@@ -5,6 +5,7 @@ import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import MyContext from "../../../context/MyContext";
 import axios from "axios";
 import { DateTimePicker } from "@material-ui/pickers";
+import PropTypes from "prop-types"
 import {
   Grid,
   DialogContent,
@@ -79,7 +80,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function SimpleDialog(props) {
+export default function SimpleDialog({handleClose, open}) {
   const classes = useStyles();
   const context = useContext(MyContext);
   let db = FB.firestore();
@@ -196,9 +197,9 @@ export default function SimpleDialog(props) {
   }
 
   return (
-    <Dialog onClose={props.handleClose} aria-labelledby="simple-dialog-title" open={props.open}>
+    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <DialogContent className={classes.contentBox}>
-        <Fab aria-label="like" className={classes.buttonClose} color="primary" onClick={props.handleClose}>
+        <Fab aria-label="like" className={classes.buttonClose} color="primary" onClick={handleClose}>
           <CloseRoundedIcon fontSize="large" />
         </Fab>
 
@@ -380,4 +381,9 @@ export default function SimpleDialog(props) {
       </DialogContent>
     </Dialog>
   );
+}
+
+SimpleDialog.propTypes = {
+  handleClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired
 }

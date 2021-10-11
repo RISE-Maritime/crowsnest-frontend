@@ -5,15 +5,12 @@
 import React, { useContext, useEffect } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import MyContext from "../../context/MyContext";
-import { Grid, Button } from "@material-ui/core";
 import Footer from "../../base-element/footer";
 import Navbar from "../../base-element/navbar";
 import ReportButton from "../../base-element/static-elements/report_button";
-import { Link } from "react-router-dom";
-import ROUTES from "../../ROUTES.json";
-import FB from "../../../FirebaseMy";
 
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = makeStyles(() => ({
   page: {
     position: "relative",
     minHeight: "100vh",
@@ -23,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = (props) => {
+const Home = () => {
   const classes = useStyles();
   const context = useContext(MyContext);
 

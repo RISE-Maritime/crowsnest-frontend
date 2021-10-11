@@ -12,4 +12,4 @@ jobs:
       - name: Format with Prettier
         run: npx prettier --write .
       - name: Check code with ESlint
-        run: npx eslint ./**
+        run: npx eslint src --fix --ext .js,.jsx

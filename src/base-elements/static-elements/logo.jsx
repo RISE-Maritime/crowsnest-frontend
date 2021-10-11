@@ -2,7 +2,7 @@ import React from "react"
 import PicLogo from "../../resources/Logo.png"
 import { makeStyles } from "@material-ui/core/styles"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     height: "100%",
     display: "flex",

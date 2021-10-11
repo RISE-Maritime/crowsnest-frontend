@@ -2,14 +2,15 @@ import React, {useContext} from "react"
 import {Route, Redirect} from "react-router-dom"
 import {AuthContext} from "./Auth";
 import ROUTES from './ROUTES.json'
+import PropTypes from 'prop-types'
 
-const PrivateRoute = ({component: RouteComponent, ...rest}) => {
+export default function PrivateRoute({component: RouteComponent, ...rest}) {
   const {currentUser} = useContext(AuthContext);
   return (
     <Route
       {...rest}
       render={routeProps =>
-        !!currentUser ? (
+        currentUser ? (
           <RouteComponent {...routeProps} />
         ) : (
           <Redirect to={ROUTES.HOME}/>
@@ -19,4 +20,6 @@ const PrivateRoute = ({component: RouteComponent, ...rest}) => {
   )
 }
 
-export default PrivateRoute
+PrivateRoute.propTypes = {
+  component: PropTypes.object.isRequired
+}

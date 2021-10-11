@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     position: "absolute",
     bottom: "0",
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Footer = (props) => {
+const Footer = () => {
   const classes = useStyles();
 
   useEffect(() => {}, []);

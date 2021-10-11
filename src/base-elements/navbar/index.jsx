@@ -10,7 +10,6 @@ import { Grid, Hidden, Tab, Tabs, Drawer, List, ListItem, ListItemText, ListItem
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ROUTES from "../../ROUTES.json";
-import HomeIcon from "@material-ui/icons/Home";
 import { AuthContext } from "../../Auth";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import TimelineRounded from "@material-ui/icons/TimelineRounded"
@@ -19,7 +18,7 @@ import LogoShip from "../../resources/logo-ship.png";
 import { Link } from "react-router-dom";
 import FB from "../../FirebaseMy";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   logo_container: {
     display: "flex",
     flexDirection: "row",
@@ -69,11 +68,11 @@ const Home = () => {
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const openDrawer = (event) => {
+  const openDrawer = () => {
     setIsDrawerOpen(true);
   };
 
-  const closeDrawer = (event) => {
+  const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
 

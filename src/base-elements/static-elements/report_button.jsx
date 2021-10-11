@@ -2,15 +2,13 @@
     Event report button overlay 
 */
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import { Fab, Button } from "@material-ui/core";
-import FB from "../../FirebaseMy";
-import axios from "axios";
+import { Fab } from "@material-ui/core";
 import ReportRoundedIcon from "@material-ui/icons/Report";
 import DialogSimpel from "./dialogs/report_event.jsx"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   button: {
     position: "fixed",
     bottom: "1rem",
@@ -19,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SingelTrack = (props) => {
+const SingelTrack = () => {
   const classes = useStyles();
-  let db = FB.firestore();
+  
 
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -30,7 +28,7 @@ const SingelTrack = (props) => {
     setDialogOpen(true);
   };
 
-  const handleClose = (value) => {
+  const handleClose = () => {
     setDialogOpen(false);
   };
 

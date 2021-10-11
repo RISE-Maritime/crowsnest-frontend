@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react'
-import Paho from "paho-mqtt";
+ 
 // Atoms
-import {atomSelectedVesselModel} from '../../home/components/vesselPicker'
-import { useRecoilValue, atom, useRecoilState } from "recoil";
+//import {atomSelectedVesselModel} from '../../home/components/vesselPicker'
+import {atom } from "recoil";
 
 export const atomTargetList = atom({
     key: "target_list",
@@ -14,7 +13,8 @@ export const atomOwnVesselAis = atom({
     default: null,
   });
   
-
+/*
+Commented because this functions are not used. 
 
 
 // AIS network connector 
@@ -45,3 +45,4 @@ export function ConnectToAIS() {
     return 'AIS connection requested'
   }
 
+  */ 
