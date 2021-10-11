@@ -1,8 +1,9 @@
 name: CI checks
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
   linting:
     name: Check the source code
