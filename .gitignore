@@ -1,8 +1,8 @@
 # FRONTEND
 # --------
 
-/frontend/build
-/frontend/node_modules
+build
+node_modules
 
 env-config.js
 
