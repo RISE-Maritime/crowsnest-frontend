@@ -13,11 +13,11 @@ import Clock from 'react-live-clock';
 // Icons
 import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
 // Atoms
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import {atomSelectedVesselModel} from '../../home/components/vesselPicker'
 
 export default function TopBar() {
-    const [vesselModel, setVesselModel] = useRecoilState(atomSelectedVesselModel);
+    const vesselModel = useRecoilValue(atomSelectedVesselModel);
 
   return (
     <Grid container alignItems="center"  justifyContent="space-between">

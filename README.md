@@ -1,24 +1,47 @@
-# react-fastapi-template
+# Crow's Nest - Frontend
 
-Template for a React + FastAPI application.
+A React web-application working as Crow's Nest frontend.
 
-## Quickstart
+## Development in VSCode
 
-1. Open a terminal.
-2. Clone the repository.
-3. Create a Python virtual environment (e.g. `conda create -n react-fastapi`).
-4. Cd into `react-fastapi-template/backend` and install the dependencies with `pip install -r requirements.txt`).
-6. Start the backend server `python server.py`.
-7. Open a *new* terminal.
-8. Cd into `react-fastapi-template/frontend` and install the dependencies with `npm install`.
-9. Start the fronend server `npm start`.
-
-The React application will be available at `http://localhost:3000` while FastAPI at `http://localhost:9999`.
+1. Clone the `crowsnest-frontend` repository.
+   - with HTTPS:
+     `git clone https://github.com/MO-RISE/crowsnest-frontend.git`
+   - with SSH:
+     `git clone git@github.com:MO-RISE/crowsnest-frontend.git`
+2. Open the `crowsnest-frontend` directory in VSCode.
+3. Install the dependencies with:
+   `npm install`
+4. Open a terminal window and start the frontend development server:
+   `npm start` (accessible at `localhost:3000`).
 
 ## Production
 
-TODO
+The Crow's Nest frontedn is meant to be served by a docker container. The latest Docker container image can be pulled from [MORISE's public docker registry](https://github.com/orgs/MO-RISE/packages).
+
+To build the image yourself:
+
+1. Clone the `crowsnest-frontend` repository.
+
+   - with HTTPS:
+     `git clone https://github.com/MO-RISE/crowsnest-frontend.git`
+   - with SSH:
+     `git clone git@github.com:MO-RISE/crowsnest-frontend.git`
+
+2. Cd into the main directory (i.e. where the `Dockerfile` file is) and run the following command:
+
+```
+docker build . -t crowsnest-frontend .
+```
+
+Afterwards, the production container can be run with a command similar to this one:
+
+```
+docker run --rm -p 8888:80 crowsnest-frontend
+```
+
+The application will then be available at the URL `http://localhost:9999`. Note that the production container exposes its webserver on port 80, so the `-p` flag must be used to bind this port to the host. Furthermore, the `-e` flag can be used to pass the environmental variable `MQTT_BROKER_URL`. This variable points to the URL where the web application can reach an MQTT broker. If `MQTT_BROKER_URL` is not given, the default value of `XXXX` is used.
 
 ## Issues
 
-Plotting maps does not work in *Firefox* because it is not compatible with `OffscreenCanvas`. 
+Plotting maps does not work in _Firefox_ because it is not compatible with `OffscreenCanvas`.

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { atom, useRecoilState } from "recoil";
+import { atom, useRecoilState, useSetRecoilState } from "recoil";
 import { Grid, TextField, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Paho from "paho-mqtt";
@@ -41,6 +41,7 @@ export const atomOwnShipData = atom({
   },
 });
 
+/* TODO: removed if unused
 const tryDisconnecting = (client) => {
   if (client !== null) {
     try {
@@ -51,6 +52,7 @@ const tryDisconnecting = (client) => {
     }
   }
 };
+*/
 
 // Component styling
 const Input = styled("input")({
@@ -59,7 +61,7 @@ const Input = styled("input")({
 
 export default function VesselPicker() {
   const [vesselModel, setVesselModel] = useRecoilState(atomSelectedVesselModel);
-  const [ownShipDataSource, setOwnShipDataSource] = useRecoilState(atomSelectedOwnShipDatSource);
+  const setOwnShipDataSource = useSetRecoilState(atomSelectedOwnShipDatSource);
   const [ownShipData, setOwnShipData] = useRecoilState(atomOwnShipData);
   const [client, setClient] = useState(null);
   const [isAISConnectionOpen, setIsAISConnectionOpen] = useState(false);

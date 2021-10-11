@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Grid, Box, Stack, Slider } from "@mui/material";
 import { atomOwnShipData } from "../home/components/vesselPicker";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 // Components
 import Pointer from "./components/pointer";
 import TopBar from "./components/topBar";
@@ -9,7 +9,7 @@ import TopBar from "./components/topBar";
 
 
 export default function Conning() {
-  const [ownShipData, setOwnShipData] = useRecoilState(atomOwnShipData);
+  const ownShipData = useRecoilValue(atomOwnShipData);
 
   useEffect(() => {
     return () => {};

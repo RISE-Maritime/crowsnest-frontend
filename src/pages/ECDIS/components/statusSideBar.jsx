@@ -1,10 +1,10 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { atomOwnShipData } from "../../home/components/vesselPicker";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 
 export default function StatusSideBar() {
-  const [ownShipData, setOwnShipData] = useRecoilState(atomOwnShipData);
+  const ownShipData = useRecoilValue(atomOwnShipData);
   return (
     <Box>
       <h2>Data coming</h2>
