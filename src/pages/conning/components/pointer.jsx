@@ -16,5 +16,5 @@ export default function Pointer({direction}) {
 }
 
 Pointer.propTypes = {
-    direction: PropTypes.float.isRequired
+    direction: PropTypes.number.isRequired
 }

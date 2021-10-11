@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 import StatusSideBar from "./components/statusSideBar";
-import ChartArea from "./components/chartArea";
+import SeaChart from "./components/SeaChart";
 import TopBar from "./components/topBar";
 export default function Ecdis() {
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Ecdis() {
         <TopBar />
       </Grid>
       <Grid item xs={10} sx={{ display: "grid", placeItems: "center", position: 'relative', height: '93vh'}} >
-        <ChartArea />
+        <SeaChart />
       </Grid>
       <Grid item xs={2} sx={{ display: "grid", placeItems: "center", position: 'relative', height: '93vh'}} >
         <StatusSideBar/>
