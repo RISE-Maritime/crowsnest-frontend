@@ -1,4 +1,5 @@
-module.exports = function override(config, env) {
+/* eslint-disable */
+module.exports = function override(config) {
     config.module.rules.push({
         resolve:{
             alias: {
@@ -10,3 +11,4 @@ module.exports = function override(config, env) {
 
     return config
 }
+/* eslint-enable */

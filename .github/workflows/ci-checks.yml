@@ -1,18 +1,15 @@
 name: CI checks
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 jobs:
   linting:
-    name: Check the source code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install packages
         run: npm ci
-      - name: Run Prettier
-        run: npm run format
-      - name: Run ESLint
-        run: npm run lint
+      - name: Format with Prettier
+        run: npx prettier --write .
+      - name: Check code with ESlint
+        run: npx eslint .
