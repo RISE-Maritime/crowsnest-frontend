@@ -5,10 +5,6 @@ A React web-application working as Crow's Nest frontend.
 ## Development in VSCode
 
 1. Clone the `crowsnest-frontend` repository.
-   - with HTTPS:
-     `git clone https://github.com/MO-RISE/crowsnest-frontend.git`
-   - with SSH:
-     `git clone git@github.com:MO-RISE/crowsnest-frontend.git`
 2. Open the `crowsnest-frontend` directory in VSCode.
 3. Install the dependencies with:
    `npm install`
@@ -17,7 +13,7 @@ A React web-application working as Crow's Nest frontend.
 
 ## Production
 
-The Crow's Nest frontedn is meant to be served by a docker container. The latest Docker container image can be pulled from [MORISE's public docker registry](https://github.com/orgs/MO-RISE/packages).
+The Crow's Nest frontend is meant to be served by a docker container. The latest Docker container image can be pulled from [MORISE's public docker registry](https://github.com/orgs/MO-RISE/packages).
 
 To build the image yourself:
 
