@@ -1,5 +1,6 @@
 import React from 'react';
 
+import {formatTime} from '../utils.js'
 import { StaticMap } from 'react-map-gl';
 import DeckGL from '@deck.gl/react';
 import VesselContourLayer from './custom-deckgl-layers/vessel-contour-layer';
@@ -41,17 +42,8 @@ const ENIRO = {
 };
 
 
-function formatTime(s) {
-  const dtFormat = new Intl.DateTimeFormat('en-GB', {
-    timeStyle: 'medium',
-    timeZone: 'UTC'
-  });
-  return dtFormat.format(new Date(s * 1e3));
-}
 
-function roundValue(value) {
-  return Math.round(value*100)/100
-}
+
 
 function getTooltip({object}) {
   return (
@@ -60,9 +52,9 @@ function getTooltip({object}) {
     MMSI: ${object.mmsi}
     Name: ${object.shipname}
     UTC Timestamp: ${formatTime(object.timestamp)}
-    HDG: ${roundValue(object.heading)}
-    COG: ${roundValue(object.cog)}
-    SOG: ${roundValue(object.sog)}`
+    HDG: ${object.heading.toFixed(2)}
+    COG: ${object.cog.toFixed(2)}
+    SOG: ${object.sog.toFixed(2)}`
   );
 }
 
@@ -102,7 +94,6 @@ export default function SeaChart() {
             controller={{ dragPan: true }}
             getTooltip={getTooltip}
         >
-        
             <StaticMap mapStyle={ENIRO} />
         </DeckGL>
      

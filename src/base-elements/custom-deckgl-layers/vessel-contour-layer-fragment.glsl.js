@@ -26,6 +26,7 @@ void main(void) {
       discard;
     }
   }
+  gl_FragColor = picking_filterPickingColor(gl_FragColor);
 }
 `;
 /* eslint-enable */

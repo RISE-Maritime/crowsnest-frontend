@@ -36,6 +36,8 @@ void main(void) {
   vFillColor = vec4(instanceFillColors.rgb, instanceFillColors.a * opacity);
   unitPosition = positions.xy;
   unitBeam = instanceBeam/(instanceLength);
+
+  picking_setPickingColor(instancePickingColors);
 }
 `;
 /* eslint-enable */

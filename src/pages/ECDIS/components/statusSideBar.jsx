@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { clickInfoAtom } from "../../../base-elements/SeaChart";
 import { vesselTargetsAtom } from "../../../base-elements/SeaChart";
-
+import {formatTime} from '../../../utils.js'
 export default function StatusSideBar() {
   
   const vesselTargets = useRecoilValue(vesselTargetsAtom)
@@ -27,12 +27,13 @@ export default function StatusSideBar() {
       {vesselAisData && <>
         <h2>Data coming</h2>
         <h3>MMSI {mmsi}</h3>
-        <h3>TIME {vesselAisData.timestamp}</h3>
-        <h3>Heading {vesselAisData.heading}</h3>
+        <h3>Name: {vesselAisData.shipname}</h3>
+        <h3>Timestamp: {formatTime(vesselAisData.timestamp)}</h3>
+        <h3>HDG: {vesselAisData.heading}</h3>
         <h3>SOG {vesselAisData.sog.toFixed(1)}</h3>
         <h3>COG {vesselAisData.cog.toFixed(1)}</h3>
         <h3>Lat {vesselAisData.lat.toFixed(3)}</h3>
-        <h3>Long {vesselAisData.lon.toFixed(3)}</h3>
+        <h3>Lon {vesselAisData.lon.toFixed(3)}</h3>
         <h3>Draught {vesselAisData.draught.toFixed(2)}</h3>
         <h3>Destination {vesselAisData.destination}</h3>
         <h3>NavStatus {vesselAisData.navStatus}</h3>
