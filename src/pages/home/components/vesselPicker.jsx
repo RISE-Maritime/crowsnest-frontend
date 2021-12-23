@@ -41,18 +41,6 @@ export const atomOwnShipData = atom({
   },
 });
 
-/* TODO: removed if unused
-const tryDisconnecting = (client) => {
-  if (client !== null) {
-    try {
-      console.log("Disconnecting...");
-      client.disconnect();
-    } catch (error) {
-      // Do nothing, client is already disconnected.
-    }
-  }
-};
-*/
 
 // Component styling
 const Input = styled("input")({
@@ -144,8 +132,8 @@ export default function VesselPicker() {
       <Grid item xs={4} sx={{ display: "grid", placeItems: "center" }}>
         <h3>Onboard</h3>
         <Button>Pilot boat 729</Button>
-        <Button>11-00</Button>
-        <Button>Svanen</Button>
+        <Button>SSRS 11-00</Button>
+     
       </Grid>
       <Grid item xs={4} sx={{ display: "grid", placeItems: "center" }}>
         <h3>AIS network</h3>

@@ -14,7 +14,7 @@ export const vesselTargetsAtom = atom({
 
 export const clickInfoAtom = atom({
   key: 'click_info_atom',
-  deafault: {},
+  default: {},
 })
 
 // Tiles
