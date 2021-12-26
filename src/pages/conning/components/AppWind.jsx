@@ -3,17 +3,12 @@ import { Stack } from "@mui/material";
 import { useSpring, animated, config } from "react-spring";
 
 export default function AppWind() {
-  const [flip, set] = useState(false);
 
-  const props = useSpring({
-    to: { opacity: 1 },
-    from: { opacity: 0 },
-    reset: true,
-    reverse: flip,
-    delay: 200,
-    config: config.molasses,
-    onRest: () => set(!flip),
-  });
+  const rotRight = useSpring({
+    loop: true,
+    from: { rotateZ: 0 },
+    to: { rotateZ: 180 },
+  })
 
   return (
     <Stack
@@ -22,16 +17,12 @@ export default function AppWind() {
       alignItems="center"
       sx={{ width: "100%", height: "100%" }}
     >
-      <animated.svg
-        width="35.126"
-        height="135.139"
-        viewBox="0 0 35.126 135.139"
-        style={props}
-      >
-        <g
+      <animated.svg width="100%" height="100%"  viewBox="0 0 454 299.669">
+        <animated.g
           id="Path_50"
-          data-name="Path 50"
-          transform="translate(0.007 0.001)"
+          data-name="ship"
+          transform={"translate(231.652 73.14) rotate(" + 19 + ")"}
+          style={ rotRight}
           fill="#404a50"
         >
           <path
@@ -43,6 +34,250 @@ export default function AppWind() {
             stroke="none"
             fill="#fff"
           />
+        </animated.g>
+        <text
+          id="_99_m_s"
+          data-name="99 m/s"
+          transform="translate(0 279.669)"
+          fill="#fff"
+          fontSize="34"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            88 m/s
+          </tspan>
+        </text>
+        <text
+          id="_99_kts"
+          data-name="99 kts"
+          transform="translate(5 37.669)"
+          fill="#3bf"
+          fontSize="35"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            99 kts
+          </tspan>
+        </text>
+        <text
+          id="_359_"
+          data-name="359°"
+          transform="translate(375 276.669)"
+          fill="#fff"
+          fontSize="35"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            359°
+          </tspan>
+        </text>
+        <text
+          id="_359_2"
+          data-name="359°"
+          transform="translate(384 34.669)"
+          fill="#3bf"
+          fontSize="31"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            359°
+          </tspan>
+        </text>
+        <text
+          id="Relative_180_"
+          data-name="Relative 180°"
+          transform="translate(378 49.669)"
+          fill="#3bf"
+          fontSize="13"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            Relative 180°
+          </tspan>
+        </text>
+        <text
+          id="Relative_180_2"
+          data-name="Relative 180°"
+          transform="translate(369 295.669)"
+          fill="#fff"
+          fontSize="13"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            Relative 180°
+          </tspan>
+        </text>
+        <text
+          id="N"
+          transform="translate(220 52.669)"
+          fill="#fff"
+          fontSize="17"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            N
+          </tspan>
+        </text>
+        <text
+          id="S"
+          transform="translate(222 244.669)"
+          fill="#fff"
+          fontSize="17"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            S
+          </tspan>
+        </text>
+        <text
+          id="W"
+          transform="translate(123 148.669)"
+          fill="#fff"
+          fontSize="17"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            W
+          </tspan>
+        </text>
+        <text
+          id="E"
+          transform="translate(315 148.669)"
+          fill="#fff"
+          fontSize="17"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            E
+          </tspan>
+        </text>
+        <text
+          id="Wind"
+          transform="translate(0 248.669)"
+          fill="rgba(255,255,255,0.35)"
+          fontSize="9"
+          fontFamily="Roboto-Regular, Roboto"
+        >
+          <tspan x="0" y="0">
+            Wind
+          </tspan>
+        </text>
+        <g
+          id="Ellipse_6"
+          data-name="Ellipse 6"
+          transform="translate(105 20.669)"
+          fill="none"
+          stroke="#707070"
+          strokeWidth="1"
+        >
+          <circle cx="121.5" cy="121.5" r="121.5" stroke="none" />
+          <circle cx="121.5" cy="121.5" r="121" fill="none" />
+        </g>
+        <g
+          id="Ellipse_7"
+          data-name="Ellipse 7"
+          transform="translate(113 29.669)"
+          fill="none"
+          stroke="#707070"
+          strokeWidth="1"
+        >
+          <circle cx="113" cy="113" r="113" stroke="none" />
+          <circle cx="113" cy="113" r="112.5" fill="none" />
+        </g>
+        <line
+          id="Line_223"
+          data-name="Line 223"
+          x1="29"
+          y2="30"
+          transform="translate(310.5 2.828)"
+          fill="none"
+          stroke="#fff"
+          strokeLinecap="round"
+          strokeWidth="4"
+        />
+        <g
+          id="Polygon_15"
+          data-name="Polygon 15"
+          transform="matrix(-0.719, -0.695, 0.695, -0.719, 309.264, 41.051)"
+          fill="#fff"
+          strokeLinecap="round"
+        >
+          <path
+            d="M 6.763935089111328 8 L 3.236064910888672 8 L 5 4.472129821777344 L 6.763935089111328 8 Z"
+            stroke="none"
+          />
+          <path d="M 5 0 L 10 10 L 0 10 L 5 0 Z" stroke="none" fill="#fff" />
+        </g>
+        <line
+          id="Line_226"
+          data-name="Line 226"
+          y2="9"
+          transform="translate(226.5 21.169)"
+          fill="none"
+          stroke="#707070"
+          strokeWidth="1"
+        />
+        <line
+          id="Line_227"
+          data-name="Line 227"
+          x1="9"
+          transform="translate(339.5 144.169)"
+          fill="none"
+          stroke="#707070"
+          strokeWidth="1"
+        />
+        <line
+          id="Line_228"
+          data-name="Line 228"
+          x2="7"
+          transform="translate(106.5 144.169)"
+          fill="none"
+          stroke="#707070"
+          strokeWidth="1"
+        />
+        <line
+          id="Line_229"
+          data-name="Line 229"
+          y2="8"
+          transform="translate(225.5 256.169)"
+          fill="none"
+          stroke="#707070"
+          strokeWidth="1"
+        />
+        <path
+          id="Path_51"
+          data-name="Path 51"
+          d="M1628.338,32.262c-1.982,3.875-3.7,7.881-3.7,7.881s17.472,6.877,31.162,17.122a127.859,127.859,0,0,1,23.6,23.858l8.087-5.854S1669.232,47.883,1628.338,32.262Z"
+          transform="translate(-1361.94 -4.331)"
+          fill="rgba(232,232,232,0.45)"
+        />
+        <path
+          id="Path_52"
+          data-name="Path 52"
+          d="M1628.135,32.262c-1.873,3.711-3.494,7.548-3.494,7.548s16.514,6.587,29.453,16.4a121.773,121.773,0,0,1,22.3,22.851l7.643-5.607S1666.787,47.224,1628.135,32.262Z"
+          transform="translate(-1314.022 547.771) rotate(-20)"
+          fill="rgba(51,187,255,0.45)"
+        />
+        <path
+          id="Path_53"
+          data-name="Path 53"
+          d="M1612.583,8.192l5.164,12.3s8.1-4.574,12.393-5.915"
+          transform="translate(-1354.5 -3.322)"
+          fill="none"
+          stroke="#3bf"
+          strokeLinecap="round"
+          strokeWidth="3"
+        />
+        <g
+          id="Ellipse_8"
+          data-name="Ellipse 8"
+          transform="translate(113 29.669)"
+          fill="none"
+          stroke="#707070"
+          strokeWidth="1"
+        >
+          <circle cx="113" cy="113" r="113" stroke="none" />
+          <circle cx="113" cy="113" r="112.5" fill="none" />
         </g>
       </animated.svg>
     </Stack>
