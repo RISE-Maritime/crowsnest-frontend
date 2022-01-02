@@ -7,13 +7,9 @@ import {
   Box,
   List,
   Checkbox,
-  ListItemIcon,
   ListItemButton,
   ListItemText,
-  Divider,
 } from "@mui/material";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 
 export default function RightDrawer(props) {
   let [showMiniApp, setShowMiniApp] = useRecoilState(showMiniAppsObj);

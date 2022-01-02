@@ -1,14 +1,15 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
+import { styled , useTheme} from "@mui/material/styles";
 import { Grid, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function viewListItem(props) {
-  const GridCenter = styled(Grid)(() => ({
-    display: "grid",
-    placeItems: "center",
-  }));
+const GridCenter = styled(Grid)(() => ({
+  display: "grid",
+  placeItems: "center",
+}));
 
+export default function viewListItem(props) {
+  const theme = useTheme();
   return (
     <GridCenter item xs={12}>
       <Button
@@ -19,10 +20,10 @@ export default function viewListItem(props) {
           width: "95%",
           maxWidth: "350px",
           margin: "0.5rem",
-          color: "#1d3658",
+          color: theme.palette.info.main,
           display: "flex",
           justifyContent: "flex-start",
-          borderColor: "#1d3658",
+          borderColor: theme.palette.info.main,
         }}
       >
         {props.icon}

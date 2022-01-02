@@ -15,7 +15,6 @@
  */
 
 import React, { useEffect, useState } from "react";
-
 // Recoil
 import { useRecoilState } from "recoil";
 import { appState } from "../../globalAtomsSelectors";
@@ -33,6 +32,7 @@ import {
   Stack,
   Avatar,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 // Icons & Images
 import LogoCrowsnest from "../../resources/crowsnest.png";
 import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
@@ -42,6 +42,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
 export default function NavBar() {
+  const theme = useTheme()
   const [appObj, setAppObj] = useRecoilState(appState);
   const [drawerState, setDrawerState] = useState({
     left: false,
@@ -94,7 +95,7 @@ export default function NavBar() {
           >
             {/* App navigation button */}
             <IconButton onClick={toggleDrawer("left", true)}>
-              <MenuIcon />
+              <MenuIcon sx={{color: theme.palette.primary.contrastText}}/>
             </IconButton>
             {/* Active view status text */}
             <Typography variant={"h6"}>Crowsnest</Typography>
@@ -137,15 +138,15 @@ export default function NavBar() {
             {/* Day and night mode (App color theme) */}
             <IconButton onClick={ToggleThemeMode}>
               {appObj.appActiveColorTheme === "light" ? (
-                <DarkModeIcon />
+                <DarkModeIcon sx={{color: theme.palette.primary.contrastText}}/>
               ) : (
-                <LightModeIcon />
+                <LightModeIcon sx={{color: theme.palette.primary.contrastText}}/>
               )}
             </IconButton>
 
             {/* Floating mini apps */}
             <IconButton onClick={toggleDrawer("right", true)}>
-              <AppsRoundedIcon />
+              <AppsRoundedIcon sx={{color: theme.palette.primary.contrastText}}/>
             </IconButton>
           </Stack>
         </Grid>

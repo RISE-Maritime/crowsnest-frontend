@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Recoil
 import { useRecoilValue } from "recoil";
 import { appState } from "./globalAtomsSelectors";
@@ -32,12 +32,13 @@ export default function App() {
         ? // Light pallette
           {
             primary: {
-              main: "#46525c",
+              main: "#1f2e47",
               light: "#66bb77",
               contrastText: "#ffffff",
             },
             secondary: {
               main: "#ed6432",
+              contrast: "#33BBFF",
             },
             background: {
               default: "#e3e3e3",
@@ -52,13 +53,13 @@ export default function App() {
               main: "#99b93d",
             },
             info: {
-              main: "#2196f3",
+              main: "#031e49",
             },
           }
         : // Dark pallette
           {
             primary: {
-              main: "#46525c",
+              main: "#2196f3",
               light: "#66bb77",
               contrastText: "#ffffff",
               port: "#E93629",
@@ -99,18 +100,22 @@ export default function App() {
 
         <Router>
           <BasePage>
-            <Switch>
-              <Route exact path={ROUTES.HOME} component={PageHome} />
-              <Route exact path={ROUTES.ECDIS} component={PageECDIS} />
-              <Route exact path={ROUTES.CONNING} component={PageConning} />
-              <Route exact path={ROUTES.DATA_FLOW} component={PageDataFlow} />
+            <Routes>
+              <Route exact path={ROUTES.HOME} element={<PageHome />} />
+              <Route exact path={ROUTES.ECDIS} element={<PageECDIS />} />
+              <Route exact path={ROUTES.CONNING} element={<PageConning />} />
+              <Route exact path={ROUTES.DATA_FLOW} element={<PageDataFlow />} />
               <Route
                 exact
                 path={ROUTES.REMOTE_CONTROL}
-                component={PageRemoteControl}
+                element={<PageRemoteControl />}
               />
-              <Route exact path={ROUTES.PAGE1} component={PageVesselSpinner} />
-            </Switch>
+              <Route
+                exact
+                path={ROUTES.PAGE1}
+                element={<PageVesselSpinner />}
+              />
+            </Routes>
           </BasePage>
         </Router>
       </ThemeProvider>

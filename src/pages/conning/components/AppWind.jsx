@@ -1,285 +1,100 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stack } from "@mui/material";
 import { useSpring, animated, config } from "react-spring";
 
-export default function AppWind() {
+function Icon() {
+  const [degCover, setDegCover] = useState(180);
+  const [pathL, setPathL] = useState(null);
+  const [pathCover, setPathCover] = useState(0);
 
-  const rotRight = useSpring({
-    loop: true,
-    from: { rotateZ: 0 },
-    to: { rotateZ: 180 },
-  })
+  useEffect(() => {
+    outRing();
+  }, [pathL]);
+
+  const outRing = () => {
+    let oneDegPx = pathL / 360;
+    let coverPx = (360 - degCover) * oneDegPx;
+
+    setPathCover(coverPx);
+  };
 
   return (
-    <Stack
-      direction="column"
-      justifyContent="center"
-      alignItems="center"
-      sx={{ width: "100%", height: "100%" }}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="245"
+      height="261.512"
+      viewBox="0 0 245 261.512"
     >
-      <animated.svg width="100%" height="100%"  viewBox="0 0 454 299.669">
-        <animated.g
-          id="Path_50"
-          data-name="ship"
-          transform={"translate(231.652 73.14) rotate(" + 19 + ")"}
-          style={ rotRight}
-          fill="#404a50"
-        >
-          <path
-            d="M 30.72271919250488 134.13818359375 C 30.27288436889648 134.13818359375 29.78544807434082 134.1106414794922 29.26937484741211 134.0814514160156 C 28.6810474395752 134.0482025146484 28.07268333435059 134.0138244628906 27.43115615844727 134.0138244628906 L 7.674829006195068 134.0149536132812 C 7.437156200408936 134.0149688720703 7.201956272125244 134.0165710449219 6.969719886779785 134.0181732177734 C 6.746774196624756 134.0197143554688 6.526610851287842 134.021240234375 6.309665203094482 134.021240234375 C 4.445737838745117 134.021240234375 3.283374309539795 133.8815460205078 2.480119943618774 133.1446533203125 C 1.479065299034119 132.2263488769531 0.9925198554992676 130.2612762451172 0.9927016496658325 127.1371307373047 L 0.9977744221687317 38.73518753051758 C 0.9979925751686096 34.8737678527832 1.644047141075134 30.55242156982422 2.917956113815308 25.89120483398438 C 4.050338268280029 21.74785804748535 5.654956340789795 17.47367668151855 7.558338165283203 13.53073120117188 C 9.324919700622559 9.871150016784668 11.30993843078613 6.60304069519043 13.14771938323975 4.328422546386719 C 15.62355613708496 1.264075040817261 16.97221183776855 1.003077745437622 17.33970260620117 0.9990533590316772 C 17.72116470336914 1.009803295135498 19.11715698242188 1.285534501075745 21.64619255065918 4.271295070648193 C 23.53795623779297 6.504713535308838 25.56941032409668 9.70147705078125 27.3663387298584 13.27269554138184 C 29.32632064819336 17.16794967651367 30.97490119934082 21.4175853729248 32.13384628295898 25.56216812133789 C 33.44679260253906 30.25745964050293 34.11448287963867 34.68913269042969 34.11837387084961 38.73409652709961 L 34.11324691772461 128.2327117919922 C 34.11310195922852 130.7846832275391 33.77544784545898 132.5014801025391 33.10968399047852 133.3353881835938 C 32.64846420288086 133.9130706787109 31.97922897338867 134.1381683349609 30.72271919250488 134.13818359375 Z"
-            stroke="none"
-          />
-          <path
-            d="M 17.33828163146973 2.00018310546875 C 17.21999740600586 2.01666259765625 16.10809135437012 2.24554443359375 13.89750099182129 4.991668701171875 C 12.10770225524902 7.215072631835938 10.16944122314453 10.41613006591797 8.439762115478516 14.00514984130859 C 6.5672607421875 17.89049530029297 4.989242553710938 22.09975433349609 3.876300811767578 26.17787170410156 C 2.630020141601562 30.74451446533203 1.998001098632812 34.96942901611328 1.997779846191406 38.73525238037109 L 1.992702484130859 127.1371917724609 C 1.992500305175781 130.6113586425781 2.625202178955078 131.9210052490234 3.156002044677734 132.4079284667969 C 3.715181350708008 132.9208679199219 4.735801696777344 133.0212249755859 6.309761047363281 133.0212249755859 C 6.524202346801758 133.0212249755859 6.741962432861328 133.0197143554688 6.962461471557617 133.0181884765625 C 7.197141647338867 133.0165863037109 7.43480110168457 133.0149688720703 7.674760818481445 133.0149536132812 L 27.43124198913574 133.0138244628906 C 28.10102081298828 133.0138244628906 28.72372055053711 133.0490264892578 29.32588195800781 133.0830535888672 C 29.82740211486816 133.1113891601562 30.30110168457031 133.1381683349609 30.72270202636719 133.1381683349609 C 31.88984107971191 133.1381683349609 32.15579986572266 132.9273681640625 32.32818222045898 132.7114562988281 C 32.62129974365234 132.3443145751953 33.11305999755859 131.2742309570312 33.11324310302734 128.2326354980469 L 33.11838150024414 38.73505401611328 C 33.11458206176758 34.78079223632812 32.45932006835938 30.43941497802734 31.17080116271973 25.83147430419922 C 30.0289421081543 21.74803161621094 28.40450096130371 17.56069183349609 26.47306060791016 13.72216796875 C 24.7105827331543 10.21941375732422 22.72538185119629 7.092575073242188 20.88314056396484 4.917633056640625 C 18.92041969299316 2.600448608398438 17.68713569641113 2.03289794921875 17.33828163146973 2.00018310546875 M 17.34844207763672 -0.0009918212890625 C 22.76862144470215 0.09619140625 35.10148239135742 21.18830871582031 35.11838150024414 38.73313140869141 L 35.11324310302734 128.2327575683594 C 35.11276245117188 136.6266326904297 31.67353248596191 135.0138244628906 27.43124771118164 135.0138244628906 C 27.43072891235352 135.0138244628906 27.43074035644531 135.0138244628906 27.43022155761719 135.0138244628906 L 7.674880981445312 135.0149536132812 C 3.431901931762695 135.0151977539062 -0.007778167724609375 135.5319519042969 -0.007297515869140625 127.1370697021484 L -0.00222015380859375 38.73513031005859 C -0.00125885009765625 22.01195526123047 11.9732608795166 -0.0006866455078125 17.34844207763672 -0.0009918212890625 Z"
-            stroke="none"
-            fill="#fff"
-          />
-        </animated.g>
-        <text
-          id="_99_m_s"
-          data-name="99 m/s"
-          transform="translate(0 279.669)"
-          fill="#fff"
-          fontSize="34"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            88 m/s
-          </tspan>
-        </text>
-        <text
-          id="_99_kts"
-          data-name="99 kts"
-          transform="translate(5 37.669)"
-          fill="#3bf"
-          fontSize="35"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            99 kts
-          </tspan>
-        </text>
-        <text
-          id="_359_"
-          data-name="359°"
-          transform="translate(375 276.669)"
-          fill="#fff"
-          fontSize="35"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            359°
-          </tspan>
-        </text>
-        <text
-          id="_359_2"
-          data-name="359°"
-          transform="translate(384 34.669)"
-          fill="#3bf"
-          fontSize="31"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            359°
-          </tspan>
-        </text>
-        <text
-          id="Relative_180_"
-          data-name="Relative 180°"
-          transform="translate(378 49.669)"
-          fill="#3bf"
-          fontSize="13"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            Relative 180°
-          </tspan>
-        </text>
-        <text
-          id="Relative_180_2"
-          data-name="Relative 180°"
-          transform="translate(369 295.669)"
-          fill="#fff"
-          fontSize="13"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            Relative 180°
-          </tspan>
-        </text>
-        <text
-          id="N"
-          transform="translate(220 52.669)"
-          fill="#fff"
-          fontSize="17"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            N
-          </tspan>
-        </text>
-        <text
-          id="S"
-          transform="translate(222 244.669)"
-          fill="#fff"
-          fontSize="17"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            S
-          </tspan>
-        </text>
-        <text
-          id="W"
-          transform="translate(123 148.669)"
-          fill="#fff"
-          fontSize="17"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            W
-          </tspan>
-        </text>
-        <text
-          id="E"
-          transform="translate(315 148.669)"
-          fill="#fff"
-          fontSize="17"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            E
-          </tspan>
-        </text>
-        <text
-          id="Wind"
-          transform="translate(0 248.669)"
-          fill="rgba(255,255,255,0.35)"
-          fontSize="9"
-          fontFamily="Roboto-Regular, Roboto"
-        >
-          <tspan x="0" y="0">
-            Wind
-          </tspan>
-        </text>
+      <circle
+        cx="122.5"
+        cy="122.5"
+        r="122.5"
+        fill="#2e366f"
+        data-name="Ellipse 9"
+        transform="translate(0 16.512)"
+        style={{}}
+      ></circle>
+
+      <path
+        fill="#d11919"
+        d="M33.872 11.277L72.281 181.8H0L33.872 11.277z"
+        data-name="Path 74"
+        transform="translate(86 42.235) rotate(310)"
+        style={{
+          transformOrigin: "center",
+          transformBox: "fill-box",
+        }}
+      ></path>
+
+      <g
+        data-name="Group 2"
+        transform="translate(-1507 -96) rotate(30)"
+        style={{
+          transformOrigin: "center",
+          transformBox: "fill-box",
+        }}
+      >
         <g
-          id="Ellipse_6"
-          data-name="Ellipse 6"
-          transform="translate(105 20.669)"
-          fill="none"
+          fill="rgba(255,255,255,0)"
           stroke="#707070"
           strokeWidth="1"
+          data-name="Rectangle 75"
+          transform="translate(1616 96)"
         >
-          <circle cx="121.5" cy="121.5" r="121.5" stroke="none" />
-          <circle cx="121.5" cy="121.5" r="121" fill="none" />
+          <path stroke="none" d="M0 0H28V275H0z"></path>
+          <path fill="none" d="M0.5 0.5H27.5V274.5H0.5z"></path>
         </g>
-        <g
-          id="Ellipse_7"
-          data-name="Ellipse 7"
-          transform="translate(113 29.669)"
-          fill="none"
-          stroke="#707070"
-          strokeWidth="1"
-        >
-          <circle cx="113" cy="113" r="113" stroke="none" />
-          <circle cx="113" cy="113" r="112.5" fill="none" />
-        </g>
-        <line
-          id="Line_223"
-          data-name="Line 223"
-          x1="29"
-          y2="30"
-          transform="translate(310.5 2.828)"
-          fill="none"
-          stroke="#fff"
-          strokeLinecap="round"
-          strokeWidth="4"
-        />
-        <g
-          id="Polygon_15"
-          data-name="Polygon 15"
-          transform="matrix(-0.719, -0.695, 0.695, -0.719, 309.264, 41.051)"
-          fill="#fff"
-          strokeLinecap="round"
-        >
-          <path
-            d="M 6.763935089111328 8 L 3.236064910888672 8 L 5 4.472129821777344 L 6.763935089111328 8 Z"
-            stroke="none"
-          />
-          <path d="M 5 0 L 10 10 L 0 10 L 5 0 Z" stroke="none" fill="#fff" />
-        </g>
-        <line
-          id="Line_226"
-          data-name="Line 226"
-          y2="9"
-          transform="translate(226.5 21.169)"
-          fill="none"
-          stroke="#707070"
-          strokeWidth="1"
-        />
-        <line
-          id="Line_227"
-          data-name="Line 227"
-          x1="9"
-          transform="translate(339.5 144.169)"
-          fill="none"
-          stroke="#707070"
-          strokeWidth="1"
-        />
-        <line
-          id="Line_228"
-          data-name="Line 228"
-          x2="7"
-          transform="translate(106.5 144.169)"
-          fill="none"
-          stroke="#707070"
-          strokeWidth="1"
-        />
-        <line
-          id="Line_229"
-          data-name="Line 229"
-          y2="8"
-          transform="translate(225.5 256.169)"
-          fill="none"
-          stroke="#707070"
-          strokeWidth="1"
-        />
         <path
-          id="Path_51"
-          data-name="Path 51"
-          d="M1628.338,32.262c-1.982,3.875-3.7,7.881-3.7,7.881s17.472,6.877,31.162,17.122a127.859,127.859,0,0,1,23.6,23.858l8.087-5.854S1669.232,47.883,1628.338,32.262Z"
-          transform="translate(-1361.94 -4.331)"
-          fill="rgba(232,232,232,0.45)"
-        />
-        <path
-          id="Path_52"
-          data-name="Path 52"
-          d="M1628.135,32.262c-1.873,3.711-3.494,7.548-3.494,7.548s16.514,6.587,29.453,16.4a121.773,121.773,0,0,1,22.3,22.851l7.643-5.607S1666.787,47.224,1628.135,32.262Z"
-          transform="translate(-1314.022 547.771) rotate(-20)"
-          fill="rgba(51,187,255,0.45)"
-        />
-        <path
-          id="Path_53"
-          data-name="Path 53"
-          d="M1612.583,8.192l5.164,12.3s8.1-4.574,12.393-5.915"
-          transform="translate(-1354.5 -3.322)"
-          fill="none"
-          stroke="#3bf"
-          strokeLinecap="round"
-          strokeWidth="3"
-        />
-        <g
-          id="Ellipse_8"
-          data-name="Ellipse 8"
-          transform="translate(113 29.669)"
-          fill="none"
-          stroke="#707070"
-          strokeWidth="1"
-        >
-          <circle cx="113" cy="113" r="113" stroke="none" />
-          <circle cx="113" cy="113" r="112.5" fill="none" />
-        </g>
-      </animated.svg>
-    </Stack>
+          fill="#3f7d00"
+          d="M12.887 27.789L27.5 11.277H0l12.887 16.512z"
+          data-name="Path 75"
+          transform="translate(1616.5 85.211)"
+        ></path>
+      </g>
+
+
+      <path
+        ref={(ref) => {
+          if (ref) {
+            setPathL(ref.getTotalLength());
+            console.log(ref.getTotalLength());
+          }
+        }}
+        fill="none"
+        stroke="#57b236"
+        strokeWidth="9"
+        d="M133.695 9.883c10.9-.61 126.282-4.4 124.824 129.878S140.364 261.938 133.695 263.267 14.942 265.483 5.047 136.935 122.795 10.493 133.695 9.883z"
+        data-name="Path 76"
+        transform="rotate(270)"
+        style={{
+          strokeDasharray: pathL,
+          strokeDashoffset: pathCover,
+          transformOrigin: "center",
+          transformBox: "fill-box",
+        }}
+      ></path>
+    </svg>
   );
 }
+
+export default Icon;
