@@ -99,7 +99,7 @@ export default function Conning() {
             <AppSogCogObj
               showNearbyObj={false}
               heading={0}
-              cog={275.0}
+              cog={45}
               sogAFT={-5}
               sogMID={1}
               sogFWD={3}
@@ -129,7 +129,7 @@ export default function Conning() {
               windSpeedRel={20}
               windDirTrue={270}
               windDirRel={180}
-              windDirDistribution={45}
+              windDirDistribution={90}
               currentSpeedTrue={20}
               currentSpeedRel={10}
               currentDirTrue={50}

@@ -18,7 +18,8 @@ import PageECDIS from "./pages/ECDIS";
 import PageConning from "./pages/conning";
 import PageDataFlow from "./pages/data-flow";
 import PageRemoteControl from "./pages/remote-control";
-import PageVesselSpinner from "./pages/vesselSpinner";
+import PageBearingRate from "./pages/bearing-rate";
+// import PageVesselSpinner from "./pages/vesselSpinner";
 
 export default function App() {
   const appObj = useRecoilValue(appState);
@@ -103,17 +104,17 @@ export default function App() {
             <Routes>
               <Route exact path={ROUTES.HOME} element={<PageHome />} />
               <Route exact path={ROUTES.ECDIS} element={<PageECDIS />} />
+              <Route
+                exact
+                path={ROUTES.BEARING_RATE}
+                element={<PageBearingRate />}
+              />
               <Route exact path={ROUTES.CONNING} element={<PageConning />} />
               <Route exact path={ROUTES.DATA_FLOW} element={<PageDataFlow />} />
               <Route
                 exact
                 path={ROUTES.REMOTE_CONTROL}
                 element={<PageRemoteControl />}
-              />
-              <Route
-                exact
-                path={ROUTES.PAGE1}
-                element={<PageVesselSpinner />}
               />
             </Routes>
           </BasePage>

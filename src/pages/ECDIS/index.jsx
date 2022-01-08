@@ -32,6 +32,14 @@ function MqttMessageParser() {
     } else {
       console.log("Received MQTT message with topic " + mqttMessage.topic);
     }
+
+    if (mqttMessage.topic.includes("NTpro")) {
+      const vessel = JSON.parse(mqttMessage.payload.toString());
+   console.log(vessel);
+
+    } else {
+      console.log("Received MQTT message with topic " + mqttMessage.topic);
+    }
   });
 
   return <></>;
@@ -41,7 +49,8 @@ export default function Ecdis() {
   React.useEffect(() => {
     //mqttSubscribe('CROWSNEST/AIS/SJOFARTSVERKET/265177000')
     //mqttSubscribe('CROWSNEST/AIS/SJOFARTSVERKET/265514130')
-    mqttSubscribe("CROWSNEST/AIS/SJOFARTSVERKET/#");
+    // mqttSubscribe("CROWSNEST/AIS/SJOFARTSVERKET/#");
+    mqttSubscribe("NTpro");
   }, []);
 
   return (
