@@ -8,6 +8,7 @@ import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded";
 import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded";
+import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded";
 
 const GridCenter = styled(Grid)(() => ({
   display: "grid",
@@ -15,7 +16,6 @@ const GridCenter = styled(Grid)(() => ({
 }));
 
 export default function viewList() {
-
   const theme = useTheme();
 
   return (
@@ -32,22 +32,9 @@ export default function viewList() {
         ></div>
       </GridCenter>
       <GridCenter item xs={12}>
-        <h2 style={{ color: theme.palette.primary.contrastText, }}>View list</h2>
+        <h2 style={{ color: theme.palette.primary.contrastText }}>View list</h2>
       </GridCenter>
 
-      <ViewListItem
-        routeLink={ROUTES.DATA_FLOW}
-        viewName={"Data Flow"}
-  
-        icon={
-          <InsightsRoundedIcon
-            sx={{
-              fontSize: "4rem",
-              color: theme.palette.info.main,
-            }}
-          />
-        }
-      />
       <ViewListItem
         routeLink={ROUTES.ECDIS}
         viewName={" ECDIS"}
@@ -60,6 +47,20 @@ export default function viewList() {
           />
         }
       />
+
+      <ViewListItem
+        routeLink={ROUTES.BEARING_RATE}
+        viewName={" Bearing Rate"}
+        icon={
+          <TrackChangesRoundedIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+
       <ViewListItem
         routeLink={ROUTES.CONNING}
         viewName={"Conning"}
@@ -77,6 +78,19 @@ export default function viewList() {
         viewName={"Remote control"}
         icon={
           <SportsEsportsRoundedIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+
+      <ViewListItem
+        routeLink={ROUTES.DATA_FLOW}
+        viewName={"Data Flow"}
+        icon={
+          <InsightsRoundedIcon
             sx={{
               fontSize: "4rem",
               color: theme.palette.info.main,

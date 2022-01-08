@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-// App Settings / State 
+// App Settings / State
 export const appState = atom({
   key: "appState",
   default: {
@@ -16,6 +16,7 @@ export const showMiniAppsObj = atom({
   key: "showMiniAppsObj",
   default: {
     test: false,
+    windCurrent: false,
   },
 });
 

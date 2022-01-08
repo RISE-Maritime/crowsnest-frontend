@@ -18,7 +18,6 @@ export default function RightDrawer(props) {
     console.log(appName);
     setShowMiniApp({
       ...showMiniApp,
-      // appName: !showMiniApp[appName]
       [appName]: !showMiniApp[appName],
     });
   };
@@ -40,6 +39,15 @@ export default function RightDrawer(props) {
           <Checkbox edge="start" checked={showMiniApp.test} color="secondary" />
           <ListItemText primary="Test Mini APP" />
         </ListItemButton>
+
+        <ListItemButton
+          selected={showMiniApp.wind}
+          onClick={() => ToggleMiniApp("windCurrent")}
+        >
+          <Checkbox edge="start" checked={showMiniApp.windCurrent} color="secondary" />
+          <ListItemText primary="Wind & Current" />
+        </ListItemButton>
+
       </List>
     </Box>
   );

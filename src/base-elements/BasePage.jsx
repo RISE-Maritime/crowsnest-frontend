@@ -1,10 +1,13 @@
 import React from "react";
 import NavigationBar from "./navbar";
 import { useTheme } from "@mui/material/styles";
+// APPs 
 import FloatApp from "./components/mini_app/FloatApp";
+import FloatAppWind from "./components/mini_app/FloatAppWind";
 // Recoil
 import { showMiniAppsObj } from "../globalAtomsSelectors";
 import { useRecoilValue } from "recoil";
+
 export default function BasePage(props) {
   const theme = useTheme();
   let showMiniApp = useRecoilValue(showMiniAppsObj);
@@ -14,6 +17,7 @@ export default function BasePage(props) {
 
       {/* Mini APPs */}
       {showMiniApp.test ? <FloatApp /> : null}
+      {showMiniApp.windCurrent ? <FloatAppWind /> : null}
 
       <div
         style={{
