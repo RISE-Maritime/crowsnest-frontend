@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Recoil
 import { useRecoilValue } from "recoil";
-import { appState } from "./globalAtomsSelectors";
+import { appState } from "./recoil/atoms";
 // Styling
 import {
   createTheme,

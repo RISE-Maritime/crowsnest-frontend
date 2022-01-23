@@ -50,7 +50,7 @@ const data = [
 ];
 
 const CustomTooltip = ({ active, payload }) => {
-  console.log(payload);
+  // console.log(payload);
   if (active && payload && payload.length) {
     return (
       <Paper sx={{ padding: "0.5rem" }}>

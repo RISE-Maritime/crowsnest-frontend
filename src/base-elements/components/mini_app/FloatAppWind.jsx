@@ -12,6 +12,7 @@ export default function FloatAppWind() {
       default={{
         x: width * 0.1,
         y: height * 0.1,
+        
       }}
       style={{ zIndex: "10000" }}
     >
@@ -19,6 +20,7 @@ export default function FloatAppWind() {
         sx={{
           width: "100%",
           height: "100%",
+        
         }}
       >
         <AppWindCurrent

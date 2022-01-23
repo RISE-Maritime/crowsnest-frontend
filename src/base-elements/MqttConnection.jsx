@@ -1,6 +1,7 @@
 import React from "react";
 import mqtt from "mqtt";
-import { atom, useSetRecoilState } from "recoil";
+import { atom, useSetRecoilState, useRecoilState } from "recoil";
+import { wsMessageParser } from "../recoil/selectors";
 
 /* eslint-disable */
 const host = process.env.REACT_APP_MQTT_BROKER_ADDRESS;
@@ -20,24 +21,54 @@ export const mqttMessageAtom = atom({
   default: { topic: "", payload: null },
 });
 
+export const mqttStateAtom = atom({
+  key: "mqtt_state",
+  default: { connected: false },
+});
+
 export function mqttSubscribe(topic) {
   client.subscribe(topic, (err) => console.log(err));
 }
 
+export function mqttPublish(topic, qos, payload) {
+  payload = JSON.stringify(payload);
+
+  client.publish(topic, payload, { qos }, (error) => {
+    if (error) {
+      console.log("Publish error: ", error);
+    }
+  });
+}
+
 export default function MqttConnection() {
-  const setMqttMessage = useSetRecoilState(mqttMessageAtom);
+  const [mqttState, setMqttState] = useRecoilState(mqttStateAtom);
+  const parseWsMessage = useSetRecoilState(wsMessageParser);
 
   React.useEffect(() => {
     client.on("connect", () => {
       console.log("Connected to MQTT broker!");
+      setMqttState({
+        ...mqttState,
+        connected: true,
+      });
     });
+
     client.on("error", (err) => {
       console.log("Connection error: " + err);
       client.end();
     });
+
+    client.on("close", function () {
+      console.log("Disconnected");
+      setMqttState({
+        ...mqttState,
+        connected: false,
+      });
+    });
+
     client.on("message", (topic, payload) => {
-      console.log("Here", topic, payload);
-      setMqttMessage({ topic: topic, payload: payload });
+      // setMqttMessage({ topic: topic, payload: payload });
+      parseWsMessage({ topic: topic, payload: JSON.parse(payload.toString()) });
     });
   }, []);
   return <></>;

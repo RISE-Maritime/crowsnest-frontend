@@ -1,12 +1,23 @@
+/*
+  Base page
+  ----------------------
+  - Controls base layout with components that renders on all pages
+  - Manage render of floating apps 
+  - Mange MQTT data flow initialization   
+*/
+
 import React from "react";
 import NavigationBar from "./navbar";
 import { useTheme } from "@mui/material/styles";
-// APPs 
+// APPs
 import FloatApp from "./components/mini_app/FloatApp";
 import FloatAppWind from "./components/mini_app/FloatAppWind";
+import FloatAppPlayback from "./components/mini_app/FloatAppPlayback";
 // Recoil
-import { showMiniAppsObj } from "../globalAtomsSelectors";
+import { showMiniAppsObj } from "../recoil/atoms";
 import { useRecoilValue } from "recoil";
+// MQTT
+import MqttConnection from "./MqttConnection";
 
 export default function BasePage(props) {
   const theme = useTheme();
@@ -15,9 +26,13 @@ export default function BasePage(props) {
     <>
       <NavigationBar />
 
-      {/* Mini APPs */}
+      {/* MQTT connector */}
+      <MqttConnection />
+
+      {/* Mini floating APPs */}
       {showMiniApp.test ? <FloatApp /> : null}
       {showMiniApp.windCurrent ? <FloatAppWind /> : null}
+      {showMiniApp.playback ? <FloatAppPlayback /> : null}
 
       <div
         style={{
@@ -27,8 +42,6 @@ export default function BasePage(props) {
       >
         {props.children}
       </div>
-
-      {/* { 0 === 0 ?  <FloatApp /> : null }  */}
     </>
   );
 }

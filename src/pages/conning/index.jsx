@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
-import { atomOwnShipData } from "../home/components/vesselPicker";
-import { appState } from "../../globalAtomsSelectors";
+import { appState } from "../../recoil/atoms";
 import { useRecoilValue, useRecoilState } from "recoil";
+import {
+  observationsStateAtom,
+  actionStateAtom,
+  ownShipDataAtom,
+} from "../../recoil/atoms";
+import { mqttSubscribe } from "../../base-elements/MqttConnection";
 // Components
 import { Grid, Stack } from "@mui/material";
 import AppWindCurrent from "./components/AppWindCurrent";
@@ -14,16 +19,20 @@ import AppRollPitch from "./components/AppRollPitch";
 import ShipPosition from "./components/ShipPosition";
 
 export default function Conning() {
-  const ownShipData = useRecoilValue(atomOwnShipData);
+  const ownShipData = useRecoilValue(ownShipDataAtom);
+  const observations = useRecoilValue(observationsStateAtom);
+  const actions = useRecoilValue(actionStateAtom);
   const [appObj, setAppObj] = useRecoilState(appState);
 
   useEffect(() => {
+    // Start MQTT subscription
+    mqttSubscribe("/NTpro/#");
+
     setAppObj({
       ...appObj,
       activeView: "Conning",
     });
-    return () => {};
-  }, [ownShipData]);
+  }, []);
 
   return (
     <Grid container>
@@ -33,24 +42,23 @@ export default function Conning() {
           direction="column"
           justifyContent="center"
           alignItems="center"
-          sx={{ width: "100%", height: "100%" , position: 'relative'}}
-          
+          sx={{ width: "100%", height: "100%", position: "relative" }}
         >
-          <ShipPosition/>
+          <ShipPosition />
           <AppShipSteering
             steeringMode={"Demo Mode"}
-            bow1SET={-1}
-            bow1ACT={-1}
+            bow1SET={0}
+            bow1ACT={0.1}
             bow2SET={-0.4}
             bow2ACT={-0.4}
             eng1SET={0.8}
-            eng1ACT={-1.0}
+            eng1ACT={-0.5}
             eng2SET={0.8}
             eng2ACT={-0.8}
-            rud1SET={10}
-            rud1ACT={15}
-            rud2SET={3}
-            rud2ACT={10}
+            rud1SET={actions.ruderSETps}
+            rud1ACT={observations.ruderACTps}
+            rud2SET={actions.ruderSETsb}
+            rud2ACT={observations.ruderACTsb}
           />
         </Stack>
       </Grid>
@@ -77,10 +85,10 @@ export default function Conning() {
             }}
           >
             <AppHeadingRotDrift
-              heading={222}
+              heading={observations.heading}
               drift={10}
               driftTo={"port"}
-              rot={80}
+              rot={observations.rot}
               rotMax={100}
             />
           </Grid>
@@ -95,17 +103,18 @@ export default function Conning() {
               position: "relative",
             }}
           >
-            {/* TODO: <MapMotion />  */}
             <AppSogCogObj
               showNearbyObj={false}
-              heading={0}
-              cog={45}
-              sogAFT={-5}
-              sogMID={1}
-              sogFWD={3}
-              rot={-10}
-              loa={100}
-              woa={30}
+              cog={observations.cog}
+              heading={observations.heading}
+              sogFWD={observations.sogBow}
+              sogMID={observations.sog}
+              sogAFT={observations.sogStern}
+              rot={observations.rot}
+              loa={ownShipData.loa}
+              woa={ownShipData.woa}
+              pred_min={0.75}
+              pred_steps={4}
             />
           </Grid>
         </Grid>
@@ -124,7 +133,7 @@ export default function Conning() {
         <Grid container>
           <Grid item xs={12}>
             <AppWindCurrent
-              heading={45}
+              heading={observations.heading}
               windSpeedTrue={10}
               windSpeedRel={20}
               windDirTrue={270}

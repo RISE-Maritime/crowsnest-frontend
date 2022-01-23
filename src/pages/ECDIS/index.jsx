@@ -11,52 +11,52 @@ import { useSetRecoilState, useRecoilValue } from "recoil";
 let targets = {};
 let last = 0;
 
-function MqttMessageParser() {
-  const mqttMessage = useRecoilValue(mqttMessageAtom);
-  const setVesselTargets = useSetRecoilState(vesselTargetsAtom);
+// function MqttMessageParser() {
+//   const mqttMessage = useRecoilValue(mqttMessageAtom);
+//   const setVesselTargets = useSetRecoilState(vesselTargetsAtom);
 
-  useEffect(() => {
-    if (mqttMessage.topic.includes("AIS")) {
-      const vessel = JSON.parse(mqttMessage.payload.toString());
-      // console.log('first')
-      //console.log(targets)
-      targets = { ...targets };
-      targets[vessel.mmsi] = vessel;
-      //console.log('second')
-      //console.log(targets)
-      const date = new Date();
-      if (date.getTime() - last > 2000) {
-        last = date.getTime();
-        setVesselTargets(targets);
-      }
-    } else {
-      console.log("Received MQTT message with topic " + mqttMessage.topic);
-    }
+//   useEffect(() => {
+//     if (mqttMessage.topic.includes("AIS")) {
+//       const vessel = JSON.parse(mqttMessage.payload.toString());
+//       // console.log('first')
+//       //console.log(targets)
+//       targets = { ...targets };
+//       targets[vessel.mmsi] = vessel;
+//       //console.log('second')
+//       //console.log(targets)
+//       const date = new Date();
+//       if (date.getTime() - last > 2000) {
+//         last = date.getTime();
+//         setVesselTargets(targets);
+//       }
+//     } else {
+//       console.log("Received MQTT message with topic " + mqttMessage.topic);
+//     }
 
-    if (mqttMessage.topic.includes("NTpro")) {
-      const vessel = JSON.parse(mqttMessage.payload.toString());
-   console.log(vessel);
+//     if (mqttMessage.topic.includes("NTpro")) {
+//       const vessel = JSON.parse(mqttMessage.payload.toString());
+//    console.log(vessel);
 
-    } else {
-      console.log("Received MQTT message with topic " + mqttMessage.topic);
-    }
-  });
+//     } else {
+//       console.log("Received MQTT message with topic " + mqttMessage.topic);
+//     }
+//   });
 
-  return <></>;
-}
+//   return <></>;
+// }
 
 export default function Ecdis() {
-  React.useEffect(() => {
+  useEffect(() => {
     //mqttSubscribe('CROWSNEST/AIS/SJOFARTSVERKET/265177000')
     //mqttSubscribe('CROWSNEST/AIS/SJOFARTSVERKET/265514130')
-    // mqttSubscribe("CROWSNEST/AIS/SJOFARTSVERKET/#");
-    mqttSubscribe("NTpro");
+    mqttSubscribe("CROWSNEST/AIS/SJOFARTSVERKET/#");
+    // mqttSubscribe("NTpro/*");
   }, []);
 
   return (
     <>
-      <MqttConnection />
-      <MqttMessageParser />
+      {/* <MqttConnection />
+      <MqttMessageParser /> */}
       <Grid container>
         <Grid
           item
