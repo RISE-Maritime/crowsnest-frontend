@@ -74,7 +74,7 @@ export default function viewList() {
         }
       />
       <ViewListItem
-        routeLink={ROUTES.DATA_FLOW}
+        routeLink={ROUTES.REMOTE_CONTROL}
         viewName={"Remote control"}
         icon={
           <SportsEsportsRoundedIcon

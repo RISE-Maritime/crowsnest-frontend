@@ -33,18 +33,14 @@ export default function RightDrawer(props) {
     >
       <List>
         <ListItemButton
-          selected={showMiniApp.test}
-          onClick={() => ToggleMiniApp("test")}
-        >
-          <Checkbox edge="start" checked={showMiniApp.test} color="secondary" />
-          <ListItemText primary="Test Mini APP" />
-        </ListItemButton>
-
-        <ListItemButton
           selected={showMiniApp.wind}
           onClick={() => ToggleMiniApp("windCurrent")}
         >
-          <Checkbox edge="start" checked={showMiniApp.windCurrent} color="secondary" />
+          <Checkbox
+            edge="start"
+            checked={showMiniApp.windCurrent}
+            color="secondary"
+          />
           <ListItemText primary="Wind & Current" />
         </ListItemButton>
 
@@ -52,10 +48,13 @@ export default function RightDrawer(props) {
           selected={showMiniApp.playback}
           onClick={() => ToggleMiniApp("playback")}
         >
-          <Checkbox edge="start" checked={showMiniApp.playback} color="secondary" />
+          <Checkbox
+            edge="start"
+            checked={showMiniApp.playback}
+            color="secondary"
+          />
           <ListItemText primary="Playback" />
         </ListItemButton>
-
       </List>
     </Box>
   );

@@ -34,7 +34,6 @@ export const appState = atom({
 export const showMiniAppsObj = atom({
   key: "showMiniAppsObj",
   default: {
-    test: false,
     windCurrent: false,
     playback: false,
   },

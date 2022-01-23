@@ -10,7 +10,6 @@ import React from "react";
 import NavigationBar from "./navbar";
 import { useTheme } from "@mui/material/styles";
 // APPs
-import FloatApp from "./components/mini_app/FloatApp";
 import FloatAppWind from "./components/mini_app/FloatAppWind";
 import FloatAppPlayback from "./components/mini_app/FloatAppPlayback";
 // Recoil
@@ -30,7 +29,6 @@ export default function BasePage(props) {
       <MqttConnection />
 
       {/* Mini floating APPs */}
-      {showMiniApp.test ? <FloatApp /> : null}
       {showMiniApp.windCurrent ? <FloatAppWind /> : null}
       {showMiniApp.playback ? <FloatAppPlayback /> : null}
 
