@@ -44,7 +44,7 @@ export default function Playback({ setIsDraggable, isDraggable }) {
 
   const changeTimePointer = (value) => {
     let topic = "/playback/action";
-    let qos = 0;
+    let qos = 0;  
     let payload = { timeLinePos: value };
     mqttPublish(topic, qos, payload);
 

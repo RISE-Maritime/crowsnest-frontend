@@ -17,6 +17,7 @@ import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
+import VrpanoIcon from '@mui/icons-material/Vrpano';
 
 export default function LeftDrawer(props) {
   return (
@@ -60,6 +61,13 @@ export default function LeftDrawer(props) {
             <SpeedRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Conning"} />
+        </ListItem>
+
+        <ListItem button key={"E-lookout"} component={Link} to={ROUTES.E_LOOKOUT}>
+          <ListItemIcon>
+            <VrpanoIcon />
+          </ListItemIcon>
+          <ListItemText primary={"E-Lookout"} />
         </ListItem>
 
         <ListItem

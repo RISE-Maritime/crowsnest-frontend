@@ -1,0 +1,146 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebRTC webcam</title>
+    <style>
+      button {
+        padding: 8px 16px;
+      }
+
+      video {
+        width: 100%;
+      }
+
+      .option {
+        margin-bottom: 8px;
+      }
+
+      #media {
+        max-width: 1280px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button id="start" onclick="start()">Start</button>
+    <button id="stop" style="display: none" onclick="stop()">Stop</button>
+
+    <div id="media">
+      <h2>Media</h2>
+
+      <audio id="audio" autoplay="true"></audio>
+      <video id="video" autoplay="true" playsinline="true"></video>
+    </div>
+
+    <script type="text/javascript">
+      const options = {
+        // Clean session
+        connectTimeout: 4000,
+        // Auth
+        clientId: "muppet" + Math.random(),
+        username: "admin",
+        password: "verysecretadminpassword!",
+        protocolVersion: 5,
+      };
+
+      let client = mqtt.connect("wss://crowsnest.mo.ri.se:443/mqtt", options);
+
+      var pc = null;
+
+      function negotiate() {
+        pc.addTransceiver("video", { direction: "recvonly" });
+        pc.addTransceiver("audio", { direction: "recvonly" });
+        return pc
+          .createOffer()
+          .then(function (offer) {
+            return pc.setLocalDescription(offer);
+          })
+          .then(function () {
+            // wait for ICE gathering to complete
+            return new Promise(function (resolve) {
+              if (pc.iceGatheringState === "complete") {
+                resolve();
+              } else {
+                function checkState() {
+                  if (pc.iceGatheringState === "complete") {
+                    pc.removeEventListener(
+                      "icegatheringstatechange",
+                      checkState
+                    );
+                    resolve();
+                  }
+                }
+                pc.addEventListener("icegatheringstatechange", checkState);
+              }
+            });
+          })
+          .then(function () {
+            var offer = pc.localDescription;
+            var payload = JSON.stringify({
+              sdp: offer.sdp,
+              type: offer.type,
+            });
+
+            client.on("message", function (topic, message) {
+              pc.setRemoteDescription(JSON.parse(message.toString()));
+            });
+            client.subscribe("/random/topic");
+
+            client.publish("/test/test/offer", payload, {
+              properties: {
+                responseTopic: "/random/topic",
+                correlationData: text2Binary("hej"),
+              },
+            });
+          })
+          .catch(function (e) {
+            alert(e);
+          });
+      }
+
+      function text2Binary(string) {
+        return string
+          .split("")
+          .map(function (char) {
+            return char.charCodeAt(0).toString(2);
+          })
+          .join(" ");
+      }
+
+      function start() {
+        var config = {
+          sdpSemantics: "unified-plan",
+        };
+
+        // Always use a STUN server for ICE
+        config.iceServers = [{ urls: ["stun:stun.l.google.com:19302"] }];
+
+        pc = new RTCPeerConnection(config);
+
+        // connect audio / video
+        pc.addEventListener("track", function (evt) {
+          if (evt.track.kind == "video") {
+            document.getElementById("video").srcObject = evt.streams[0];
+          } else {
+            document.getElementById("audio").srcObject = evt.streams[0];
+          }
+        });
+
+        document.getElementById("start").style.display = "none";
+        negotiate();
+        document.getElementById("stop").style.display = "inline-block";
+      }
+
+      function stop() {
+        document.getElementById("stop").style.display = "none";
+
+        // close peer connection
+        setTimeout(function () {
+          pc.close();
+        }, 500);
+      }
+    </script>
+  </body>
+</html>

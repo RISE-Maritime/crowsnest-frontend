@@ -9,6 +9,7 @@ import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded";
 import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded";
+import VrpanoIcon from '@mui/icons-material/Vrpano';
 
 const GridCenter = styled(Grid)(() => ({
   display: "grid",
@@ -73,6 +74,20 @@ export default function viewList() {
           />
         }
       />
+
+      <ViewListItem
+        routeLink={ROUTES.E_LOOKOUT}
+        viewName={"E-Lookout"}
+        icon={
+          <VrpanoIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+
       <ViewListItem
         routeLink={ROUTES.REMOTE_CONTROL}
         viewName={"Remote control"}

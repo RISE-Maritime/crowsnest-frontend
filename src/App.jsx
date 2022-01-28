@@ -19,6 +19,7 @@ import PageConning from "./pages/conning";
 import PageDataFlow from "./pages/data-flow";
 import PageRemoteControl from "./pages/remote-control";
 import PageBearingRate from "./pages/bearing-rate";
+import ELookout from "./pages/e-lookout";
 // import PageVesselSpinner from "./pages/vesselSpinner";
 
 export default function App() {
@@ -111,6 +112,7 @@ export default function App() {
               />
               <Route exact path={ROUTES.CONNING} element={<PageConning />} />
               <Route exact path={ROUTES.DATA_FLOW} element={<PageDataFlow />} />
+              <Route exact path={ROUTES.E_LOOKOUT} element={<ELookout />} />
               <Route
                 exact
                 path={ROUTES.REMOTE_CONTROL}
