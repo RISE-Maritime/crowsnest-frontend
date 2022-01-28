@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Grid, Button } from "@mui/material";
 import mqtt from "mqtt";
 
+/* eslint-disable */
 const options = {
   // Clean session
   connectTimeout: 4000,
   // Auth
   clientId: "muppet" + Math.random(),
-  username: "admin",
-  password: "verysecretadminpassword!",
+  username: process.env.WEBRTC_USERNAME,
+  password: process.env.WEBRTC_PASSWORD,
   protocolVersion: 5,
 };
+/* eslint-enable */
+
 
 function text2Binary(string) {
   return string
