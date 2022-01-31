@@ -18,6 +18,7 @@ import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import VrpanoIcon from '@mui/icons-material/Vrpano';
+import EdgesensorHighIcon from '@mui/icons-material/EdgesensorHigh';
 
 export default function LeftDrawer(props) {
   return (
@@ -81,6 +82,20 @@ export default function LeftDrawer(props) {
           </ListItemIcon>
           <ListItemText primary={"Remote Control"} />
         </ListItem>
+
+        <ListItem
+          button
+          key={"DEVISE_SENSOR"}
+          component={Link}
+          to={ROUTES.DEVISE_SENSORS}
+        >
+          <ListItemIcon>
+            <EdgesensorHighIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Devise Sensors"} />
+        </ListItem>
+
+
       </List>
       <Divider />
       <List>

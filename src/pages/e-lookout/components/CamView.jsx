@@ -8,12 +8,13 @@ const options = {
   connectTimeout: 4000,
   // Auth
   clientId: "muppet" + Math.random(),
-  username: process.env.WEBRTC_USERNAME,
-  password: process.env.WEBRTC_PASSWORD,
+  // username: "admin",
+  username: process.env.REACT_APP_WEBRTC_USERNAME,
+  // password: "verysecretadminpassword!",
+  password: process.env.REACT_APP_WEBRTC_PASSWORD,
   protocolVersion: 5,
 };
 /* eslint-enable */
-
 
 function text2Binary(string) {
   return string
@@ -45,7 +46,7 @@ export default function CamLookout() {
   function stop() {
     // close peer connection
     console.log("CLOSE");
-    rtcCon.close();
+    // rtcCon.close();
   }
 
   const start = () => {
@@ -76,7 +77,7 @@ export default function CamLookout() {
 
     pc.createOffer()
       .then(function (offer) {
-          setRtcCon(pc.setLocalDescription(offer))
+        setRtcCon(pc.setLocalDescription(offer));
         return pc.setLocalDescription(offer);
       })
       .then(function () {
