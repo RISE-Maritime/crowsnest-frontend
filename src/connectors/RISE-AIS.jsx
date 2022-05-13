@@ -41,7 +41,7 @@ export default function RiseAIS() {
     if (client === null) {
       console.log("Connecting RISE AIS...");
       setClient(
-        new Paho.Client("ws://broker.mo.ri.se/:443", "muppet" + Math.random())
+        new Paho.Client("ws://localhost:80/mqtt", "muppet" + Math.random())
       );
     } else {
       client.onConnectionLost = (response) => {
