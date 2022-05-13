@@ -2,9 +2,7 @@ import React from "react";
 import {
   Stack,
   Typography,
-  FormControl,
   Select,
-  InputLabel,
   MenuItem,
 } from "@mui/material";
 export default function ShipPosition() {

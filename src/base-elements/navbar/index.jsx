@@ -17,7 +17,7 @@
 import React, { useEffect, useState } from "react";
 // Recoil
 import { useRecoilState } from "recoil";
-import { appState } from "../../globalAtomsSelectors";
+import { appState } from "../../recoil/atoms";
 // Components
 import Clock from "react-live-clock";
 import GridCenter from "../components/GridCenter";

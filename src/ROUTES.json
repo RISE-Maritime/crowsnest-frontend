@@ -4,5 +4,8 @@
   "ECDIS": "/ecdis",
   "CONNING": "/conning",
   "REMOTE_CONTROL": "/remote_CONTROL",
-  "DATA_FLOW": "/data_flow"
+  "DATA_FLOW": "/data_flow",
+  "BEARING_RATE": "/bearing_rate",
+  "E_LOOKOUT": "/e_lookout",
+  "DEVISE_SENSORS": "/devise_sensors"
 }

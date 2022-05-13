@@ -27,7 +27,7 @@ export const atomSelectedVesselModel = atom({
 });
 
 export const atomOwnShipData = atom({
-  key: "own_ship_data",
+  key: "own_ship_data_local",
   default: {
     externalTimestamp: "2020",
     sog: 0,

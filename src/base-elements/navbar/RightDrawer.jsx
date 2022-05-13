@@ -1,6 +1,6 @@
 import React from "react";
 // Recoil
-import { showMiniAppsObj } from "../../globalAtomsSelectors";
+import { showMiniAppsObj } from "../../recoil/atoms";
 import { useRecoilState } from "recoil";
 // Components
 import {
@@ -18,7 +18,6 @@ export default function RightDrawer(props) {
     console.log(appName);
     setShowMiniApp({
       ...showMiniApp,
-      // appName: !showMiniApp[appName]
       [appName]: !showMiniApp[appName],
     });
   };
@@ -34,11 +33,27 @@ export default function RightDrawer(props) {
     >
       <List>
         <ListItemButton
-          selected={showMiniApp.test}
-          onClick={() => ToggleMiniApp("test")}
+          selected={showMiniApp.wind}
+          onClick={() => ToggleMiniApp("windCurrent")}
         >
-          <Checkbox edge="start" checked={showMiniApp.test} color="secondary" />
-          <ListItemText primary="Test Mini APP" />
+          <Checkbox
+            edge="start"
+            checked={showMiniApp.windCurrent}
+            color="secondary"
+          />
+          <ListItemText primary="Wind & Current" />
+        </ListItemButton>
+
+        <ListItemButton
+          selected={showMiniApp.playback}
+          onClick={() => ToggleMiniApp("playback")}
+        >
+          <Checkbox
+            edge="start"
+            checked={showMiniApp.playback}
+            color="secondary"
+          />
+          <ListItemText primary="Playback" />
         </ListItemButton>
       </List>
     </Box>

@@ -818,7 +818,7 @@ export default function AppHeadingRotDrift(props) {
           fontFamily="Roboto-Regular, Roboto"
         >
           <tspan x={"65"} y={0} textAnchor="middle">
-            {HDG.toFixed(1) + "°"}
+            { HDG ?  HDG.toFixed(1) + "°": "NaN"}
           </tspan>
         </text>
       </g>

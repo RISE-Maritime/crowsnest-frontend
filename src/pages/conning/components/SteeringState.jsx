@@ -1,8 +1,6 @@
 import React from "react";
 // Components
-import ShipOutline from "./SvgShipOutline";
 import { Stack } from "@mui/material";
-import Rudder from "./Rudder.jsx";
 
 export default function SteeringState() {
   return (

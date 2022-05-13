@@ -33,15 +33,22 @@ export default function AppSogCogObj(props) {
   ]);
 
   useEffect(() => {
+
+    // Adjust heading and COG to relative
+    let diff_hdg_cog = props.cog - props.heading
+    if(diff_hdg_cog < 0 ) {
+      diff_hdg_cog = diff_hdg_cog - 360
+    }
+
     let [predHeadings, predPositions] = predictorPlot(
       props.rot,
-      props.heading,
-      props.cog,
+      0, // Heading 0: due to heading up  
+      diff_hdg_cog,  // COG: Relative hading angel 
       props.sogMID,
       props.loa,
       props.woa,
-      0.75, // pred_min
-      3 // pred_steps
+      props.pred_min, // pred_min
+      props.pred_steps // pred_steps
     );
     setPredictorHeadings(predHeadings);
     setPredictorPositions(predPositions);
@@ -353,7 +360,7 @@ export default function AppSogCogObj(props) {
                 transform="translate(954.696 907.746)"
               >
                 <tspan x="50" y="0" textAnchor="middle">
-                  {Math.abs(props.sogAFT).toFixed(1)}
+                  {Math.abs(props.sogAFT).toFixed(2)}
                 </tspan>
               </text>
 
@@ -412,7 +419,7 @@ export default function AppSogCogObj(props) {
                 transform="translate(954.696 907.746)"
               >
                 <tspan x="50" y="0" textAnchor="middle">
-                  {Math.abs(props.sogFWD).toFixed(1)}
+                  {Math.abs(props.sogFWD).toFixed(2)}
                 </tspan>
               </text>
 

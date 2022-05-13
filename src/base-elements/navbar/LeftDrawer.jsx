@@ -16,6 +16,9 @@ import MapRoundedIcon from "@mui/icons-material/MapRounded";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import TrackChangesIcon from "@mui/icons-material/TrackChanges";
+import VrpanoIcon from '@mui/icons-material/Vrpano';
+import EdgesensorHighIcon from '@mui/icons-material/EdgesensorHigh';
 
 export default function LeftDrawer(props) {
   return (
@@ -42,6 +45,18 @@ export default function LeftDrawer(props) {
           <ListItemText primary={"ECDIS"} />
         </ListItem>
 
+        <ListItem
+          button
+          key={"BEARING_RATE"}
+          component={Link}
+          to={ROUTES.BEARING_RATE}
+        >
+          <ListItemIcon>
+            <TrackChangesIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Bearing Rate"} />
+        </ListItem>
+
         <ListItem button key={"Conning"} component={Link} to={ROUTES.CONNING}>
           <ListItemIcon>
             <SpeedRoundedIcon />
@@ -49,12 +64,38 @@ export default function LeftDrawer(props) {
           <ListItemText primary={"Conning"} />
         </ListItem>
 
-        <ListItem button key={"remoteControl"} component={Link} to={ROUTES.REMOTE_CONTROL}>
+        <ListItem button key={"E-lookout"} component={Link} to={ROUTES.E_LOOKOUT}>
+          <ListItemIcon>
+            <VrpanoIcon />
+          </ListItemIcon>
+          <ListItemText primary={"E-Lookout"} />
+        </ListItem>
+
+        <ListItem
+          button
+          key={"remoteControl"}
+          component={Link}
+          to={ROUTES.REMOTE_CONTROL}
+        >
           <ListItemIcon>
             <SportsEsportsRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Remote Control"} />
         </ListItem>
+
+        <ListItem
+          button
+          key={"DEVISE_SENSOR"}
+          component={Link}
+          to={ROUTES.DEVISE_SENSORS}
+        >
+          <ListItemIcon>
+            <EdgesensorHighIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Devise Sensors"} />
+        </ListItem>
+
+
       </List>
       <Divider />
       <List>
