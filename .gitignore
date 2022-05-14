@@ -3,3 +3,7 @@ node_modules
 env-config.js
 .env
 .vscode
+firebase-debug.log
+firebase.json
+.firebaserc
+.firebase

@@ -2,22 +2,22 @@ import { atom } from "recoil";
 
 const localStorageEffect =
   (key) =>
-  ({ setSelf, onSet }) => {
-    const savedValue = localStorage.getItem(key);
-    if (savedValue !== null) {
-      setSelf(JSON.parse(savedValue));
-    }
-
-    onSet(({ remember, ...newValue }, _, isReset) => {
-      if (isReset) {
-        localStorage.removeItem(key);
-      } else {
-        if (remember) {
-          localStorage.setItem(key, JSON.stringify(newValue));
-        }
+    ({ setSelf, onSet }) => {
+      const savedValue = localStorage.getItem(key);
+      if (savedValue !== null) {
+        setSelf(JSON.parse(savedValue));
       }
-    });
-  };
+
+      onSet(({ remember, ...newValue }, _, isReset) => {
+        if (isReset) {
+          localStorage.removeItem(key);
+        } else {
+          if (remember) {
+            localStorage.setItem(key, JSON.stringify(newValue));
+          }
+        }
+      });
+    };
 
 // App Settings / State
 export const appState = atom({
@@ -105,3 +105,36 @@ export const ownShipDataAtom = atom({
     woa: 30, // width over all
   },
 });
+
+
+// Platforms 
+export const atomPlatforms = atom({
+  key: "platforms",
+  default: {
+    landkrabban: {
+      name: "Landkrabban",
+      key: "landkrabban",
+      MQTTpath: "",
+    
+    },
+    germanica: {
+      name: "Stena Germainca",
+      key: "germanica",
+      MQTTpath: "",
+      mmsi: 266331000,
+      imo: 9145176
+    }
+  },
+})
+
+// Active platform
+export const atomActivePlatform = atom({
+  key: "active_platform",
+  default: {
+    activePlatformKey: "",
+    activePlatformType: "PLATFORM", // [PLATFORM, AIS, DEVICE]
+    platformName: "",
+    MQTTpath: "",
+    mmsi: 0
+  },
+})

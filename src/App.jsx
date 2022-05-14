@@ -18,6 +18,8 @@ import PageBearingRate from "./pages/bearing-rate"
 import ELookout from "./pages/e-lookout"
 import DeviceSensors from "./pages/device-sensors"
 // import PageVesselSpinner from "./pages/vesselSpinner";
+// MQTT
+import MqttConnection from "./base-elements/MqttConnection"
 
 export default function App() {
   const appObj = useRecoilValue(appState)
@@ -94,6 +96,8 @@ export default function App() {
 
   return (
     <>
+      <MqttConnection />
+
       <ThemeProvider theme={theme}>
         <CssBaseline />
 

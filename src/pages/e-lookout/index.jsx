@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
-import CamView from "./components/CamView";
+import CamView from "./components/CamStream";
 
 export default function CamLookout() {
   useEffect(() => {}, []);

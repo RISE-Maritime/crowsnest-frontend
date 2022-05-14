@@ -7,10 +7,11 @@ import { wsMessageParser } from "../recoil/selectors";
 const host = process.env.REACT_APP_MQTT_BROKER_ADDRESS;
 
 const options = {
-  clientId: "crowsnest_" + Math.random().toString(16).substr(2, 8),
-  reconnectPeriod: 1000,
+  clientId: "crowsnest_app_" + Math.random(),
+  connectTimeout: 4000,
   username: process.env.REACT_APP_MQTT_USERNAME,
   password: process.env.REACT_APP_MQTT_PASSWORD,
+  protocolVersion: 5,
 };
 /* eslint-enable */
 
@@ -71,5 +72,6 @@ export default function MqttConnection() {
       parseWsMessage({ topic: topic, payload: JSON.parse(payload.toString()) });
     });
   }, []);
+
   return <></>;
 }

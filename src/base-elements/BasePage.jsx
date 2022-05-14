@@ -15,8 +15,7 @@ import FloatAppPlayback from "./components/mini_app/FloatAppPlayback";
 // Recoil
 import { showMiniAppsObj } from "../recoil/atoms";
 import { useRecoilValue } from "recoil";
-// MQTT
-import MqttConnection from "./MqttConnection";
+
 
 export default function BasePage(props) {
   const theme = useTheme();
@@ -25,8 +24,7 @@ export default function BasePage(props) {
     <>
       <NavigationBar />
 
-      {/* MQTT connector */}
-      <MqttConnection />
+
 
       {/* Mini floating APPs */}
       {showMiniApp.windCurrent ? <FloatAppWind /> : null}

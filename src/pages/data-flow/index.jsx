@@ -11,7 +11,7 @@ import {mqttStateAtom } from "../../base-elements/MqttConnection"
 
 export default function DataFlow() {
   const theme = useTheme();
-  const riseAisMetadata = useRecoilValue(atomRiseAisMetadata);
+  const riseAisMetadataObj = useRecoilValue(atomRiseAisMetadata);
   const riseLidarMetadata = useRecoilValue(atomLidarMetadata);
   const mqttState = useRecoilValue(mqttStateAtom);
 
@@ -37,7 +37,7 @@ export default function DataFlow() {
       <Grid item xs={12}>
         <DataConnectionState
           connectionName={"AIS"}
-          isConnected={riseAisMetadata.connected}
+          isConnected={riseAisMetadataObj.connected}
         />
       </Grid>
       <Grid item xs={12}>
