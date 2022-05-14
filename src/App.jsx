@@ -1,30 +1,26 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 // Recoil
-import { useRecoilValue } from "recoil";
-import { appState } from "./recoil/atoms";
+import { useRecoilValue } from "recoil"
+import { appState } from "./recoil/atoms"
 // Styling
-import {
-  createTheme,
-  ThemeProvider,
-  responsiveFontSizes,
-} from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles"
+import CssBaseline from "@mui/material/CssBaseline"
 // Pages
-import ROUTES from "./ROUTES.json";
-import BasePage from "./base-elements/BasePage";
-import PageHome from "./pages/home";
-import PageECDIS from "./pages/ECDIS";
-import PageConning from "./pages/conning";
-import PageDataFlow from "./pages/data-flow";
-import PageRemoteControl from "./pages/remote-control";
-import PageBearingRate from "./pages/bearing-rate";
-import ELookout from "./pages/e-lookout";
-import DeviceSensors from "./pages/device-sensors";
+import ROUTES from "./ROUTES.json"
+import BasePage from "./base-elements/BasePage"
+import PageHome from "./pages/home"
+import PageECDIS from "./pages/ECDIS"
+import PageConning from "./pages/conning"
+import PageDataFlow from "./pages/data-flow"
+import PageRemoteControl from "./pages/remote-control"
+import PageBearingRate from "./pages/bearing-rate"
+import ELookout from "./pages/e-lookout"
+import DeviceSensors from "./pages/device-sensors"
 // import PageVesselSpinner from "./pages/vesselSpinner";
 
 export default function App() {
-  const appObj = useRecoilValue(appState);
+  const appObj = useRecoilValue(appState)
   // -----------------------------------------------------------
   // Global theme
   let theme = createTheme({
@@ -92,9 +88,9 @@ export default function App() {
             },
           }),
     },
-  });
+  })
 
-  theme = responsiveFontSizes(theme);
+  theme = responsiveFontSizes(theme)
 
   return (
     <>
@@ -106,24 +102,16 @@ export default function App() {
             <Routes>
               <Route exact path={ROUTES.HOME} element={<PageHome />} />
               <Route exact path={ROUTES.ECDIS} element={<PageECDIS />} />
-              <Route
-                exact
-                path={ROUTES.BEARING_RATE}
-                element={<PageBearingRate />}
-              />
+              <Route exact path={ROUTES.BEARING_RATE} element={<PageBearingRate />} />
               <Route exact path={ROUTES.CONNING} element={<PageConning />} />
               <Route exact path={ROUTES.DATA_FLOW} element={<PageDataFlow />} />
               <Route exact path={ROUTES.E_LOOKOUT} element={<ELookout />} />
               <Route exact path={ROUTES.DEVISE_SENSORS} element={<DeviceSensors />} />
-              <Route
-                exact
-                path={ROUTES.REMOTE_CONTROL}
-                element={<PageRemoteControl />}
-              />
+              <Route exact path={ROUTES.REMOTE_CONTROL} element={<PageRemoteControl />} />
             </Routes>
           </BasePage>
         </Router>
       </ThemeProvider>
     </>
-  );
+  )
 }

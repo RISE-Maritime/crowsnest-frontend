@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Button } from "@mui/material";
-import mqtt from "mqtt";
+import mqtt from "precompiled-mqtt";
 
 /* eslint-disable */
 const options = {

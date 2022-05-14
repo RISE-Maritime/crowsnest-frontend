@@ -1,7 +1,7 @@
 import React from "react";
 
 import { formatTime } from "../utils.js";
-import { StaticMap } from "react-map-gl";
+import { Map } from "react-map-gl";
 import DeckGL from "@deck.gl/react";
 import VesselContourLayer from "./custom-deckgl-layers/vessel-contour-layer";
 import { atom, useRecoilValue, useSetRecoilState } from "recoil";
@@ -92,7 +92,7 @@ export default function SeaChart() {
       controller={{ dragPan: true }}
       getTooltip={getTooltip}
     >
-      <StaticMap mapStyle={ENIRO} />
+      <Map mapStyle={ENIRO} />
     </DeckGL>
   );
 }

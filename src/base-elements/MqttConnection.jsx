@@ -1,5 +1,5 @@
 import React from "react";
-import mqtt from "mqtt";
+import mqtt from "precompiled-mqtt";
 import { atom, useSetRecoilState, useRecoilState } from "recoil";
 import { wsMessageParser } from "../recoil/selectors";
 
