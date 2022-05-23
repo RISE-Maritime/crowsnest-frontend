@@ -6,7 +6,7 @@ import {
   actionStateAtom,
   ownShipDataAtom,
 } from "../../recoil/atoms";
-import { mqttSubscribe } from "../../base-elements/MqttConnection";
+// import { mqttSubscribe } from "../../base-elements/MqttConnection";
 // Components
 import { Grid, Stack } from "@mui/material";
 import AppWindCurrent from "./components/AppWindCurrent";
@@ -26,7 +26,7 @@ export default function Conning() {
 
   useEffect(() => {
     // Start MQTT subscription
-    mqttSubscribe("/NTpro/#");
+    // mqttSubscribe("/NTpro/#");
 
     setAppObj({
       ...appObj,

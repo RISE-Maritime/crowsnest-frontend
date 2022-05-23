@@ -1,10 +1,13 @@
-import { selector } from "recoil";
+import { selector, useSetRecoilState } from "recoil";
 import {
   userState,
   observationsStateAtom,
   playbackState,
   targetsAIS,
+  lidarObservationAtom,
+  radarObservationAtom
 } from "./atoms";
+
 
 export const selectUser = selector({
   key: "selectUser",
@@ -18,6 +21,9 @@ export const selectUser = selector({
   },
 });
 
+let AISlist = {}
+let last = 0;
+
 export const wsMessageParser = selector({
   key: "websocket_latest_message",
   get: () => {
@@ -27,18 +33,51 @@ export const wsMessageParser = selector({
     let source = "/NTpro";
 
     switch (latestMessage.topic) {
-      case "/AIS": {
-        let targets = {};
-        let last = 0;
-        const vessel = JSON.parse(latestMessage.payload.toString());
-        targets = { ...targets };
-        targets[vessel.mmsi] = vessel;
+      // TODO: parse AIS messages 
+      case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
+        // console.log(latestMessage.topic);
+        // console.log(latestMessage.payload.message);
+        const incomming = latestMessage.payload.message
+        AISlist[incomming.mmsi] = { ...AISlist[incomming.mmsi], ...incomming }
+        // console.log(AISlist);
+
         const date = new Date();
-        if (date.getTime() - last > 2000) {
+        if (date.getTime() - last > 2000) {  // 2000
           last = date.getTime();
-          set(targetsAIS, () => targets);
+          // console.log("AIS list updated", Object.values(AISlist));
+          set(targetsAIS, () => Object.values(AISlist))
         }
 
+        break;
+      }
+
+      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/LIDAR\/0/)?.input: {
+        // console.log(latestMessage.topic);
+        // console.log(latestMessage.payload);
+        set(lidarObservationAtom, () => (
+          latestMessage.payload.message
+        ));
+        break;
+      }
+
+      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0/)?.input: {
+        // console.log(latestMessage.topic);
+        // console.log(latestMessage.payload.message);
+        let radarFrame = []
+        for (let i = 0; i < latestMessage.payload.message.points.length; i++) {
+          const radarPoint = {
+            point: latestMessage.payload.message.points[i],
+            weight: latestMessage.payload.message.weights[i],
+            distance: Math.sqrt(Math.abs(latestMessage.payload.message.points[i][0])**2 + Math.abs( latestMessage.payload.message.points[i][1])**2)
+          }
+          radarFrame.push(radarPoint)
+        }
+
+        // console.log(radarFrame);
+
+        set(radarObservationAtom, () => (
+          radarFrame
+        ));
         break;
       }
 
@@ -88,7 +127,8 @@ export const wsMessageParser = selector({
         break;
 
       default:
-        console.log("Unknown message of type " + latestMessage.topic);
+      // console.log("Unknown message of type " + latestMessage.topic);
+      // console.log(latestMessage.payload.message);
     }
   },
 });

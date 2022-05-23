@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { Box } from "@mui/material";
-//import { atomOwnShipData } from "../../home/components/vesselPicker";
+import { Box, Grid } from "@mui/material";
 import { useRecoilValue } from "recoil";
-import { clickInfoAtom } from "../../../base-elements/SeaChart";
-import { vesselTargetsAtom } from "../../../base-elements/SeaChart";
+import { clickInfoAtom } from "./SeaChart";
+import { vesselTargetsAtom } from "./SeaChart";
 import {formatTime} from '../../../utils.js'
+import PositionStatusSmall from "./PositionStatusSmall";
+import MapCursorInfo from "./MapCursorInfo";
 export default function StatusSideBar() {
   
   const vesselTargets = useRecoilValue(vesselTargetsAtom)
@@ -23,6 +24,15 @@ export default function StatusSideBar() {
 
 
   return (
+    <Grid container sx={{height: "100%"}}>
+      <Grid item xs={12} >
+        <PositionStatusSmall/>
+      </Grid>
+      <Grid item xs={12} >
+        <MapCursorInfo/>
+      </Grid>
+
+    
     <Box>
       {vesselAisData && <>
         <h2>Data coming</h2>
@@ -40,16 +50,7 @@ export default function StatusSideBar() {
         </>
         }
     </Box>
+    </Grid>
   );
 }
-      /*
-      <h3>TIME {ownShipData.externalTimestamp}</h3>
-      <h3>Heading {ownShipData.heading}</h3>
-      <h3>SOG {ownShipData.sog.toFixed(1)}</h3>
-      <h3>COG {ownShipData.cog.toFixed(1)}</h3>
-      <h3>Lat {ownShipData.latitude.toFixed(3)}</h3>
-      <h3>Long {ownShipData.longitude.toFixed(3)}</h3>
-      <h3>Draught {ownShipData.draught.toFixed(2)}</h3>
-      <h3>Destination {ownShipData.destination}</h3>
-      <h3>NavStatus {ownShipData.navStatus}</h3>
-      */
+   

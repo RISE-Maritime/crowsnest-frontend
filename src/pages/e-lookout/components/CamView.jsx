@@ -90,12 +90,13 @@ export default function CamLookout() {
                 pc.removeEventListener("icegatheringstatechange", checkState)
                 resolve()
               }
+              // sgrreg
             }
             pc.addEventListener("icegatheringstatechange", checkState)
           }
         })
       })
-      .then(function () {
+      .then(function () { 
         var offer = pc.localDescription
         var payload = JSON.stringify({
           sdp: offer.sdp,

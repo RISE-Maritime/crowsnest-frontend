@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 // Recoil
 import { useRecoilValue } from "recoil"
@@ -20,6 +20,7 @@ import DeviceSensors from "./pages/device-sensors"
 // import PageVesselSpinner from "./pages/vesselSpinner";
 // MQTT
 import MqttConnection from "./base-elements/MqttConnection"
+import { mqttSubscribe } from "./base-elements/MqttConnection"
 
 export default function App() {
   const appObj = useRecoilValue(appState)
@@ -51,7 +52,7 @@ export default function App() {
               main: "#eec937",
             },
             success: {
-              main: "#99b93d",
+              main: "#14cc17",
             },
             info: {
               main: "#031e49",
@@ -80,7 +81,8 @@ export default function App() {
               main: "#eec937",
             },
             success: {
-              main: "#99b93d",
+              main: "#11b014",
+              contrastText: "#ffffff",
             },
             info: {
               main: "#2196f3",
@@ -93,6 +95,11 @@ export default function App() {
   })
 
   theme = responsiveFontSizes(theme)
+
+  useEffect(() => {
+    mqttSubscribe("CROWSNEST/#")
+  }, [])
+  
 
   return (
     <>

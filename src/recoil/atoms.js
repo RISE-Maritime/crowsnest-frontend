@@ -138,3 +138,26 @@ export const atomActivePlatform = atom({
     mmsi: 0
   },
 })
+
+
+export const OS_POSITION = atom({
+  key: "os_position_state",
+  default: {
+   latitude: 57.70958, // degrees 
+   longitude: 11.9466,  // degrees
+   source: "manual",
+   status: "normal", // [normal, warning, error] 
+   statusText: ""
+  },
+});
+
+export const lidarObservationAtom = atom({
+  key: "lidar_observation_state",
+  default: [],
+});
+
+export const radarObservationAtom = atom({
+  key: "radar_observation_state",
+  default: [],
+});
+

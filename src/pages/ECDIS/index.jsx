@@ -1,89 +1,43 @@
-import React, { useEffect } from "react";
-import { Grid } from "@mui/material";
-import StatusSideBar from "./components/statusSideBar";
-import SeaChart, { vesselTargetsAtom } from "../../base-elements/SeaChart";
-import MqttConnection, {
-  mqttMessageAtom,
-  mqttSubscribe,
-} from "../../base-elements/MqttConnection";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import React  from "react"
+import { Grid } from "@mui/material"
+import StatusSideBar from "./components/StatusSideBar"
+import SeaChart, { vesselTargetsAtom } from "./components/SeaChart"
+import ChartControls from "./components/ChartControls"
 
-let targets = {};
-let last = 0;
-
-// function MqttMessageParser() {
-//   const mqttMessage = useRecoilValue(mqttMessageAtom);
-//   const setVesselTargets = useSetRecoilState(vesselTargetsAtom);
-
-//   useEffect(() => {
-//     if (mqttMessage.topic.includes("AIS")) {
-//       const vessel = JSON.parse(mqttMessage.payload.toString());
-//       // console.log('first')
-//       //console.log(targets)
-//       targets = { ...targets };
-//       targets[vessel.mmsi] = vessel;
-//       //console.log('second')
-//       //console.log(targets)
-//       const date = new Date();
-//       if (date.getTime() - last > 2000) {
-//         last = date.getTime();
-//         setVesselTargets(targets);
-//       }
-//     } else {
-//       console.log("Received MQTT message with topic " + mqttMessage.topic);
-//     }
-
-//     if (mqttMessage.topic.includes("NTpro")) {
-//       const vessel = JSON.parse(mqttMessage.payload.toString());
-//    console.log(vessel);
-
-//     } else {
-//       console.log("Received MQTT message with topic " + mqttMessage.topic);
-//     }
-//   });
-
-//   return <></>;
-// }
 
 export default function Ecdis() {
-  useEffect(() => {
-    //mqttSubscribe('CROWSNEST/AIS/SJOFARTSVERKET/265177000')
-    //mqttSubscribe('CROWSNEST/AIS/SJOFARTSVERKET/265514130')
-    mqttSubscribe("CROWSNEST/AIS/SJOFARTSVERKET/#");
-    // mqttSubscribe("NTpro/*");
-  }, []);
+
 
   return (
-    <>
-      {/* <MqttConnection />
-      <MqttMessageParser /> */}
-      <Grid container>
-        <Grid
-          item
-          xs={10}
-          sx={{
-            display: "grid",
-            placeItems: "center",
-            position: "relative",
-            top: 0,
-            height: "calc(100vh - 40px)",
-          }}
-        >
-          <SeaChart />
-        </Grid>
-        <Grid
-          item
-          xs={2}
-          sx={{
-            display: "grid",
-            placeItems: "center",
-            position: "relative",
-            height: "93vh",
-          }}
-        >
-          <StatusSideBar />
-        </Grid>
+    <Grid container>
+      <Grid
+        item
+        xs={10}
+        sx={{
+          // display: "grid",
+          // placeItems: "center",
+          position: "relative",
+          // top: 0,
+          height: "calc(100vh - 80px)",
+        }}
+      >
+        <SeaChart />
       </Grid>
-    </>
-  );
+      <Grid
+        item
+        xs={2}
+        sx={{
+          display: "grid",
+          placeItems: "center",
+          position: "relative",
+          height: "93vh",
+        }}
+      >
+        <StatusSideBar />
+      </Grid>
+      <Grid item xs={12}>
+        <ChartControls/>
+      </Grid>
+    </Grid>
+  )
 }
