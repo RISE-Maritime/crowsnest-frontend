@@ -1,8 +1,6 @@
-import React, { useEffect, useState, useRef } from "react"
-import { Grid, Button } from "@mui/material"
+import React, { useState, useRef } from "react"
+import { Grid } from "@mui/material"
 import "@tensorflow/tfjs"
-import * as cocoSsd from "@tensorflow-models/coco-ssd"
-
 import CamSelect from "./CamSelect"
 
 export default function CamStreamYOLO({ ID }) {
@@ -10,8 +8,6 @@ export default function CamStreamYOLO({ ID }) {
   const refVideo = useRef()
   const refAudio = useRef()
   const refCanvas = useRef()
-
-
 
   const detectFrame = (video, model) => {
     model.detect(video, 10, 0).then(predictions => {
