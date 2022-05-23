@@ -21,7 +21,7 @@ export default function StatusSideBar() {
     clickInfo && setMmsi(clickInfo.mmsi)
   },[clickInfo])
 
-
+// Humm
 
   return (
     <Grid container sx={{height: "100%"}}>
