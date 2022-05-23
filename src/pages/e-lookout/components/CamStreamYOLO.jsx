@@ -11,16 +11,10 @@ export default function CamStreamYOLO({ ID }) {
   const refAudio = useRef()
   const refCanvas = useRef()
 
-  useEffect(() => {
-    console.log("V1", refVideo.current)
 
-   
-  }, [])
 
   const detectFrame = (video, model) => {
-    model.detect(video).then(predictions => {
-      // console.log(video);
-      console.log(predictions)
+    model.detect(video, 10, 0).then(predictions => {
       setObjectDetected(predictions)
       renderPredictions(predictions)
       requestAnimationFrame(() => {
@@ -28,8 +22,6 @@ export default function CamStreamYOLO({ ID }) {
       })
     })
   }
-
-  
 
   const renderPredictions = predictions => {
     const ctx = refCanvas.current.getContext("2d")
@@ -62,8 +54,6 @@ export default function CamStreamYOLO({ ID }) {
       ctx.fillText(prediction.class, x, y)
     })
   }
-
-
 
   return (
     <Grid container>

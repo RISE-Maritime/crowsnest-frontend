@@ -33,18 +33,19 @@ export const wsMessageParser = selector({
     let source = "/NTpro";
 
     switch (latestMessage.topic) {
-      // TODO: parse AIS messages 
+      // AIS messages  
       case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
-        // console.log(latestMessage.topic);
-        // console.log(latestMessage.payload.message);
+
         const incomming = latestMessage.payload.message
-        AISlist[incomming.mmsi] = { ...AISlist[incomming.mmsi], ...incomming }
-        // console.log(AISlist);
+        AISlist[incomming.mmsi] = {
+          ...AISlist[incomming.mmsi],
+          ...incomming,
+          // loa: (AISlist[incomming.mmsi].to_bow + AISlist[incomming.mmsi].to_stern) || 100
+        }
 
         const date = new Date();
         if (date.getTime() - last > 2000) {  // 2000
           last = date.getTime();
-          // console.log("AIS list updated", Object.values(AISlist));
           set(targetsAIS, () => Object.values(AISlist))
         }
 
@@ -68,7 +69,7 @@ export const wsMessageParser = selector({
           const radarPoint = {
             point: latestMessage.payload.message.points[i],
             weight: latestMessage.payload.message.weights[i],
-            distance: Math.sqrt(Math.abs(latestMessage.payload.message.points[i][0])**2 + Math.abs( latestMessage.payload.message.points[i][1])**2)
+            distance: Math.sqrt(Math.abs(latestMessage.payload.message.points[i][0]) ** 2 + Math.abs(latestMessage.payload.message.points[i][1]) ** 2)
           }
           radarFrame.push(radarPoint)
         }

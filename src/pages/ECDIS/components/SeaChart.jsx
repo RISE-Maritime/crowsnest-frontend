@@ -1,21 +1,15 @@
 import React from "react"
-import { formatTime } from "../../../utils.js"
 import { atom, useRecoilValue, useSetRecoilState } from "recoil"
 import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITION } from "../../../recoil/atoms"
-
 import "mapbox-gl/dist/mapbox-gl.css"
-
-import { Map, Marker } from "react-map-gl"
+import { Map } from "react-map-gl"
 import { HeatmapLayer, HexagonLayer } from "@deck.gl/aggregation-layers"
 import DeckGL from "@deck.gl/react"
 import VesselContourLayer from "../../../base-elements/custom-deckgl-layers/vessel-contour-layer"
-
 import { PointCloudLayer } from "@deck.gl/layers"
 import { COORDINATE_SYSTEM } from "@deck.gl/core"
-
 import { BitmapLayer, IconLayer, ScatterplotLayer } from "@deck.gl/layers"
 import { TileLayer } from "@deck.gl/geo-layers"
-
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
 
 // Atoms
@@ -38,30 +32,11 @@ export const mapCursorPosAtom = atom({
   },
 })
 
-// Tiles
-const ENIRO = {
-  version: 8,
-  sources: {
-    "raster-tiles": {
-      type: "raster",
-      scheme: "tms",
-      tiles: ["http://map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{y}.png"],
-      tileSize: 256,
-    },
-  },
-  layers: [
-    {
-      id: "osm-tiles",
-      type: "raster",
-      source: "raster-tiles",
-      minzoom: 0,
-      maxzoom: 23,
-    },
-  ],
-}
 
 function getTooltip({ object }) {
-  //     UTC Timestamp: ${formatTime(object.timestamp)}
+
+  console.log(object);
+
   return (
     object &&
     `\
@@ -69,32 +44,34 @@ function getTooltip({ object }) {
     Name: ${object.shipname}
 
     HDG: ${object.heading}
-    COG: ${object.cog}
-    SOG: ${object.sog}`
+    COG: ${object.course}
+    SOG: ${object.speed}
+    ROT: ${object.turn}
+    Destination: ${object.destination}
+    Status: ${object.status}`
   )
 }
 
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoieXlkZGVldHQiLCJhIjoiY2t0eGEyNjJhMWI0NjJxcW53dGNrMmk2eSJ9.6bkGb4cvC5pbb8sisIScSw"
 
 export default function SeaChart() {
-  // State of the map
-  const [viewstate, setViewState] = React.useState({
-    latitude: 57.68477776430862,
-    longitude: 11.846957404275882,
-    zoom: 13,
-    pitch: 0,
-    maxZoom: 24,
-    maxPitch: 80,
-  })
-
   const setClickInfo = useSetRecoilState(clickInfoAtom)
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
 
   const os_pos = useRecoilValue(OS_POSITION)
   const AIStargets = useRecoilValue(targetsAIS)
   const radarFrames = useRecoilValue(radarObservationAtom)
-
   const lidarObservations = useRecoilValue(lidarObservationAtom)
+
+  // State of the map
+  const [viewstate, setViewState] = React.useState({
+    latitude: os_pos.latitude,
+    longitude: os_pos.longitude,
+    zoom: 13,
+    pitch: 0,
+    maxZoom: 24,
+    maxPitch: 80,
+  })
 
   const layers = [
     // SEA CHART
@@ -121,11 +98,8 @@ export default function SeaChart() {
     new IconLayer({
       id: "icon-layer",
       data: [{ pos: [os_pos.longitude, os_pos.latitude] }],
-      pickable: true,
-      // iconAtlas and iconMapping are required
-      // getIcon: PicOwnShipBlack,
-      // iconAtlas: PicOwnShipBlack,
-      // iconMapping: ICON_MAPPING,
+      pickable: false,
+      billboard: false,
       getIcon: d => {
         return {
           url: PicOwnShipBlack,
@@ -140,7 +114,7 @@ export default function SeaChart() {
 
       getPosition: d => d.pos,
       getSize: d => 5,
-      getColor: d => [Math.sqrt(d.exits), 140, 0],
+
     }),
 
     // AIS targets
@@ -148,16 +122,27 @@ export default function SeaChart() {
       id: "vessel-contour-layer",
       data: AIStargets,
       getCoordinates: d => [d.lon, d.lat],
-      // getLength: (d) => d.l,
-      getLength: d => 100,
-      // getBeam: (d) => d.b,
-      getBeam: d => 30,
+      getLength: d => {
+        if (d.to_bow) {
+          return d.to_bow + d.to_stern
+        }
+        return 100
+      },
+      getBeam: d => {
+        if (d.to_port) {
+          return d.to_port + d.to_starboard
+        }
+        return 25
+      },
       getHeading: d => (d.heading * Math.PI) / 180,
-      getFillColor: () => [255, 0, 0, 255],
+      getFillColor: () => [65, 210, 82, 250],
       pickable: true,
       onClick: info => {
         console.log(info.object)
-        setClickInfo(info.object)
+        setClickInfo({
+          layer: "ais",
+          object: info.object,
+        })
       },
     }),
 
@@ -235,7 +220,7 @@ export default function SeaChart() {
       data: lidarObservations,
       pickable: false,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos.longitude, os_pos.latitude], 
+      coordinateOrigin: [os_pos.longitude, os_pos.latitude],
       pointSize: 4,
       getPosition: d => d,
       // getNormal: d => d.normal,
@@ -244,7 +229,6 @@ export default function SeaChart() {
   ]
 
   const changeViewState = e => {
-    // console.log(e);
     setViewState(e.viewState)
   }
 
@@ -272,6 +256,7 @@ export default function SeaChart() {
       onHover={e => hoverMapCursor(e)}
       controller={{ dragPan: true, doubleClickZoom: false }}
       getTooltip={getTooltip}
+      getCursor={() => "crosshair"}
     >
       <Map mapboxAccessToken={MAPBOX_ACCESS_TOKEN} mapStyle="mapbox://styles/mapbox/streets-v9" />
     </DeckGL>

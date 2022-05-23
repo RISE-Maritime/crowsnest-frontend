@@ -22,6 +22,7 @@ export default function CamSelect({ refV, refA, refCanvas, detectFrame, setObjec
 
     refV.current.addEventListener("play", event => {
       const modelPromise = cocoSsd.load()
+      // modelPromise.detect()
       Promise.all([modelPromise, refV])
         .then(values => {
           detectFrame(refV.current, values[0])
