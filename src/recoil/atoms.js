@@ -143,8 +143,8 @@ export const atomActivePlatform = atom({
 export const OS_POSITION = atom({
   key: "os_position_state",
   default: {
-   latitude: 57.70958, // degrees 
-   longitude: 11.9466,  // degrees
+   latitude: 57.70907, // degrees 
+   longitude: 11.94741,  // degrees
    source: "manual",
    status: "normal", // [normal, warning, error] 
    statusText: ""

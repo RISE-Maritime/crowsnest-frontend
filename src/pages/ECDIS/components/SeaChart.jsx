@@ -75,24 +75,24 @@ export default function SeaChart() {
 
   const layers = [
     // SEA CHART
-    new TileLayer({
-      data: "http://map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{-y}.png",
-      minZoom: 0,
-      maxZoom: 19,
-      tileSize: 256,
+    // new TileLayer({
+    //   data: "http://map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{-y}.png",
+    //   minZoom: 0,
+    //   maxZoom: 19,
+    //   tileSize: 256,
 
-      renderSubLayers: props => {
-        const {
-          bbox: { west, south, east, north },
-        } = props.tile
+    //   renderSubLayers: props => {
+    //     const {
+    //       bbox: { west, south, east, north },
+    //     } = props.tile
 
-        return new BitmapLayer(props, {
-          data: null,
-          image: props.data,
-          bounds: [west, south, east, north],
-        })
-      },
-    }),
+    //     return new BitmapLayer(props, {
+    //       data: null,
+    //       image: props.data,
+    //       bounds: [west, south, east, north],
+    //     })
+    //   },
+    // }),
 
     // OWN SHIP symbol
     new IconLayer({
@@ -167,14 +167,14 @@ export default function SeaChart() {
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [os_pos.longitude, os_pos.latitude],
       extruded: true,
-      radius: 4,
+      radius: 3,
       elevationScale: 1,
       elevationRange: [0, 20],
       getPosition: d => d.point,
       getColorWeight: d => d.weight,
       getElevationWeight: d => d.weight,
       colorAggregation: "MEAN",
-      elevationAggregation: "MEAN",
+      elevationAggregation: "SUM",
       visible: false,
     }),
 
@@ -190,10 +190,11 @@ export default function SeaChart() {
       threshold: 0.0001,
       radiusPixels: viewstate.zoom * 1.5,
       intensity: 1, // (viewstate.zoom * 30) / 1,
-      visible: false,
+      visible: true,
       opacity: 1,
     }),
 
+    // This one
     new ScatterplotLayer({
       id: "radar-scatterplot-layer",
       data: radarFrames,
@@ -212,7 +213,7 @@ export default function SeaChart() {
       getRadius: d => d.distance / 11,
       getFillColor: d => [255, 140, 0, d.weight],
       getLineColor: d => [0, 0, 0],
-      visible: true,
+      visible: false,
     }),
 
     new PointCloudLayer({
