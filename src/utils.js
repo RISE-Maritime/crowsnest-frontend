@@ -102,12 +102,12 @@ export function calcDistanceBetween(lat1, lon1, lat2, lon2) {
 }
 
 // Converts numeric degrees to radians
-function toRadians(Value) {
+export function toRadians(Value) {
   return Value * Math.PI / 180;
 }
 
 // Converts from radians to degrees.
-function toDegrees(radians) {
+export function toDegrees(radians) {
   return radians * 180 / Math.PI;
 }
 

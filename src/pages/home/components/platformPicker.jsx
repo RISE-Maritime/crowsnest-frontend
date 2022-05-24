@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { atom, useRecoilState, useSetRecoilState } from "recoil"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { atomPlatforms, atomActivePlatform } from "../../../recoil/atoms"
+import { atomPlatforms, atomActivePlatform , appState} from "../../../recoil/atoms"
 import { Grid, TextField, Button, Stack, Typography } from "@mui/material"
 import styled from "styled-components"
 import LineVertical from "../../../base-elements/components/LineVertical"
@@ -63,11 +63,12 @@ const validationSchema = yup.object({
 
 export default function PlatformPicker() {
   const [platforms, setPlatforms] = useRecoilState(atomPlatforms)
+  const [appObj, setAppObj] = useRecoilState(appState)
   const [activePlatform, setActivePlatform] = useRecoilState(atomActivePlatform)
 
   // Activating platform as source
   const selectedPlatform = platform => {
-    console.log(platform)
+    // console.log(platform)
     setActivePlatform({
       ...activePlatform,
       activePlatformKey: platform.key,
@@ -76,6 +77,11 @@ export default function PlatformPicker() {
       mmsi: platform.mmsi,
       imo: platform.imo,
     })
+    setAppObj({
+      ...appObj,
+      activeVessel: platform.name
+    })
+
   }
 
   // Activating device as source

@@ -1,0 +1,17 @@
+
+//
+// THIS IS AN AUTO-GENERATED FILE. DO NOT MODIFY AS CHANGES MIGHT BE OVERWRITTEN!
+//
+
+
+// This line is only needed when using Google Protobuf 3.
+syntax = "proto2";
+
+
+// Message identifier: 1201.
+message opendlv_proxy_RadarDetectionReading {
+    optional float azimuth = 1;
+    optional bytes data = 2;
+    optional float range = 3;
+}
+

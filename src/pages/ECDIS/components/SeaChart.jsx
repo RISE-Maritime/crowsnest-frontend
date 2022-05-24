@@ -32,10 +32,8 @@ export const mapCursorPosAtom = atom({
   },
 })
 
-
 function getTooltip({ object }) {
-
-  console.log(object);
+  console.log(object)
 
   return (
     object &&
@@ -75,24 +73,24 @@ export default function SeaChart() {
 
   const layers = [
     // SEA CHART
-    // new TileLayer({
-    //   data: "http://map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{-y}.png",
-    //   minZoom: 0,
-    //   maxZoom: 19,
-    //   tileSize: 256,
+    new TileLayer({
+      data: "http://map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{-y}.png",
+      minZoom: 0,
+      maxZoom: 19,
+      tileSize: 256,
 
-    //   renderSubLayers: props => {
-    //     const {
-    //       bbox: { west, south, east, north },
-    //     } = props.tile
+      renderSubLayers: props => {
+        const {
+          bbox: { west, south, east, north },
+        } = props.tile
 
-    //     return new BitmapLayer(props, {
-    //       data: null,
-    //       image: props.data,
-    //       bounds: [west, south, east, north],
-    //     })
-    //   },
-    // }),
+        return new BitmapLayer(props, {
+          data: null,
+          image: props.data,
+          bounds: [west, south, east, north],
+        })
+      },
+    }),
 
     // OWN SHIP symbol
     new IconLayer({
@@ -114,7 +112,6 @@ export default function SeaChart() {
 
       getPosition: d => d.pos,
       getSize: d => 5,
-
     }),
 
     // AIS targets
@@ -160,23 +157,23 @@ export default function SeaChart() {
       visible: false,
     }),
 
-    new HexagonLayer({
-      id: "hexagon-layer",
-      data: radarFrames,
-      pickable: true,
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos.longitude, os_pos.latitude],
-      extruded: true,
-      radius: 3,
-      elevationScale: 1,
-      elevationRange: [0, 20],
-      getPosition: d => d.point,
-      getColorWeight: d => d.weight,
-      getElevationWeight: d => d.weight,
-      colorAggregation: "MEAN",
-      elevationAggregation: "SUM",
-      visible: false,
-    }),
+    // new HexagonLayer({
+    //   id: "hexagon-layer",
+    //   data: radarFrames,
+    //   pickable: true,
+    //   coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+    //   coordinateOrigin: [os_pos.longitude, os_pos.latitude],
+    //   extruded: true,
+    //   radius: 3,
+    //   elevationScale: 1,
+    //   elevationRange: [0, 20],
+    //   getPosition: d => d.point,
+    //   getColorWeight: d => d.weight,
+    //   getElevationWeight: d => d.weight,
+    //   colorAggregation: "MEAN",
+    //   elevationAggregation: "SUM",
+    //   visible: false,
+    // }),
 
     new HeatmapLayer({
       id: "radar-heatmapLayer",

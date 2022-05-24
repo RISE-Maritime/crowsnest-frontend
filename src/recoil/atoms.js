@@ -147,10 +147,22 @@ export const OS_POSITION = atom({
    longitude: 11.94741,  // degrees
    source: "manual",
    status: "normal", // [normal, warning, error] 
-   statusText: ""
+   statusText: "",
+   timeCreated: ""
   },
 });
 
+
+export const lidarStateAtom = atom({
+  key: "lidar_state",
+  default: {
+    type: "lidar",
+    mqttMessageCount: 0,
+    timeDataLogged: "",
+    delaySec: 0,
+    connected: false
+  },
+});
 export const lidarObservationAtom = atom({
   key: "lidar_observation_state",
   default: [],
