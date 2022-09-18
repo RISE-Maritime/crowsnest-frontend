@@ -33,14 +33,13 @@ export const mapCursorPosAtom = atom({
 })
 
 function getTooltip({ object }) {
-  console.log(object)
+  // console.log(object)
 
   return (
     object &&
     `\
     MMSI: ${object.mmsi}
     Name: ${object.shipname}
-
     HDG: ${object.heading}
     COG: ${object.course}
     SOG: ${object.speed}

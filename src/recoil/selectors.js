@@ -4,12 +4,11 @@ import {
   observationsStateAtom,
   playbackState,
   targetsAIS,
-  lidarStateAtom,
+  atomActivePlatform,
   lidarObservationAtom,
   radarObservationAtom
 } from "./atoms";
 import { toRadians } from "../utils"
-import messages from './radar_pb'
 
 
 // import proto
@@ -52,6 +51,30 @@ const decode_azimuth = (spoke_direction) => {
 
 
 
+//Setting own platform as AIS target
+export const setPlatformAIS = selector({
+  key: "ais_platform_setter",
+  get: () => {
+    return null;
+  },
+  set: ({ set }, ais_target) => {
+
+    console.log("SETTER: ",ais_target);
+
+    set(atomActivePlatform, (existingPlatform) => ({
+      ...existingPlatform,
+      ...ais_target,
+      activePlatformType: "AIS"
+    }))
+
+  }
+})
+
+
+
+
+
+
 export const wsMessageParser = selector({
   key: "websocket_latest_message",
   get: () => {
@@ -62,25 +85,27 @@ export const wsMessageParser = selector({
 
     switch (latestMessage.topic) {
       // AIS messages  
-      // case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
+      case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
 
-      //   const incomming = latestMessage.payload.message
-      //   AISlist[incomming.mmsi] = {
-      //     ...AISlist[incomming.mmsi],
-      //     ...incomming,
-      //     // loa: (AISlist[incomming.mmsi].to_bow + AISlist[incomming.mmsi].to_stern) || 100
-      //   }
+        const incomming = latestMessage.payload.message
+        // console.log(incomming);
 
-      //   const date = new Date();
-      //   if (date.getTime() - last > 2000) {  // 2000
-      //     last = date.getTime();
-      //     set(targetsAIS, () => Object.values(AISlist))
-      //   }
+        AISlist[incomming.mmsi] = {
+          shipname: "UNKNOWN",
+          ...AISlist[incomming.mmsi],
+          ...incomming,
+        }
 
-      //   break;
-      // }
+        const date = new Date();
+        if (date.getTime() - last > 2000) {  // 2000
+          last = date.getTime();
+          set(targetsAIS, () => Object.values(AISlist))
+        }
 
-      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/LIDAR\/0/)?.input: {
+        break;
+      }
+
+      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/LIDAR\/0\/POINTCLOUD/)?.input: {
         // console.log(latestMessage.topic);
         // console.log(latestMessage.payload);
         set(lidarObservationAtom, () => (
@@ -94,7 +119,7 @@ export const wsMessageParser = selector({
         // const delay = new Date( time_sent_at.getTime() - time_now.getTime())
         const delay = (time_sent_at - time_now) / 11000 // Convert milliseconds to seconds 
 
-        console.log("delay", delay);
+        // console.log("delay", delay);
 
         set(playbackState, (existing) => ({
           ...existing,
@@ -105,64 +130,66 @@ export const wsMessageParser = selector({
         break;
       }
 
-      // case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0\/SWEEP/)?.input: {
-      //   // console.log(latestMessage.topic);
-      //   // console.log(latestMessage.payload.message.toS);
-      //   let frameR = JSON.parse(latestMessage.payload.toString())
-      //   let radarFrame = []
-      //   for (let i = 0; i < frameR.message.points.length; i++) {
-      //     const radarPoint = {
-      //       point: frameR.message.points[i],
-      //       weight: frameR.message.weights[i],
-      //       distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
-      //     }
-      //     radarFrame.push(radarPoint)
-      //   }
-
-      //   // console.log(radarFrame);
-
-      //   set(radarObservationAtom, () => (
-      //     radarFrame
-      //   ));
-      //   break;
-      // }
-
-      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0\/PROTOBUF/)?.input: {
+      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0\/SWEEP/)?.input: {
         // console.log(latestMessage.topic);
-        var message = messages.opendlv_proxy_RadarDetectionReading.deserializeBinary(new Uint8Array(latestMessage.payload))
+        // console.log(latestMessage.payload.message.toS);
+        // let frameR = JSON.parse(latestMessage.payload.toString())
+        let frameR = latestMessage.payload
 
-        let arrPuls = message.getData()
-        let range = message.getRange()
-        let azimuth = decode_azimuth(message.getAzimuth())
-        let distances = decode_distances(arrPuls.length, range)
-
-        if (spokeCount % 2 === 0) {
-          for (let i = 0; i < arrPuls.length; i++) {
-            // Map from polar to cartesian coordinates
-            let x = distances[i] * Math.cos(toRadians(azimuth))
-            let y = distances[i] * Math.sin(toRadians(azimuth))
-            let points = [x, y]
-            const radarPoint = {
-              point: points,
-              weight: arrPuls[i],
-              distance: distances[i]
-            }
-            radarFrame.push(radarPoint)
+        let radarFrame = []
+        for (let i = 0; i < frameR.message.points.length; i++) {
+          const radarPoint = {
+            point: frameR.message.points[i],
+            weight: frameR.message.weights[i],
+            distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
           }
+          radarFrame.push(radarPoint)
         }
 
-        spokeCount += 1
+        // console.log(radarFrame);
 
-        if (azimuth < lastAzimute) {  // 2000
-          set(radarObservationAtom, () => (
-            radarFrame
-          ));
-          // console.log("frame", radarFrame);
-          radarFrame = []
-        }
-        lastAzimute = azimuth
+        set(radarObservationAtom, () => (
+          radarFrame
+        ));
         break;
       }
+
+      // case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0\/PROTOBUF/)?.input: {
+      //   // console.log(latestMessage.topic);
+      //   var message = messages.opendlv_proxy_RadarDetectionReading.deserializeBinary(new Uint8Array(latestMessage.payload))
+
+      //   let arrPuls = message.getData()
+      //   let range = message.getRange()
+      //   let azimuth = decode_azimuth(message.getAzimuth())
+      //   let distances = decode_distances(arrPuls.length, range)
+
+      //   if (spokeCount % 2 === 0) {
+      //     for (let i = 0; i < arrPuls.length; i++) {
+      //       // Map from polar to cartesian coordinates
+      //       let x = distances[i] * Math.cos(toRadians(azimuth))
+      //       let y = distances[i] * Math.sin(toRadians(azimuth))
+      //       let points = [x, y]
+      //       const radarPoint = {
+      //         point: points,
+      //         weight: arrPuls[i],
+      //         distance: distances[i]
+      //       }
+      //       radarFrame.push(radarPoint)
+      //     }
+      //   }
+
+      //   spokeCount += 1
+
+      //   if (azimuth < lastAzimute) {  // 2000
+      //     set(radarObservationAtom, () => (
+      //       radarFrame
+      //     ));
+      //     // console.log("frame", radarFrame);
+      //     radarFrame = []
+      //   }
+      //   lastAzimute = azimuth
+      //   break;
+      // }
 
       case source + "/playback":
         set(playbackState, (existing) => ({

@@ -69,8 +69,8 @@ export default function MqttConnection() {
     })
 
     client.on("message", (topic, payload) => {
-      // parseWsMessage({ topic: topic, payload: JSON.parse(payload.toString()) })
-      parseWsMessage({ topic: topic, payload: payload })
+      parseWsMessage({ topic: topic, payload: JSON.parse(payload.toString()) })
+      // parseWsMessage({ topic: topic, payload: payload })
     })
   }, [])
 

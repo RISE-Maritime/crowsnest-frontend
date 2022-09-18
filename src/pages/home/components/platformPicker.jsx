@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react"
-import { atom, useRecoilState, useSetRecoilState } from "recoil"
+import { atom, useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { atomPlatforms, atomActivePlatform , appState} from "../../../recoil/atoms"
-import { Grid, TextField, Button, Stack, Typography } from "@mui/material"
+import { atomPlatforms, atomActivePlatform, appState, targetsAIS } from "../../../recoil/atoms"
+import { Grid, TextField, Button, Stack, Typography, Autocomplete } from "@mui/material"
 import styled from "styled-components"
 import LineVertical from "../../../base-elements/components/LineVertical"
+import DefaultAisTargets from "./DefaultAisTargets"
+
+import AutorenewIcon from "@mui/icons-material/Autorenew"
 
 // Selected vessel profile
 export const atomSelectedOwnShipDatSource = atom({
@@ -65,6 +68,16 @@ export default function PlatformPicker() {
   const [platforms, setPlatforms] = useRecoilState(atomPlatforms)
   const [appObj, setAppObj] = useRecoilState(appState)
   const [activePlatform, setActivePlatform] = useRecoilState(atomActivePlatform)
+  const AIStargets = useRecoilValue(targetsAIS)
+
+  const [aisFiltered, setAisFiltered] = useState([])
+
+  // useEffect(() => {}, [])
+
+  const updateTargetList = () => {
+    console.log(AIStargets)
+    setAisFiltered(AIStargets)
+  }
 
   // Activating platform as source
   const selectedPlatform = platform => {
@@ -79,9 +92,8 @@ export default function PlatformPicker() {
     })
     setAppObj({
       ...appObj,
-      activeVessel: platform.name
+      activeVessel: platform.name,
     })
-
   }
 
   // Activating device as source
@@ -130,24 +142,48 @@ export default function PlatformPicker() {
         </BoxStyled>
 
         <BoxStyled>
-          <Typography variant="h5">AIS</Typography>
+          <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>
           <form onSubmit={formik.handleSubmit}>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
-              <TextField
-                label="MMSI"
-                variant="filled"
-                size="small"
-                id="mmsi"
-                name="mmsi"
-                value={formik.values.mmsi}
-                onChange={formik.handleChange}
-                error={formik.touched.mmsi && Boolean(formik.errors.mmsi)}
-                helperText={formik.touched.mmsi && formik.errors.mmsi}
+              <Button onClick={updateTargetList}>
+                <AutorenewIcon /> Update AIS list{" "}
+              </Button>
+
+              <Autocomplete
+                id="group"
+                name="group"
+                options={aisFiltered}
+                onChange={(e, value) => {
+                  formik.setFieldValue("mmsi", value.mmsi)
+                  console.log(value)
+                }}
+                getOptionLabel={option => option.shipname + " (" + option.mmsi + ")"}
+                renderInput={params => (
+                  <TextField
+                    sx={{ width: "18rem" }}
+                    required
+                    fullWidth
+                    variant="standard"
+                    {...params}
+                    label="mmsi"
+                    id="mmsi"
+                    name="mmsi"
+                    error={formik.touched.group && Boolean(formik.errors.group)}
+                    helperText={formik.touched.group && formik.errors.group}
+                  />
+                )}
               />
+
+           
               <Button color="secondary" variant="outlined" type="submit">
-                Connect to AIS
+                Connect to MMSI
               </Button>
             </Stack>
+
+            {/* Saved AIS targets */}
+            <hr />
+            <Typography variant="subtitle1">Saved AIS targets</Typography>
+            <DefaultAisTargets aisFiltered={AIStargets} />
           </form>
         </BoxStyled>
 

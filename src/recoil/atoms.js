@@ -91,11 +91,7 @@ export const playbackState = atom({
 
 export const targetsAIS = atom({
   key: "targets_ais",
-  default: {
-    duration: 30,
-    timeline_position: 0,
-    is_playing: false,
-  },
+  default: [],
 });
 
 export const ownShipDataAtom = atom({
@@ -107,7 +103,7 @@ export const ownShipDataAtom = atom({
 });
 
 
-// Platforms 
+// Platforms saved 
 export const atomPlatforms = atom({
   key: "platforms",
   default: {
@@ -115,7 +111,7 @@ export const atomPlatforms = atom({
       name: "Landkrabban",
       key: "landkrabban",
       MQTTpath: "",
-    
+
     },
     germanica: {
       name: "Stena Germainca",
@@ -126,8 +122,41 @@ export const atomPlatforms = atom({
     }
   },
 })
+// AIS Platforms saved 
+export const atomPlatformsAIS = atom({
+  key: "platforms_ais",
+  default: [
+    {
+      id: "viking_glory_platform",
+      platformName: "VIKING GLORY",
+      mmsi: 230041000,
+      callsign: "OJTC",
+      imo: 9827877,
+      ship_type: "PASSENGER",
+      to_bow: 25,
+      to_port: 18,
+      to_starboard: 18,
+      to_stern: 198,
+    },
+    {
+      id: "Viking_grace_kbralebr",
+      platformName: "Viking Grace",
+      mmsi: 230629000,
+    },
+    {
+      id: "tg_glory",
+      platformName: "Stena Jutlandica",
+      mmsi: 265410000,
+    },
+    {
+      id: "tg_igkhbearikb",
+      platformName: "other",
+      mmsi: 219020425351,
+    },
+  ]
+})
 
-// Active platform
+// Active platform STATIC
 export const atomActivePlatform = atom({
   key: "active_platform",
   default: {
@@ -135,7 +164,14 @@ export const atomActivePlatform = atom({
     activePlatformType: "PLATFORM", // [PLATFORM, AIS, DEVICE]
     platformName: "",
     MQTTpath: "",
-    mmsi: 0
+    mmsi: 0,
+    imo: 9827877,
+    callsign: "OJTC",
+    ship_type: "PASSENGER",
+    to_bow: 25,
+    to_port: 18,
+    to_starboard: 18,
+    to_stern: 198,
   },
 })
 
@@ -143,13 +179,25 @@ export const atomActivePlatform = atom({
 export const OS_POSITION = atom({
   key: "os_position_state",
   default: {
-   latitude: 57.70907, // degrees 
-   longitude: 11.94741,  // degrees
-   source: "manual",
-   status: "normal", // [normal, warning, error] 
-   statusText: "",
-   timeCreated: ""
+    latitude: 0.0, // degrees 
+    longitude: 0.0,  // degrees
+    source: "MANUAL",
+    status: "normal", // [normal, warning, error] 
+    statusText: "Normal",
+    timeCreated: ""
   },
+});
+
+export const OS_POSITIONS_AVAILABLE = atom({
+  key: "os_positions_state",
+  default: [{
+    latitude: 57.70907, // degrees 
+    longitude: 11.94741,  // degrees
+    source: "manual",
+    status: "normal", // [normal, warning, error] 
+    statusText: "",
+    timeCreated: ""
+  }],
 });
 
 

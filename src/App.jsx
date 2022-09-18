@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React, { useEffect } from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 // Recoil
 import { useRecoilValue } from "recoil"
@@ -99,7 +99,6 @@ export default function App() {
   useEffect(() => {
     mqttSubscribe("CROWSNEST/#")
   }, [])
-  
 
   return (
     <>
