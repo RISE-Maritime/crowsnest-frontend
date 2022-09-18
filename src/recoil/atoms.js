@@ -1,5 +1,11 @@
 import { atom } from "recoil";
 
+import PicGermanica from "../resources/platforms/germanica.png"
+import PicSeahorse from "../resources/platforms/seahorse.png"
+import PicLandkrabban from "../resources/platforms/landkrabban.png"
+import PicVikingGrace from "../resources/platforms/viking_grace.png"
+import PicJutlandica from "../resources/platforms/jutlandica.png"
+
 const localStorageEffect =
   (key) =>
     ({ setSelf, onSet }) => {
@@ -30,15 +36,6 @@ export const appState = atom({
   },
 });
 
-// Mini apps show or hide mini apps (floating and resizable window)
-export const showMiniAppsObj = atom({
-  key: "showMiniAppsObj",
-  default: {
-    windCurrent: false,
-    playback: false,
-  },
-});
-
 export const themeModeState = atom({
   key: "themeModeValue",
   default: "light",
@@ -58,27 +55,17 @@ export const userState = atom({
   effects_UNSTABLE: [localStorageEffect("current_user")],
 });
 
-export const observationsStateAtom = atom({
-  key: "observation_state",
+
+
+// Mini apps show or hide mini apps (floating and resizable window)
+export const showMiniAppsObj = atom({
+  key: "showMiniAppsObj",
   default: {
-    ruderACTps: 0,
-    ruderACTsb: 0,
-    rot: 0,
-    heading: 0,
-    cog: 0,
-    sog: 0,
-    sogBow: 0,
-    sogStern: 0,
+    windCurrent: false,
+    playback: false,
   },
 });
 
-export const actionStateAtom = atom({
-  key: "action_state",
-  default: {
-    ruderSETps: 0,
-    ruderSETsb: 0,
-  },
-});
 
 export const playbackState = atom({
   key: "playback_state",
@@ -89,18 +76,9 @@ export const playbackState = atom({
   },
 });
 
-export const targetsAIS = atom({
-  key: "targets_ais",
-  default: [],
-});
 
-export const ownShipDataAtom = atom({
-  key: "own_ship_data",
-  default: {
-    loa: 200, // length over all
-    woa: 30, // width over all
-  },
-});
+
+
 
 
 // Platforms saved 
@@ -110,18 +88,30 @@ export const atomPlatforms = atom({
     landkrabban: {
       name: "Landkrabban",
       key: "landkrabban",
+      mmsi: 2,
       MQTTpath: "",
-
+      picture: PicLandkrabban
     },
     germanica: {
       name: "Stena Germainca",
       key: "germanica",
       MQTTpath: "",
       mmsi: 266331000,
-      imo: 9145176
+      imo: 9145176,
+      picture: PicGermanica
+    },
+    seahorse: {
+      name: "Seahorse",
+      key: "seahorse",
+      MQTTpath: "",
+      mmsi: 3,
+      imo: 0,
+      picture: PicSeahorse
     }
   },
 })
+
+
 // AIS Platforms saved 
 export const atomPlatformsAIS = atom({
   key: "platforms_ais",
@@ -137,26 +127,25 @@ export const atomPlatformsAIS = atom({
       to_port: 18,
       to_starboard: 18,
       to_stern: 198,
+      
     },
     {
       id: "Viking_grace_kbralebr",
       platformName: "Viking Grace",
       mmsi: 230629000,
+      picture: PicVikingGrace
     },
     {
       id: "tg_glory",
       platformName: "Stena Jutlandica",
       mmsi: 265410000,
+      picture: PicJutlandica
     },
-    {
-      id: "tg_igkhbearikb",
-      platformName: "other",
-      mmsi: 219020425351,
-    },
+   
   ]
 })
 
-// Active platform STATIC
+// Active platform STATIC data 
 export const atomActivePlatform = atom({
   key: "active_platform",
   default: {
@@ -165,16 +154,21 @@ export const atomActivePlatform = atom({
     platformName: "",
     MQTTpath: "",
     mmsi: 0,
-    imo: 9827877,
+    imo: 0,
     callsign: "OJTC",
     ship_type: "PASSENGER",
     to_bow: 25,
     to_port: 18,
     to_starboard: 18,
     to_stern: 198,
+    picture: ""
   },
 })
 
+// ######################################
+// ALL Realtime DATA 
+// 
+// Own ship operational data like sensors... 
 
 export const OS_POSITION = atom({
   key: "os_position_state",
@@ -221,3 +215,41 @@ export const radarObservationAtom = atom({
   default: [],
 });
 
+
+
+
+export const observationsStateAtom = atom({
+  key: "observation_state",
+  default: {
+    ruderACTps: 0,
+    ruderACTsb: 0,
+    rot: 0,
+    heading: 0,
+    cog: 0,
+    sog: 0,
+    sogBow: 0,
+    sogStern: 0,
+  },
+});
+
+export const actionStateAtom = atom({
+  key: "action_state",
+  default: {
+    ruderSETps: 0,
+    ruderSETsb: 0,
+  },
+});
+
+
+export const targetsAIS = atom({
+  key: "targets_ais",
+  default: [],
+});
+
+export const ownShipDataAtom = atom({
+  key: "own_ship_data",
+  default: {
+    loa: 200, // length over all
+    woa: 30, // width over all
+  },
+});

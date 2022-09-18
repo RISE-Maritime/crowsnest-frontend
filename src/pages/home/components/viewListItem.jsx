@@ -11,7 +11,7 @@ const GridCenter = styled(Grid)(() => ({
 export default function viewListItem(props) {
   const theme = useTheme();
   return (
-    <GridCenter item xs={12}>
+    <GridCenter item xs={6}>
       <Button
         component={Link}
         to={props.routeLink}

@@ -1,12 +1,13 @@
 import React from "react"
 import { Button, Stack } from "@mui/material"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil"
 import { setPlatformAIS } from "../../../recoil/selectors"
-import { atomPlatformsAIS } from "../../../recoil/atoms"
+import { atomPlatformsAIS, atomActivePlatform } from "../../../recoil/atoms"
 
 export default function DefaultAisTargets({ aisFiltered }) {
   const setPlatform = useSetRecoilState(setPlatformAIS)
   const AISplatforms = useRecoilValue(atomPlatformsAIS)
+  const [activePlatform, setActivePlatform] = useRecoilState(atomActivePlatform)
 
   const isFound = mmsi => {
     const filteredArray = aisFiltered.filter(element => {
@@ -31,7 +32,8 @@ export default function DefaultAisTargets({ aisFiltered }) {
             key={obj.id}
             color="secondary"
             disabled={isFound(obj.mmsi)}
-            variant="outlined"
+            // variant="outlined"
+            variant={obj.mmsi == activePlatform.mmsi ? "contained" : "outlined"}
             size="small"
             onClick={() => setPlatform(obj)}
           >

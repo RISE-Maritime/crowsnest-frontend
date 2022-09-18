@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react"
-import { atom, useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
+import React, { useState } from "react"
+import { atom, useRecoilState, useRecoilValue } from "recoil"
+import { atomPlatforms, atomActivePlatform, appState, targetsAIS } from "../../../recoil/atoms"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { atomPlatforms, atomActivePlatform, appState, targetsAIS } from "../../../recoil/atoms"
 import { Grid, TextField, Button, Stack, Typography, Autocomplete } from "@mui/material"
 import styled from "styled-components"
-import LineVertical from "../../../base-elements/components/LineVertical"
 import DefaultAisTargets from "./DefaultAisTargets"
 
 import AutorenewIcon from "@mui/icons-material/Autorenew"
+import PlatformQuickDescription from "./PlatformQuickDescription"
+
+import PicDevice from "../../../resources/platforms/devise.png"
 
 // Selected vessel profile
 export const atomSelectedOwnShipDatSource = atom({
@@ -55,9 +57,9 @@ const Input = styled("input")({
 const BoxStyled = styled.div`
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 0.5rem;
-  min-width: 90%;
+  padding: 0.5rem;
+  margin: 0.5rem 0rem;
+  min-width: 98%;
 `
 
 const validationSchema = yup.object({
@@ -81,9 +83,10 @@ export default function PlatformPicker() {
 
   // Activating platform as source
   const selectedPlatform = platform => {
-    // console.log(platform)
+    console.log(platform)
     setActivePlatform({
       ...activePlatform,
+      ...platform,
       activePlatformKey: platform.key,
       platformName: platform.name,
       activePlatformType: "PLATFORM",
@@ -101,10 +104,11 @@ export default function PlatformPicker() {
     setActivePlatform({
       ...activePlatform,
       activePlatformKey: "device",
-      platformName: "Device",
+      platformName: "Own Device",
       activePlatformType: "DEVICE",
       mmsi: 0,
       imo: 0,
+      picture: PicDevice,
     })
   }
 
@@ -119,10 +123,13 @@ export default function PlatformPicker() {
   })
 
   return (
-    <Grid container direction="row" justifyContent="center" alignItems="stretch">
-      <Grid item xs={7} sx={{ display: "grid", placeItems: "center" }}>
-        <h2>Select own view source </h2>
-
+    <Grid container direction="row" justifyContent="center" alignItems="center">
+      <Grid item xs={12}>
+        <Typography variant="h4" sx={{ padding: "1rem" }}>
+          Select own view source{" "}
+        </Typography>
+      </Grid>
+      <Grid item xs={8} sx={{ display: "grid", placeItems: "center" }}>
         <BoxStyled>
           <Typography variant="h5">Platforms</Typography>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "0.5rem" }}>
@@ -130,7 +137,7 @@ export default function PlatformPicker() {
               return (
                 <Button
                   color="secondary"
-                  variant={platform.key == activePlatform.activePlatformKey ? "contained" : "outlined"}
+                  variant={platform.mmsi == activePlatform.mmsi ? "contained" : "outlined"}
                   key={platform.key}
                   onClick={() => selectedPlatform(platform)}
                 >
@@ -142,13 +149,15 @@ export default function PlatformPicker() {
         </BoxStyled>
 
         <BoxStyled>
-          <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>
+          <Stack direction="row">
+            <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>{" "}
+            <Button onClick={updateTargetList}>
+              <AutorenewIcon /> Update AIS List
+            </Button>
+          </Stack>
+
           <form onSubmit={formik.handleSubmit}>
             <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
-              <Button onClick={updateTargetList}>
-                <AutorenewIcon /> Update AIS list{" "}
-              </Button>
-
               <Autocomplete
                 id="group"
                 name="group"
@@ -174,7 +183,6 @@ export default function PlatformPicker() {
                 )}
               />
 
-           
               <Button color="secondary" variant="outlined" type="submit">
                 Connect to MMSI
               </Button>
@@ -199,40 +207,23 @@ export default function PlatformPicker() {
             </Button>
           </Stack>
         </BoxStyled>
-      </Grid>
 
-      <Grid item xs={3} sx={{ display: "grid", placeItems: "center" }}>
         <BoxStyled>
-          <Typography variant="h5" align="center">
-            Selected
-          </Typography>
-          <Stack direction="column" justifyContent="center" alignItems="flex-start" spacing={2} sx={{ margin: "1rem" }}>
-            <Typography variant="caption">
-              Platform: {activePlatform.platformName}
-              <br />
-              Platform type: {activePlatform.activePlatformType}
-              <br />
-              MMSI: {activePlatform.mmsi}
-            </Typography>
-          </Stack>
+          <Typography variant="h5">Replay log (Coming soon)</Typography>
+          <label htmlFor="contained-button-file">
+            <Input accept="image/*" id="contained-button-file" multiple type="file" />
+            <Button variant="outlined" disabled={true} component="span" color="secondary">
+              Upload file
+            </Button>
+          </label>
         </BoxStyled>
       </Grid>
 
-      <Grid item xs={2}>
-        <Stack direction="row" justifyContent="center" alignItems="center" sx={{ height: "100%" }}>
-          <LineVertical />
-          <BoxStyled>
-            <Typography align="center">
-              Replay log <br /> (Coming soon)
-            </Typography>
-            <label htmlFor="contained-button-file">
-              <Input accept="image/*" id="contained-button-file" multiple type="file" />
-              <Button variant="contained" component="span" color="secondary">
-                Upload file
-              </Button>
-            </label>
-          </BoxStyled>
-        </Stack>
+      {/* Preview of selected viewpoint */}
+      <Grid item xs={4} sx={{ display: "grid", placeItems: "center" }}>
+        <BoxStyled>
+          <PlatformQuickDescription />
+        </BoxStyled>
       </Grid>
     </Grid>
   )
