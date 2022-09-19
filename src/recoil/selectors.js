@@ -1,4 +1,4 @@
-import { selector, useSetRecoilState } from "recoil";
+import { selector, useSetRecoilState, useRecoilValue } from "recoil";
 import {
   userState,
   observationsStateAtom,
@@ -6,7 +6,8 @@ import {
   targetsAIS,
   atomActivePlatform,
   lidarObservationAtom,
-  radarObservationAtom
+  radarObservationAtom,
+  OS_POSITIONS
 } from "./atoms";
 import { toRadians } from "../utils"
 
@@ -59,7 +60,7 @@ export const setPlatformAIS = selector({
   },
   set: ({ set }, ais_target) => {
 
-    console.log("SETTER: ",ais_target);
+    console.log("SETTER: ", ais_target);
 
     set(atomActivePlatform, (existingPlatform) => ({
       ...existingPlatform,
@@ -80,15 +81,13 @@ export const wsMessageParser = selector({
   get: () => {
     return null;
   },
-  set: ({ set }, latestMessage) => {
-    let source = "/NTpro";
+  set: ({ get, set }, latestMessage) => {
 
     switch (latestMessage.topic) {
       // AIS messages  
       case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
 
         const incomming = latestMessage.payload.message
-        // console.log(incomming);
 
         AISlist[incomming.mmsi] = {
           shipname: "UNKNOWN",
@@ -99,7 +98,40 @@ export const wsMessageParser = selector({
         const date = new Date();
         if (date.getTime() - last > 2000) {  // 2000
           last = date.getTime();
+
+          //  Update AIS targets list 
           set(targetsAIS, () => Object.values(AISlist))
+
+          // Update OS AIS data references 
+          const active_platform = get(atomActivePlatform)
+          if (active_platform.mmsi in AISlist) {  // Check if OS exists
+           
+            console.log("HERE", AISlist[active_platform.mmsi]);
+            const os_ais_data = AISlist[active_platform.mmsi]
+            console.log("HERE TWO", 2022, os_ais_data.month, os_ais_data.day);
+            let time_now = new Date();
+            const sec_now = time_now.getSeconds()
+            const sec_diff = os_ais_data.second - sec_now 
+            // console.log("diff",sec_now - os_ais_data.second);
+
+            let ais_msg_created = new Date();
+
+            ais_msg_created.setSeconds(os_ais_data.second)
+            console.log("HERE TWO", ais_msg_created);
+            set(OS_POSITIONS, (currentObj) => ({
+              ...currentObj,
+              AIS: {
+                ...currentObj.AIS,
+                latitude: os_ais_data.lat, // degrees 
+                longitude: os_ais_data.lon,  // degrees
+                timeCreated:  sec_diff + " sec"
+              }
+            }))
+
+            // TODO: Add the other ais data to OS realtime data
+
+          }
+
         }
 
         break;
@@ -191,42 +223,42 @@ export const wsMessageParser = selector({
       //   break;
       // }
 
-      case source + "/playback":
+      case "/NTpro/playback":
         set(playbackState, (existing) => ({
           ...existing,
           ...latestMessage.payload.message,
         }));
         break;
 
-      case source + "/observations/rudder/1":
+      case "/NTpro/observations/rudder/1":
         set(observationsStateAtom, (existing) => ({
           ...existing,
           ruderACTps: latestMessage.payload.message.angle,
         }));
         break;
 
-      case source + "/observations/rudder/2":
+      case "/NTpro/observations/rudder/2":
         set(observationsStateAtom, (existing) => ({
           ...existing,
           ruderACTsb: latestMessage.payload.message.angle,
         }));
         break;
 
-      case source + "/observations/rot/1":
+      case "/NTpro/observations/rot/1":
         set(observationsStateAtom, (existing) => ({
           ...existing,
           rot: latestMessage.payload.message.rot,
         }));
         break;
 
-      case source + "/observations/heading/1":
+      case "/NTpro/observations/heading/1":
         set(observationsStateAtom, (existing) => ({
           ...existing,
           heading: latestMessage.payload.message.heading,
         }));
         break;
 
-      case source + "/observations/ground_velocity/1":
+      case "/NTpro/observations/ground_velocity/1":
         set(observationsStateAtom, (existing) => ({
           ...existing,
           cog: latestMessage.payload.message.cog,

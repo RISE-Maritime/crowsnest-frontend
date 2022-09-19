@@ -1,6 +1,6 @@
 import React from "react"
 import { atom, useRecoilValue, useSetRecoilState } from "recoil"
-import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITION } from "../../../recoil/atoms"
+import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Map } from "react-map-gl"
 import { HeatmapLayer, HexagonLayer } from "@deck.gl/aggregation-layers"
@@ -55,7 +55,9 @@ export default function SeaChart() {
   const setClickInfo = useSetRecoilState(clickInfoAtom)
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
 
-  const os_pos = useRecoilValue(OS_POSITION)
+  const os_pos = useRecoilValue(OS_POSITIONS)
+  const os_pos_setting = useRecoilValue(OS_POSITION_SETTING)
+  
   const AIStargets = useRecoilValue(targetsAIS)
   const radarFrames = useRecoilValue(radarObservationAtom)
   const lidarObservations = useRecoilValue(lidarObservationAtom)
@@ -94,7 +96,7 @@ export default function SeaChart() {
     // OWN SHIP symbol
     new IconLayer({
       id: "icon-layer",
-      data: [{ pos: [os_pos.longitude, os_pos.latitude] }],
+      data: [{ pos: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude] }],
       pickable: false,
       billboard: false,
       getIcon: d => {
@@ -147,7 +149,7 @@ export default function SeaChart() {
       data: radarFrames,
       pickable: false,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos.longitude, os_pos.latitude], //Longitude, latitude
+      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
       sizeUnits: "meters",
       pointSize: 3,
       getPosition: d => d.point,
@@ -178,7 +180,7 @@ export default function SeaChart() {
       id: "radar-heatmapLayer",
       data: radarFrames,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos.longitude, os_pos.latitude],
+      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
       getPosition: d => d.point,
       getWeight: d => d.weight,
       aggregation: "MEAN", // SUM or MEAN
@@ -195,7 +197,7 @@ export default function SeaChart() {
       id: "radar-scatterplot-layer",
       data: radarFrames,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos.longitude, os_pos.latitude],
+      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
       pickable: true,
       billboard: false,
       opacity: 0.5,
@@ -217,7 +219,7 @@ export default function SeaChart() {
       data: lidarObservations,
       pickable: false,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos.longitude, os_pos.latitude],
+      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
       pointSize: 4,
       getPosition: d => d,
       // getNormal: d => d.normal,

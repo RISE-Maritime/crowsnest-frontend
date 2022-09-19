@@ -1,13 +1,14 @@
 import React, { useState } from "react"
 import { mapCursorPosAtom } from "./SeaChart"
-import { OS_POSITION } from "../../../recoil/atoms"
+import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import { useRecoilValue } from "recoil"
 import { formatLatitude, formatLongitude, calcDistanceBetween, calcBearingBetween } from "../../../utils"
 import { Stack, Typography, Grid } from "@mui/material"
 
 export default function MapCursorInfo() {
   const mapCursor = useRecoilValue(mapCursorPosAtom)
-  const osPos = useRecoilValue(OS_POSITION)
+  const osPos = useRecoilValue(OS_POSITIONS)
+  const osPosSetting = useRecoilValue(OS_POSITION_SETTING)
   const [displayOptions, setDisplayOptions] = useState({
     positionInDegrees: false,
   })
@@ -43,13 +44,33 @@ export default function MapCursorInfo() {
         </Grid>
         <Grid item xs={7}>
           <Typography variant="caption">
-            DIST: {calcDistanceBetween(mapCursor.latitude, mapCursor.longitude, osPos.latitude, osPos.longitude)} nm
+            DIST:{" "}
+            {calcDistanceBetween(
+              mapCursor.latitude,
+              mapCursor.longitude,
+              osPos[osPosSetting.source].latitude,
+              osPos[osPosSetting.source].longitude
+            )}
+            nm
             <br />
-            BRG: {calcBearingBetween(osPos.latitude, osPos.longitude, mapCursor.latitude, mapCursor.longitude)} °
+            BRG:
+            {calcBearingBetween(
+              osPos[osPosSetting.source].latitude,
+              osPos[osPosSetting.source].longitude,
+              mapCursor.latitude,
+              mapCursor.longitude
+            )}
+            °
             <br />
-            TTG: {(calcDistanceBetween(mapCursor.latitude, mapCursor.longitude, osPos.latitude, osPos.longitude) * 10).toFixed(
-              1
-            )}{" "}
+            TTG:
+            {(
+              calcDistanceBetween(
+                mapCursor.latitude,
+                mapCursor.longitude,
+                osPos[osPosSetting.source].latitude,
+                osPos[osPosSetting.source].longitude
+              ) * 10
+            ).toFixed(1)}
             min
           </Typography>
         </Grid>

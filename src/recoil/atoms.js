@@ -127,7 +127,7 @@ export const atomPlatformsAIS = atom({
       to_port: 18,
       to_starboard: 18,
       to_stern: 198,
-      
+
     },
     {
       id: "Viking_grace_kbralebr",
@@ -141,7 +141,7 @@ export const atomPlatformsAIS = atom({
       mmsi: 265410000,
       picture: PicJutlandica
     },
-   
+
   ]
 })
 
@@ -168,31 +168,54 @@ export const atomActivePlatform = atom({
 // ######################################
 // ALL Realtime DATA 
 // 
-// Own ship operational data like sensors... 
+// OS Sensor or data source in use of components globally 
 
-export const OS_POSITION = atom({
-  key: "os_position_state",
+
+// POSITION 
+
+export const OS_POSITION_SETTING = atom({
+  key: "os_position_stetting",
   default: {
-    latitude: 0.0, // degrees 
-    longitude: 0.0,  // degrees
-    source: "MANUAL",
+    source: "AIS",
     status: "normal", // [normal, warning, error] 
     statusText: "Normal",
-    timeCreated: ""
+    timeCreated: "" // Delay in system 
   },
 });
 
-export const OS_POSITIONS_AVAILABLE = atom({
+
+export const OS_POSITIONS = atom({
   key: "os_positions_state",
-  default: [{
-    latitude: 57.70907, // degrees 
-    longitude: 11.94741,  // degrees
-    source: "manual",
-    status: "normal", // [normal, warning, error] 
-    statusText: "",
-    timeCreated: ""
-  }],
+  default: {
+    AIS: {
+      latitude: 0.0, // degrees 
+      longitude: 0.0,  // degrees
+      source: "MANUAL",
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    },
+    DEVISE: {
+      latitude: 0.0, // degrees 
+      longitude: 0.0,  // degrees
+      source: "MANUAL",
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    },
+    MANUAL: {
+      latitude: 0.0, // degrees 
+      longitude: 0.0,  // degrees
+      source: "MANUAL",
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    }
+  },
 });
+
+
+
 
 
 export const lidarStateAtom = atom({

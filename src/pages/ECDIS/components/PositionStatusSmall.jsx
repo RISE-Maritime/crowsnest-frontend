@@ -5,7 +5,7 @@ import GpsOffIcon from "@mui/icons-material/GpsOff"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import EditRoundedIcon from "@mui/icons-material/EditRounded"
 import { Button, Typography, Stack, FormControl, TextField, Select, MenuItem, Grid, IconButton } from "@mui/material"
-import { OS_POSITION } from "../../../recoil/atoms"
+import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import { useRecoilState } from "recoil"
 import { formatLatitude, formatLongitude } from "../../../utils"
 import { Formik, Form } from "formik"
@@ -32,7 +32,8 @@ const validationSchema = yup.object({
 })
 
 export default function PositionStatusSmall() {
-  const [positionData, setPositionData] = useRecoilState(OS_POSITION)
+  const [positionData, setPositionData] = useRecoilState(OS_POSITIONS)
+  const position_setting = useRecoilState(OS_POSITION_SETTING)
   const [viewManualPosInput, setViewManualPosInput] = useState(false)
   // sge
   const handleChangeGNSSsource = event => {
@@ -85,8 +86,8 @@ export default function PositionStatusSmall() {
         <GpsFixedIcon />
 
         <Stack direction="column" justifyContent="center" alignItems="flex-end">
-          <Typography variant="caption"> {formatLatitude(positionData?.latitude)}</Typography>
-          <Typography variant="caption"> {formatLongitude(positionData?.longitude)}</Typography>
+          <Typography variant="caption"> {formatLatitude(positionData[position_setting.source]?.latitude)}</Typography>
+          <Typography variant="caption"> {formatLongitude(positionData[position_setting.source]?.longitude)}</Typography>
         </Stack>
         {positionData.source === "manual" ? (
           <IconButton size="small" onClick={toggleManualPosInput}>

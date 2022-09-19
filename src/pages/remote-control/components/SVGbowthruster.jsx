@@ -517,7 +517,7 @@ function SVGbowthruster() {
           fontFamily='Roboto-Bold, Roboto'
           fontSize='23'
           fontWeight='700'
-          transformSVGbowthruster='translate(1403.059 566)'
+          transform='translate(1403.059 566)'
         >
           <tspan x='0' y='0'>
             2
