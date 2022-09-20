@@ -176,7 +176,7 @@ export const atomActivePlatform = atom({
 export const OS_POSITION_SETTING = atom({
   key: "os_position_stetting",
   default: {
-    source: "AIS",
+    source: "DEVISE",
     status: "normal", // [normal, warning, error] 
     statusText: "Normal",
     timeCreated: "" // Delay in system 
@@ -190,32 +190,70 @@ export const OS_POSITIONS = atom({
     AIS: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
-      source: "MANUAL",
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: null, // Delay in system 
+      delay: null // Delay in system 
+    },
+    DEVISE: {
+      latitude: 0.0, // degrees 
+      longitude: 0.0,  // degrees
+      accuracy: null, // meters 
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: null, // Delay in system 
+      delay: null
+    },
+    MANUAL: {
+      latitude: 0.0, // degrees 
+      longitude: 0.0,  // degrees
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: null, // Delay in system 
+      delay: null
+    }
+  },
+});
+
+
+// VELOCITY  
+
+export const OS_VELOCITY_SETTING = atom({
+  key: "os_velocity_stetting",
+  default: {
+    source: "AIS",
+    status: "normal", // [normal, warning, error] 
+    statusText: "Normal",
+    timeCreated: "" // Delay in system 
+  },
+});
+
+export const OS_VELOCITY = atom({
+  key: "os_velocity_state",
+  default: {
+    AIS: {
+      sog: 0.0, // knots 
+      cog: 0.0, // units?
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
     DEVISE: {
-      latitude: 0.0, // degrees 
-      longitude: 0.0,  // degrees
-      source: "MANUAL",
+      sog: 0.0, // units? 
+      cog: 0.0, // units?
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
     MANUAL: {
-      latitude: 0.0, // degrees 
-      longitude: 0.0,  // degrees
-      source: "MANUAL",
+      sog: 0.0, // knots 
+      cog: 0.0, // units?
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     }
   },
 });
-
-
-
 
 
 export const lidarStateAtom = atom({

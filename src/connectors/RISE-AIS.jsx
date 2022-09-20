@@ -4,7 +4,7 @@ import { atom, useRecoilState, useSetRecoilState } from "recoil";
 import {
   atomOwnShipData,
   atomSelectedVesselModel,
-} from "../pages/home/components/platformPicker";
+} from "../pages/home/components/PlatformPicker";
 
 // Rise MQTT stream connection state
 export const atomRiseAisMetadata = atom({

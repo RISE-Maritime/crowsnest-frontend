@@ -7,7 +7,8 @@ import {
   atomActivePlatform,
   lidarObservationAtom,
   radarObservationAtom,
-  OS_POSITIONS
+  OS_POSITIONS,
+  OS_VELOCITY
 } from "./atoms";
 import { toRadians } from "../utils"
 
@@ -105,26 +106,23 @@ export const wsMessageParser = selector({
           // Update OS AIS data references 
           const active_platform = get(atomActivePlatform)
           if (active_platform.mmsi in AISlist) {  // Check if OS exists
-           
-            console.log("HERE", AISlist[active_platform.mmsi]);
+
+            // console.log("HERE", AISlist[active_platform.mmsi]);
             const os_ais_data = AISlist[active_platform.mmsi]
-            console.log("HERE TWO", 2022, os_ais_data.month, os_ais_data.day);
             let time_now = new Date();
             const sec_now = time_now.getSeconds()
-            const sec_diff = os_ais_data.second - sec_now 
-            // console.log("diff",sec_now - os_ais_data.second);
-
+            const sec_diff = os_ais_data.second - sec_now
             let ais_msg_created = new Date();
 
             ais_msg_created.setSeconds(os_ais_data.second)
-            console.log("HERE TWO", ais_msg_created);
+
             set(OS_POSITIONS, (currentObj) => ({
               ...currentObj,
               AIS: {
                 ...currentObj.AIS,
                 latitude: os_ais_data.lat, // degrees 
                 longitude: os_ais_data.lon,  // degrees
-                timeCreated:  sec_diff + " sec"
+                timeCreated: sec_diff + " sec"
               }
             }))
 
@@ -274,3 +272,46 @@ export const wsMessageParser = selector({
     }
   },
 });
+
+
+
+
+
+// Device Data 
+export const setDeviceSensorData = selector({
+  key: "set_device_sensor_data",
+  get: () => {
+    return null;
+  },
+  set: ({ set }, newValues) => {
+
+    console.log("DEVISE SENSOR SETTER: ", newValues);
+
+    set(OS_POSITIONS, (currentObj) => ({
+      ...currentObj,
+      DEVISE: {
+        latitude: newValues.latitude, // degrees 
+        longitude: newValues.longitude,  // degrees
+        accuracy: newValues.accuracy,
+        altitude: newValues.altitude,
+        altitudeAccuracy: newValues.altitudeAccuracy,
+        status: "normal", // [normal, warning, error] 
+        statusText: "Normal",
+        timeCreated: newValues.created // Delay in system 
+      },
+    }))
+
+    set(OS_VELOCITY, (currentObj) => ({
+      ...currentObj,
+      DEVISE: {
+        sog: newValues.speed, // units? 
+        cog: newValues.heading, // units?
+        status: "normal", // [normal, warning, error] 
+        statusText: "Normal",
+        timeCreated: newValues.created // Delay in system 
+      },
+    }))
+
+  }
+})
+

@@ -57,15 +57,15 @@ export default function SeaChart() {
 
   const os_pos = useRecoilValue(OS_POSITIONS)
   const os_pos_setting = useRecoilValue(OS_POSITION_SETTING)
-  
+
   const AIStargets = useRecoilValue(targetsAIS)
   const radarFrames = useRecoilValue(radarObservationAtom)
   const lidarObservations = useRecoilValue(lidarObservationAtom)
 
   // State of the map
   const [viewstate, setViewState] = React.useState({
-    latitude: os_pos.latitude,
-    longitude: os_pos.longitude,
+    latitude: os_pos[os_pos_setting.source].latitude,
+    longitude: os_pos[os_pos_setting.source].longitude,
     zoom: 13,
     pitch: 0,
     maxZoom: 24,

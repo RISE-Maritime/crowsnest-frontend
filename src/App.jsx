@@ -21,6 +21,7 @@ import DeviceSensors from "./pages/device-sensors"
 // MQTT
 import MqttConnection from "./base-elements/MqttConnection"
 import { mqttSubscribe } from "./base-elements/MqttConnection"
+import DeviceConnection from "./base-elements/DeviceConnection"
 
 export default function App() {
   const appObj = useRecoilValue(appState)
@@ -103,6 +104,7 @@ export default function App() {
   return (
     <>
       <MqttConnection />
+      <DeviceConnection/>
 
       <ThemeProvider theme={theme}>
         <CssBaseline />

@@ -22,12 +22,15 @@ export default function DeviceSensors() {
   });
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(success, error, options);
+    // navigator.geolocation.getCurrentPosition(success, error, options);
+    navigator.geolocation.watchPosition(success, error, options);
   }, []);
 
   function success(pos) {
     var crd = pos.coords;
     console.log(pos);
+    let current_time = new Date()
+
     setPosition({
       ...position,
       latitude: crd.latitude,
@@ -37,6 +40,7 @@ export default function DeviceSensors() {
       altitudeAccuracy: crd.altitudeAccuracy,
       heading: crd.heading,
       speed: crd.speed,
+      created: current_time.toUTCString()
     });
 
     console.log("Your current position is:");
@@ -63,6 +67,8 @@ export default function DeviceSensors() {
         Heading: {position.heading}
         <br />
         Speed: {position.speed}
+        <br />
+        Created: {position.created}
       </p>
 
       <p>

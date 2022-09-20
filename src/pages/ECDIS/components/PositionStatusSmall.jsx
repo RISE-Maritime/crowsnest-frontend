@@ -86,7 +86,7 @@ export default function PositionStatusSmall() {
         <GpsFixedIcon />
 
         <Stack direction="column" justifyContent="center" alignItems="flex-end">
-          <Typography variant="caption"> {formatLatitude(positionData[position_setting.source]?.latitude)}</Typography>
+          <Typography variant="caption"> {formatLatitude(positionData[position_setting.source]?.latitude)  } </Typography>
           <Typography variant="caption"> {formatLongitude(positionData[position_setting.source]?.longitude)}</Typography>
         </Stack>
         {positionData.source === "manual" ? (

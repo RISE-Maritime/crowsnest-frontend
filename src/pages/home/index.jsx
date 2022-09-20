@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import ViewList from "./components/viewList";
-import PlatformPicker from "./components/platformPicker";
+import PlatformPicker from "./components/PlatformPicker";
 
 export default function index() {
   return (

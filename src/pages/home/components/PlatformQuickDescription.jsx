@@ -24,7 +24,9 @@ export default function PlatformQuickDescription() {
           <br/>
           POS: {os_pos[os_pos_ref.source]?.latitude} , {os_pos[os_pos_ref.source]?.longitude}
           <br />
-          Delay: {os_pos[os_pos_ref.source]?.timeCreated}
+          {/* Created: {os_pos[os_pos_ref.source]?.timeCreated?.toLocaleTimeString()} */}
+          <br />
+          Delay: {os_pos[os_pos_ref.source]?.delay}
         </Typography>
       </Stack>
     </Stack>

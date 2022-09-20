@@ -28,14 +28,18 @@ export default function DataFlow() {
           color: theme.palette.primary.contrastText,
         }}
       >
-        <h1>Data flow</h1>
+        <h1>Data flow & Sources</h1>
       </Grid>
       <Grid item xs={12}>
-        <DataConnectionState connectionName={"MQTT Broker"} isConnected={mqttState.connected} />
+        <DataConnectionState connectionName={"MQTT RISE Broker"} isConnected={mqttState.connected} />
       </Grid>
 
       <Grid item xs={12}>
-        <DataConnectionState connectionName={"LIDAR"} isConnected={lidarSate.connected} delay={lidarSate.delaySec} />
+        <DataConnectionState connectionName={"MQTT Local Broker"} isConnected={false} />
+      </Grid>
+
+      <Grid item xs={12}>
+        <DataConnectionState connectionName={"Own Device"} isConnected={true} delay={lidarSate.delaySec} />
       </Grid>
     </Grid>
   )

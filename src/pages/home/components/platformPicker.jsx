@@ -1,8 +1,6 @@
 import React, { useState } from "react"
 import { atom, useRecoilState, useRecoilValue } from "recoil"
-import { atomPlatforms, atomActivePlatform, appState, targetsAIS } from "../../../recoil/atoms"
-import { useFormik } from "formik"
-import * as yup from "yup"
+import { atomPlatforms, atomActivePlatform, appState, targetsAIS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import { Grid, TextField, Button, Stack, Typography, Autocomplete } from "@mui/material"
 import styled from "styled-components"
 import DefaultAisTargets from "./DefaultAisTargets"
@@ -11,6 +9,7 @@ import AutorenewIcon from "@mui/icons-material/Autorenew"
 import PlatformQuickDescription from "./PlatformQuickDescription"
 
 import PicDevice from "../../../resources/platforms/devise.png"
+import PicAis from "../../../resources/platforms/ais.png"
 
 // Selected vessel profile
 export const atomSelectedOwnShipDatSource = atom({
@@ -62,22 +61,17 @@ const BoxStyled = styled.div`
   min-width: 98%;
 `
 
-const validationSchema = yup.object({
-  mmsi: yup.number("Enter MMSI number with 9 digits").min(8, "Enter more numbers").required("MMIS number is required"),
-})
-
 export default function PlatformPicker() {
-  const [platforms, setPlatforms] = useRecoilState(atomPlatforms)
+  const platforms = useRecoilValue(atomPlatforms)
   const [appObj, setAppObj] = useRecoilState(appState)
   const [activePlatform, setActivePlatform] = useRecoilState(atomActivePlatform)
+  const [position_setting, set_position_setting] = useRecoilState(OS_POSITION_SETTING)
   const AIStargets = useRecoilValue(targetsAIS)
 
   const [aisFiltered, setAisFiltered] = useState([])
-
-  // useEffect(() => {}, [])
+  const [AISmmsi, setAISmmsi] = useState({})
 
   const updateTargetList = () => {
-    console.log(AIStargets)
     setAisFiltered(AIStargets)
   }
 
@@ -99,28 +93,42 @@ export default function PlatformPicker() {
     })
   }
 
-  // Activating device as source
-  const selectedDevice = () => {
+  // Activating DEVICE as OS
+  const setDeviseAsOS = () => {
     setActivePlatform({
       ...activePlatform,
       activePlatformKey: "device",
       platformName: "Own Device",
       activePlatformType: "DEVICE",
-      mmsi: 0,
-      imo: 0,
+      mmsi: 1000,
+      imo: 1000,
       picture: PicDevice,
+    })
+
+    set_position_setting({
+      ...position_setting,
+      source: "DEVISE",
     })
   }
 
-  const formik = useFormik({
-    initialValues: {
-      mmsi: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: values => {
-      console.log("HERE:", values)
-    },
-  })
+  // Activating AIS target as OS
+  const connectAISmmsi = () => {
+    // console.log(AISmmsi);
+
+    setActivePlatform({
+      ...activePlatform,
+      activePlatformKey: "ais",
+      platformName: AISmmsi.shipname,
+      activePlatformType: "AIS",
+      mmsi: AISmmsi.mmsi,
+      picture: PicAis,
+    })
+
+    set_position_setting({
+      ...position_setting,
+      source: "AIS",
+    })
+  }
 
   return (
     <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -156,43 +164,39 @@ export default function PlatformPicker() {
             </Button>
           </Stack>
 
-          <form onSubmit={formik.handleSubmit}>
-            <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
-              <Autocomplete
-                id="group"
-                name="group"
-                options={aisFiltered}
-                onChange={(e, value) => {
-                  formik.setFieldValue("mmsi", value.mmsi)
-                  console.log(value)
-                }}
-                getOptionLabel={option => option.shipname + " (" + option.mmsi + ")"}
-                renderInput={params => (
-                  <TextField
-                    sx={{ width: "18rem" }}
-                    required
-                    fullWidth
-                    variant="standard"
-                    {...params}
-                    label="mmsi"
-                    id="mmsi"
-                    name="mmsi"
-                    error={formik.touched.group && Boolean(formik.errors.group)}
-                    helperText={formik.touched.group && formik.errors.group}
-                  />
-                )}
-              />
+          <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
+            <Autocomplete
+              id="group"
+              name="group"
+              options={aisFiltered}
+              onChange={(e, value) => {
+                setAISmmsi(value)
+                console.log(value)
+              }}
+              getOptionLabel={option => option.shipname + " (" + option.mmsi + ")"}
+              renderInput={params => (
+                <TextField
+                  sx={{ width: "18rem" }}
+                  required
+                  fullWidth
+                  variant="standard"
+                  {...params}
+                  label="mmsi"
+                  id="mmsi"
+                  name="mmsi"
+                />
+              )}
+            />
 
-              <Button color="secondary" variant="outlined" type="submit">
-                Connect to MMSI
-              </Button>
-            </Stack>
+            <Button color="secondary" variant="outlined" onClick={connectAISmmsi}>
+              Connect to MMSI
+            </Button>
+          </Stack>
 
-            {/* Saved AIS targets */}
-            <hr />
-            <Typography variant="subtitle1">Saved AIS targets</Typography>
-            <DefaultAisTargets aisFiltered={AIStargets} />
-          </form>
+          {/* Saved AIS targets */}
+          <hr />
+          <Typography variant="subtitle1">Saved AIS targets</Typography>
+          <DefaultAisTargets aisFiltered={AIStargets} />
         </BoxStyled>
 
         <BoxStyled>
@@ -201,7 +205,7 @@ export default function PlatformPicker() {
             <Button
               color="secondary"
               variant={"device" === activePlatform.activePlatformKey ? "contained" : "outlined"}
-              onClick={selectedDevice}
+              onClick={setDeviseAsOS}
             >
               Use device sensors as source
             </Button>
