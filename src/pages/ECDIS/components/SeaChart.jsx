@@ -1,5 +1,5 @@
-import React from "react"
-import { atom, useRecoilValue, useSetRecoilState } from "recoil"
+import React, { useState } from "react"
+import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Map } from "react-map-gl"
@@ -32,6 +32,34 @@ export const mapCursorPosAtom = atom({
   },
 })
 
+export const atomMapState = atom({
+  key: "atom_map_state",
+  default: {
+    altitude: 1.5,
+    bearing: 0,
+    height: 891,
+    latitude: 57.25471516033827,
+    longitude: 11.010708587397385,
+    normalize: true,
+    width: 1397,
+    pitch: 0,
+    zoom: 13,
+    maxZoom: 24,
+    maxPitch: 80,
+  },
+})
+
+export const atomLayersTaggable = atom({
+  key: "atom_layers_taggable",
+  default: ["ENIRO", "Street map","Satellite", "Dark","Sea Marks"],
+})
+
+export const atomLayersShowing = atom({
+  key: "atom_layers_showing",
+  default: ["ENIRO"],
+})
+
+
 function getTooltip({ object }) {
   // console.log(object)
 
@@ -54,6 +82,9 @@ const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoieXlkZGVldHQiLCJhIjoiY2t0eGEyNjJhMWI0NjJx
 export default function SeaChart() {
   const setClickInfo = useSetRecoilState(clickInfoAtom)
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
+  const [mapState, setMapState] = useRecoilState(atomMapState)
+  const [layersTaggable, setLayersTaggable] = useRecoilState(atomLayersTaggable)
+  const [layersShowing, setLayersShowing] = useRecoilState(atomLayersShowing)
 
   const os_pos = useRecoilValue(OS_POSITIONS)
   const os_pos_setting = useRecoilValue(OS_POSITION_SETTING)
@@ -63,18 +94,20 @@ export default function SeaChart() {
   const lidarObservations = useRecoilValue(lidarObservationAtom)
 
   // State of the map
-  const [viewstate, setViewState] = React.useState({
+  const [viewstate, setViewState] = useState({
     latitude: os_pos[os_pos_setting.source].latitude,
     longitude: os_pos[os_pos_setting.source].longitude,
     zoom: 13,
     pitch: 0,
     maxZoom: 24,
-    maxPitch: 80,
+    maxPitch: 85,
   })
 
   const layers = [
     // SEA CHART
     new TileLayer({
+      id: "tail-layer-enior",
+      visible: layersShowing.includes("ENIRO"),
       data: "http://map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{-y}.png",
       minZoom: 0,
       maxZoom: 19,
@@ -92,6 +125,100 @@ export default function SeaChart() {
         })
       },
     }),
+
+    new TileLayer({
+      id: "tail-layer-open-street-map",
+      visible: layersShowing.includes("Street map"),
+
+      data: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
+      minZoom: 0,
+      maxZoom: 19,
+      tileSize: 256,
+
+      renderSubLayers: props => {
+        const {
+          bbox: { west, south, east, north },
+        } = props.tile
+
+        return new BitmapLayer(props, {
+          data: null,
+          image: props.data,
+          bounds: [west, south, east, north],
+        })
+      },
+    }),
+
+    new TileLayer({
+      id: "tail-layer-satellite",
+      visible: layersShowing.includes("Satellite"),
+
+      data: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+
+      minZoom: 0,
+      maxZoom: 19,
+      tileSize: 256,
+
+      renderSubLayers: props => {
+        const {
+          bbox: { west, south, east, north },
+        } = props.tile
+
+        return new BitmapLayer(props, {
+          data: null,
+          image: props.data,
+          bounds: [west, south, east, north],
+        })
+      },
+    }),
+
+    new TileLayer({
+      id: "tail-layer-dark",
+      visible: layersShowing.includes("Dark"),
+
+      data: 'https://abcde.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+
+      minZoom: 0,
+      maxZoom: 19,
+      tileSize: 256,
+
+      renderSubLayers: props => {
+        const {
+          bbox: { west, south, east, north },
+        } = props.tile
+
+        return new BitmapLayer(props, {
+          data: null,
+          image: props.data,
+          bounds: [west, south, east, north],
+        })
+      },
+    }),
+
+    new TileLayer({
+      id: "tail-layer-sea-marks",
+      visible: layersShowing.includes("Sea Marks"),
+
+      data: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+
+      minZoom: 0,
+      maxZoom: 19,
+      tileSize: 256,
+
+      renderSubLayers: props => {
+        const {
+          bbox: { west, south, east, north },
+        } = props.tile
+
+        return new BitmapLayer(props, {
+          data: null,
+          image: props.data,
+          bounds: [west, south, east, north],
+        })
+      },
+    }),
+
+  
 
     // OWN SHIP symbol
     new IconLayer({
@@ -228,6 +355,8 @@ export default function SeaChart() {
   ]
 
   const changeViewState = e => {
+    console.log(e)
+    setMapState(e.viewState)
     setViewState(e.viewState)
   }
 
@@ -250,14 +379,25 @@ export default function SeaChart() {
   return (
     <DeckGL
       layers={layers}
-      viewState={viewstate}
+      viewState={mapState}
       onViewStateChange={e => changeViewState(e)}
       onHover={e => hoverMapCursor(e)}
       controller={{ dragPan: true, doubleClickZoom: false }}
       getTooltip={getTooltip}
       getCursor={() => "crosshair"}
     >
-      <Map mapboxAccessToken={MAPBOX_ACCESS_TOKEN} mapStyle="mapbox://styles/mapbox/streets-v9" />
+      <Map
+        mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+        fog={{
+          range: [-1, 2],
+          "horizon-blend": 0.3,
+          color: "white",
+          "high-color": "#add8e6",
+          "space-color": "#d8f2ff",
+          "star-intensity": 0.0,
+        }}
+        // mapStyle="mapbox://styles/mapbox/streets-v9"
+      />
     </DeckGL>
   )
 }

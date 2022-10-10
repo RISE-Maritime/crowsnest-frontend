@@ -89,12 +89,14 @@ export const atomPlatforms = atom({
       name: "Landkrabban",
       key: "landkrabban",
       mmsi: 2,
+      source_position: "DEVISE",
       MQTTpath: "",
       picture: PicLandkrabban
     },
     germanica: {
       name: "Stena Germainca",
       key: "germanica",
+      source_position: "DEVISE",
       MQTTpath: "",
       mmsi: 266331000,
       imo: 9145176,
@@ -103,6 +105,7 @@ export const atomPlatforms = atom({
     seahorse: {
       name: "Seahorse",
       key: "seahorse",
+      source_position: "DEVISE",
       MQTTpath: "",
       mmsi: 3,
       imo: 0,
@@ -149,7 +152,7 @@ export const atomPlatformsAIS = atom({
 export const atomActivePlatform = atom({
   key: "active_platform",
   default: {
-    activePlatformKey: "",
+  
     activePlatformType: "PLATFORM", // [PLATFORM, AIS, DEVICE]
     platformName: "",
     MQTTpath: "",
@@ -169,6 +172,9 @@ export const atomActivePlatform = atom({
 // ALL Realtime DATA 
 // 
 // OS Sensor or data source in use of components globally 
+// 
+//  os_X_setting ->> Selected active source in use  
+//  os_X ->> Object include all sources of same value type   
 
 
 // POSITION 
@@ -179,7 +185,7 @@ export const OS_POSITION_SETTING = atom({
     source: "DEVISE",
     status: "normal", // [normal, warning, error] 
     statusText: "Normal",
-    timeCreated: "" // Delay in system 
+    timeCreated: "" 
   },
 });
 
@@ -192,7 +198,7 @@ export const OS_POSITIONS = atom({
       longitude: 0.0,  // degrees
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
-      timeCreated: null, // Delay in system 
+      timeCreated: null, 
       delay: null // Delay in system 
     },
     DEVISE: {
@@ -201,15 +207,23 @@ export const OS_POSITIONS = atom({
       accuracy: null, // meters 
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
-      timeCreated: null, // Delay in system 
+      timeCreated: null, 
       delay: null
+    },
+    GNSS_0: {
+      latitude: 0.0, // degrees 
+      longitude: 0.0,  // degrees
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: null, 
+      delay: null // Delay in system 
     },
     MANUAL: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
-      timeCreated: null, // Delay in system 
+      timeCreated: null, 
       delay: null
     }
   },

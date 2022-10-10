@@ -81,7 +81,6 @@ export default function PlatformPicker() {
     setActivePlatform({
       ...activePlatform,
       ...platform,
-      activePlatformKey: platform.key,
       platformName: platform.name,
       activePlatformType: "PLATFORM",
       mmsi: platform.mmsi,
@@ -91,15 +90,18 @@ export default function PlatformPicker() {
       ...appObj,
       activeVessel: platform.name,
     })
+    set_position_setting({
+      ...position_setting,
+      source: platform.source_position,
+    })
   }
 
   // Activating DEVICE as OS
   const setDeviseAsOS = () => {
     setActivePlatform({
       ...activePlatform,
-      activePlatformKey: "device",
-      platformName: "Own Device",
       activePlatformType: "DEVICE",
+      platformName: "Own Device",
       mmsi: 1000,
       imo: 1000,
       picture: PicDevice,
@@ -117,7 +119,6 @@ export default function PlatformPicker() {
 
     setActivePlatform({
       ...activePlatform,
-      activePlatformKey: "ais",
       platformName: AISmmsi.shipname,
       activePlatformType: "AIS",
       mmsi: AISmmsi.mmsi,
@@ -134,10 +135,11 @@ export default function PlatformPicker() {
     <Grid container direction="row" justifyContent="center" alignItems="center">
       <Grid item xs={12}>
         <Typography variant="h4" sx={{ padding: "1rem" }}>
-          Select own view source{" "}
+          Select own ship source
         </Typography>
       </Grid>
       <Grid item xs={8} sx={{ display: "grid", placeItems: "center" }}>
+        {/* PLATFORMS */}
         <BoxStyled>
           <Typography variant="h5">Platforms</Typography>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "0.5rem" }}>
@@ -204,7 +206,7 @@ export default function PlatformPicker() {
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
             <Button
               color="secondary"
-              variant={"device" === activePlatform.activePlatformKey ? "contained" : "outlined"}
+              variant={"DEVISE" === activePlatform.activePlatformType ? "contained" : "outlined"}
               onClick={setDeviseAsOS}
             >
               Use device sensors as source

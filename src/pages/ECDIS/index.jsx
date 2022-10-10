@@ -12,7 +12,8 @@ export default function Ecdis() {
         xs={10}
         sx={{
           position: "relative",
-          height: "calc(100vh - 80px)",
+          // height: "calc(100vh - 95px)",
+          height: "92vh",
           cursor: "crosshair",
         }}
       >
@@ -25,7 +26,7 @@ export default function Ecdis() {
           display: "grid",
           placeItems: "center",
           position: "relative",
-          height: "93vh",
+          height: "90vh",
         }}
       >
         <StatusSideBar />
