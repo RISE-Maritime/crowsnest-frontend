@@ -90,24 +90,24 @@ export const atomPlatforms = atom({
       key: "landkrabban",
       mmsi: 2,
       source_position: "DEVISE",
-      MQTTpath: "",
+      MQTTpath: "LANDKRABBAN",
       picture: PicLandkrabban
     },
     germanica: {
       name: "Stena Germainca",
       key: "germanica",
       source_position: "DEVISE",
-      MQTTpath: "",
+      MQTTpath: "GERMANICA",
       mmsi: 266331000,
       imo: 9145176,
       picture: PicGermanica
     },
     seahorse: {
-      name: "Seahorse",
+      name: "Seahorse/ALVELI",
       key: "seahorse",
-      source_position: "DEVISE",
-      MQTTpath: "",
-      mmsi: 3,
+      source_position: "AIS",
+      MQTTpath: "SEAHORSE",
+      mmsi: 265738540,
       imo: 0,
       picture: PicSeahorse
     }
@@ -154,10 +154,10 @@ export const atomActivePlatform = atom({
   default: {
   
     activePlatformType: "PLATFORM", // [PLATFORM, AIS, DEVICE]
-    platformName: "",
-    MQTTpath: "",
-    mmsi: 0,
-    imo: 0,
+    platformName: "Seahorse",
+    MQTTpath: "SEAHORSE",
+    mmsi: 3,
+    imo: 3,
     callsign: "OJTC",
     ship_type: "PASSENGER",
     to_bow: 25,
@@ -201,6 +201,14 @@ export const OS_POSITIONS = atom({
       timeCreated: null, 
       delay: null // Delay in system 
     },
+    GNSS_0: {
+      latitude: 0.0, // degrees 
+      longitude: 0.0,  // degrees
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: null, 
+      delay: null // Delay in system 
+    },
     DEVISE: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
@@ -209,14 +217,6 @@ export const OS_POSITIONS = atom({
       statusText: "Normal",
       timeCreated: null, 
       delay: null
-    },
-    GNSS_0: {
-      latitude: 0.0, // degrees 
-      longitude: 0.0,  // degrees
-      status: "normal", // [normal, warning, error] 
-      statusText: "Normal",
-      timeCreated: null, 
-      delay: null // Delay in system 
     },
     MANUAL: {
       latitude: 0.0, // degrees 

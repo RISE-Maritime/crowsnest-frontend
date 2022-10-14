@@ -1,9 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Map } from "react-map-gl"
-import { HeatmapLayer, HexagonLayer } from "@deck.gl/aggregation-layers"
+import { HeatmapLayer } from "@deck.gl/aggregation-layers"
 import DeckGL from "@deck.gl/react"
 import VesselContourLayer from "../../../base-elements/custom-deckgl-layers/vessel-contour-layer"
 import { PointCloudLayer } from "@deck.gl/layers"
@@ -35,30 +35,37 @@ export const mapCursorPosAtom = atom({
 export const atomMapState = atom({
   key: "atom_map_state",
   default: {
+    zoom: 10,
+    pitch: 6,
+    maxZoom: 24,
+    maxPitch: 85,
     altitude: 1.5,
     bearing: 0,
-    height: 891,
-    latitude: 57.25471516033827,
-    longitude: 11.010708587397385,
-    normalize: true,
-    width: 1397,
-    pitch: 0,
-    zoom: 13,
-    maxZoom: 24,
-    maxPitch: 80,
+    // height: 891,
+    latitude: 58.0,
+    longitude: 12.01,
+    // normalize: true,
+    // width: 1397,
+    chartFix: "OS", // Chart view position behavior
+  },
+})
+
+export const atomMapSetting = atom({
+  key: "atom_map_setting",
+  default: {
+    chartFix: "OS",
   },
 })
 
 export const atomLayersTaggable = atom({
   key: "atom_layers_taggable",
-  default: ["ENIRO", "Street map","Satellite", "Dark","Sea Marks"],
+  default: ["ENIRO", "Street map", "Satellite", "Dark", "Sea Marks"],
 })
 
 export const atomLayersShowing = atom({
   key: "atom_layers_showing",
   default: ["ENIRO"],
 })
-
 
 function getTooltip({ object }) {
   // console.log(object)
@@ -83,7 +90,7 @@ export default function SeaChart() {
   const setClickInfo = useSetRecoilState(clickInfoAtom)
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
   const [mapState, setMapState] = useRecoilState(atomMapState)
-  const [layersTaggable, setLayersTaggable] = useRecoilState(atomLayersTaggable)
+  const [mapSetting, setMapSetting] = useRecoilState(atomMapSetting)
   const [layersShowing, setLayersShowing] = useRecoilState(atomLayersShowing)
 
   const os_pos = useRecoilValue(OS_POSITIONS)
@@ -93,15 +100,35 @@ export default function SeaChart() {
   const radarFrames = useRecoilValue(radarObservationAtom)
   const lidarObservations = useRecoilValue(lidarObservationAtom)
 
-  // State of the map
-  const [viewstate, setViewState] = useState({
-    latitude: os_pos[os_pos_setting.source].latitude,
-    longitude: os_pos[os_pos_setting.source].longitude,
-    zoom: 13,
-    pitch: 0,
-    maxZoom: 24,
-    maxPitch: 85,
-  })
+  // // State of the map
+  // const [viewstate, setViewState] = useState({
+  //   latitude: os_pos[os_pos_setting.source].latitude,
+  //   longitude: os_pos[os_pos_setting.source].longitude,
+  //   zoom: 10,
+  //   pitch: 0,
+  //   maxZoom: 24,
+  //   maxPitch: 85,
+  // })
+
+  useEffect(() => {
+    if (mapSetting.chartFix === "OS") {
+      setMapState({
+        ...mapState,
+        latitude: os_pos[os_pos_setting.source].latitude,
+        longitude: os_pos[os_pos_setting.source].longitude,
+      })
+    }
+  }, [os_pos[os_pos_setting.source].latitude])
+
+  const changeViewState = e => {
+    setMapState({
+      ...e.viewState,
+    })
+    setMapSetting({
+      ...mapSetting,
+      chartFix: "MANUAL",
+    })
+  }
 
   const layers = [
     // SEA CHART
@@ -176,7 +203,7 @@ export default function SeaChart() {
       id: "tail-layer-dark",
       visible: layersShowing.includes("Dark"),
 
-      data: 'https://abcde.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      data: "https://abcde.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
 
       minZoom: 0,
       maxZoom: 19,
@@ -199,7 +226,7 @@ export default function SeaChart() {
       id: "tail-layer-sea-marks",
       visible: layersShowing.includes("Sea Marks"),
 
-      data: 'https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png',
+      data: "https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png",
 
       minZoom: 0,
       maxZoom: 19,
@@ -217,8 +244,6 @@ export default function SeaChart() {
         })
       },
     }),
-
-  
 
     // OWN SHIP symbol
     new IconLayer({
@@ -263,7 +288,6 @@ export default function SeaChart() {
       getFillColor: () => [65, 210, 82, 250],
       pickable: true,
       onClick: info => {
-        console.log(info.object)
         setClickInfo({
           layer: "ais",
           object: info.object,
@@ -313,7 +337,7 @@ export default function SeaChart() {
       aggregation: "MEAN", // SUM or MEAN
       weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
       threshold: 0.0001,
-      radiusPixels: viewstate.zoom * 1.5,
+      radiusPixels: mapState.zoom * 1.5,
       intensity: 1, // (viewstate.zoom * 30) / 1,
       visible: true,
       opacity: 1,
@@ -353,12 +377,6 @@ export default function SeaChart() {
       // getColor: d => d.color
     }),
   ]
-
-  const changeViewState = e => {
-    console.log(e)
-    setMapState(e.viewState)
-    setViewState(e.viewState)
-  }
 
   const hoverMapCursor = e => {
     if (e.viewport === undefined) {

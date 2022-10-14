@@ -7,7 +7,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/Lock";
 import { playbackState } from "../../../recoil/atoms";
 import { useRecoilState } from "recoil";
-import { mqttPublish } from "../../MqttConnection";
+import { mqttPublish } from "../../RemoteMqttConnection";
 
 const TinyText = styled(Typography)({
   fontSize: "0.75rem",

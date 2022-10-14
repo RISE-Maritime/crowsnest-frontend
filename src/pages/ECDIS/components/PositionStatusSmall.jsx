@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import GpsFixedIcon from "@mui/icons-material/GpsFixed"
 import GpsNotFixedIcon from "@mui/icons-material/GpsNotFixed"
 import GpsOffIcon from "@mui/icons-material/GpsOff"
@@ -6,7 +6,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import EditRoundedIcon from "@mui/icons-material/EditRounded"
 import { Button, Typography, Stack, FormControl, TextField, Select, MenuItem, Grid, IconButton } from "@mui/material"
 import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import { formatLatitude, formatLongitude } from "../../../utils"
 import { Formik, Form } from "formik"
 import * as yup from "yup"
@@ -32,17 +32,19 @@ const validationSchema = yup.object({
 })
 
 export default function PositionStatusSmall() {
-  const [positionData, setPositionData] = useRecoilState(OS_POSITIONS)
-  const position_setting = useRecoilState(OS_POSITION_SETTING)
+  const [osPos, setOsPos] = useRecoilState(OS_POSITIONS)
+  const [posSetting, setPosSetting] = useRecoilState(OS_POSITION_SETTING)
   const [viewManualPosInput, setViewManualPosInput] = useState(false)
-  // sge
-  const handleChangeGNSSsource = event => {
-    const newValue = event.target.value
 
-    console.log(newValue)
-    setPositionData({
-      ...positionData,
-      source: newValue,
+  useEffect(() => {
+    console.log("HERE", Object.keys(osPos))
+  }, [])
+
+  const handleChangeGNSSsource = event => {
+    const newPosSource = event.target.value
+    setPosSetting({
+      ...posSetting,
+      source: newPosSource,
     })
   }
 
@@ -63,14 +65,14 @@ export default function PositionStatusSmall() {
     let lat = Number(Number(values.latDeg) + values.latMin / 60)
     let long = Number(Number(values.longDeg) + values.longMin / 60)
 
-    setPositionData({
-      ...positionData,
+    setOsPos({
+      ...osPos,
       latitude: lat,
       longitude: long,
     })
 
     console.log("UPDATE: ", {
-      ...positionData,
+      ...osPos,
       latitude: lat,
       longitude: long,
     })
@@ -84,27 +86,31 @@ export default function PositionStatusSmall() {
     <>
       <Stack direction="row" justifyContent="space-evenly" alignItems="center">
         <GpsFixedIcon />
-
         <Stack direction="column" justifyContent="center" alignItems="flex-end">
-          <Typography variant="caption"> {formatLatitude(positionData[position_setting.source]?.latitude)  } </Typography>
-          <Typography variant="caption"> {formatLongitude(positionData[position_setting.source]?.longitude)}</Typography>
+          <Typography variant="caption">{formatLatitude(osPos[posSetting.source]?.latitude)} </Typography>
+          <Typography variant="caption"> {formatLongitude(osPos[posSetting.source]?.longitude)}</Typography>
         </Stack>
-        {positionData.source === "manual" ? (
+        {osPos.source === "manual" ? (
           <IconButton size="small" onClick={toggleManualPosInput}>
             <EditRoundedIcon size="small" color="info" />
           </IconButton>
         ) : null}
-        <FormControl variant="standard" size="small" sx={{ minWidth: "rem" }}>
+        <FormControl variant="standard" size="small" sx={{ minWidth: "3rem" }}>
           {/* <InputLabel id="select-gnss-source-label">Position sensor</InputLabel> */}
           <Select
             labelId="select-gnss-source-label"
             id="select-gnss-source"
-            value={positionData.source}
+            value={posSetting.source}
             onChange={handleChangeGNSSsource}
             sx={{ fontSize: "0.7rem" }}
           >
-            <MenuItem value={"manual"}>Manual</MenuItem>
-            <MenuItem value={"other"}>Other</MenuItem>
+            {Object.keys(osPos).map(osPoskey => {
+              return (
+                <MenuItem key={"jhv" + osPoskey} value={osPoskey}>
+                  {osPoskey}
+                </MenuItem>
+              )
+            })}
           </Select>
         </FormControl>
       </Stack>

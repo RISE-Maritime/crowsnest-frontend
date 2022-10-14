@@ -16,8 +16,9 @@ import React from "react"
 import { useTheme } from "@mui/material/styles"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
 import ZoomInIcon from "@mui/icons-material/ZoomIn"
-import { atomMapState , atomLayersTaggable, atomLayersShowing} from "./SeaChart"
+import { atomMapState, atomMapSetting, atomLayersTaggable, atomLayersShowing } from "./SeaChart"
 import { useRecoilState } from "recoil"
+import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -30,17 +31,19 @@ const MenuProps = {
   },
 }
 
-
-function getStyles(name, personName, theme) {
+function getStyles(layersTaggable, name, theme) {
   return {
-    fontWeight: personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
+    fontWeight: layersTaggable.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium,
   }
 }
 
 export default function ChartControls() {
   const [mapState, setMapState] = useRecoilState(atomMapState)
+  const [mapSetting, setMapSetting] = useRecoilState(atomMapSetting)
   const [layersTaggable, setLayersTaggable] = useRecoilState(atomLayersTaggable)
   const [layersShowing, setLayersShowing] = useRecoilState(atomLayersShowing)
+  const [osPos, setOsPos] = useRecoilState(OS_POSITIONS)
+  const [osPosSetting, setOsPosSetting] = useRecoilState(OS_POSITION_SETTING)
 
   const zoomOut = () => {
     setMapState({
@@ -92,7 +95,6 @@ export default function ChartControls() {
   }
 
   const theme = useTheme()
-  const [personName, setPersonName] = React.useState([])
 
   const handleChange = event => {
     const {
@@ -104,14 +106,38 @@ export default function ChartControls() {
     )
   }
 
+  const setOsPosChartCenter = () => {
+    setMapState({
+      ...mapState,
+      latitude: osPos[osPosSetting.source].latitude,
+      longitude: osPos[osPosSetting.source].longitude,
+    })
+    setMapSetting({
+      ...mapSetting,
+      chartFix: "OS",
+    })
+  }
+
+  const setOsPosChartManual = () => {
+
+    setMapSetting({
+      ...mapSetting,
+      chartFix: "MANUAL",
+    })
+  }
+
+
   return (
-    <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1} sx={{height: "75px"}}>
-      <IconButton>
-        <ZoomOutIcon onClick={zoomOut} />
+    <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+      <Button onClick={setOsPosChartCenter}>Center OS</Button>
+      <Button onClick={setOsPosChartManual}>Manual</Button>
+
+      <IconButton onClick={zoomOut}>
+        <ZoomOutIcon />
       </IconButton>
       <Typography variant="subtitle1"> {mapState.zoom.toFixed(1)} </Typography>
-      <IconButton>
-        <ZoomInIcon onClick={zoomIn} />
+      <IconButton onClick={zoomIn}>
+        <ZoomInIcon />
       </IconButton>
 
       <ButtonGroup variant="outlined" aria-label="outlined button group" size="small">
@@ -126,7 +152,7 @@ export default function ChartControls() {
       </ButtonGroup>
 
       {/* MAP TILES SELECT */}
-      <FormControl sx={{ m: 1, width: 300 }} size="small">
+      <FormControl sx={{ width: 300 }} size="small">
         <InputLabel id="demo-multiple-chip-label">Chart Layers</InputLabel>
         <Select
           labelId="demo-multiple-chip-label"
@@ -138,14 +164,14 @@ export default function ChartControls() {
           renderValue={selected => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map(value => (
-                <Chip key={value} label={value} />
+                <Chip key={value} label={value} size="small" />
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
           {layersTaggable.map(name => (
-            <MenuItem key={name} value={name} style={getStyles(name, personName, theme)}>
+            <MenuItem key={name} value={name} style={getStyles(layersTaggable, name, theme)}>
               {name}
             </MenuItem>
           ))}

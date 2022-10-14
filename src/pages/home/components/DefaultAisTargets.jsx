@@ -1,13 +1,13 @@
 import React from "react"
 import { Button, Stack } from "@mui/material"
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { setPlatformAIS } from "../../../recoil/selectors"
 import { atomPlatformsAIS, atomActivePlatform } from "../../../recoil/atoms"
 
 export default function DefaultAisTargets({ aisFiltered }) {
   const setPlatform = useSetRecoilState(setPlatformAIS)
   const AISplatforms = useRecoilValue(atomPlatformsAIS)
-  const [activePlatform, setActivePlatform] = useRecoilState(atomActivePlatform)
+  const activePlatform = useRecoilValue(atomActivePlatform)
 
   const isFound = mmsi => {
     const filteredArray = aisFiltered.filter(element => {

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react"
+import React from "react"
 import { Button } from "@mui/material"
 import mqtt from "precompiled-mqtt"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
@@ -14,13 +14,14 @@ function text2Binary(string) {
     .join(" ")
 }
 
-export default function CamSelect({ refV, refA, refCanvas, detectFrame, setObjectDetected }) {
+export default function CamSelect({ refV, refA,  detectFrame }) {
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
     }
 
     refV.current.addEventListener("play", event => {
+      event 
       const modelPromise = cocoSsd.load()
       // modelPromise.detect()
       Promise.all([modelPromise, refV])

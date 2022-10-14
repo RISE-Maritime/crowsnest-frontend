@@ -26,13 +26,14 @@ export function formatDirection(direction) {
 }
 
 export function formatLatitude(latitudeInDegrees, pression = 2) {
+ 
   let latString = ""
 
   if ((typeof latitudeInDegrees) === "number") {
 
+
     let lonStr = latitudeInDegrees.toString();
     latString += lonStr.slice(0, (lonStr.indexOf("."))) + "° "
-
 
     latString += ((latitudeInDegrees % 1) * 60)?.toFixed(pression) + "´ "
 
@@ -42,6 +43,8 @@ export function formatLatitude(latitudeInDegrees, pression = 2) {
       latString += "S"
     }
   }
+
+
   return latString
 }
 

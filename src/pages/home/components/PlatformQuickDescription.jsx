@@ -1,11 +1,11 @@
 import React from "react"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilValue } from "recoil"
 import { atomActivePlatform, OS_POSITION_SETTING, OS_POSITIONS } from "../../../recoil/atoms"
 
 import { Stack, Typography } from "@mui/material"
 
 export default function PlatformQuickDescription() {
-  const [activePlatform, setActivePlatform] = useRecoilState(atomActivePlatform)
+  const activePlatform = useRecoilValue(atomActivePlatform)
   const os_pos_ref = useRecoilValue(OS_POSITION_SETTING)
   const os_pos = useRecoilValue(OS_POSITIONS)
 
@@ -18,13 +18,13 @@ export default function PlatformQuickDescription() {
 
       <Stack direction="column" justifyContent="center" alignItems="flex-start" spacing={2} sx={{ margin: "1rem 0rem" }}>
         <Typography variant="caption">
-          Platform type: {activePlatform.activePlatformType}
+        Platform type: {activePlatform.activePlatformType}
+          <br />
+           Platform name: {activePlatform.name}
           <br />
           MMSI: {activePlatform.mmsi}
-          <br/>
-          POS: {os_pos[os_pos_ref.source]?.latitude} , {os_pos[os_pos_ref.source]?.longitude}
           <br />
-          {/* Created: {os_pos[os_pos_ref.source]?.timeCreated?.toLocaleTimeString()} */}
+          POS: {os_pos[os_pos_ref.source]?.latitude} , {os_pos[os_pos_ref.source]?.longitude}
           <br />
           Delay: {os_pos[os_pos_ref.source]?.delay}
         </Typography>

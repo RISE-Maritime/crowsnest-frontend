@@ -19,8 +19,8 @@ import ELookout from "./pages/e-lookout"
 import DeviceSensors from "./pages/device-sensors"
 // import PageVesselSpinner from "./pages/vesselSpinner";
 // MQTT
-import MqttConnection from "./base-elements/MqttConnection"
-import { mqttSubscribe } from "./base-elements/MqttConnection"
+import RemoteMqttConnection from "./base-elements/RemoteMqttConnection"
+import { mqttSubscribe } from "./base-elements/RemoteMqttConnection"
 import DeviceConnection from "./base-elements/DeviceConnection"
 
 export default function App() {
@@ -103,7 +103,7 @@ export default function App() {
 
   return (
     <>
-      <MqttConnection />
+      <RemoteMqttConnection />
       <DeviceConnection/>
 
       <ThemeProvider theme={theme}>

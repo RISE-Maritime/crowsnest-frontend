@@ -5,15 +5,12 @@ import { useTheme } from "@mui/material/styles"
 import DataConnectionState from "./components/connectionStatus"
 // Recoil
 import { useRecoilValue } from "recoil"
-import { atomRiseAisMetadata } from "../../connectors/RISE-AIS"
-import { atomLidarMetadata } from "../../connectors/RISE-LIDAR"
-import { mqttStateAtom } from "../../base-elements/MqttConnection"
+
+import { mqttStateAtom } from "../../base-elements/RemoteMqttConnection"
 import { lidarStateAtom } from "../../recoil/atoms"
 
 export default function DataFlow() {
   const theme = useTheme()
-  const riseAisMetadataObj = useRecoilValue(atomRiseAisMetadata)
-  const riseLidarMetadata = useRecoilValue(atomLidarMetadata)
   const mqttState = useRecoilValue(mqttStateAtom)
   const lidarSate = useRecoilValue(lidarStateAtom)
 

@@ -1,4 +1,4 @@
-import { selector, useSetRecoilState, useRecoilValue } from "recoil";
+import { selector } from "recoil";
 import {
   userState,
   observationsStateAtom,
@@ -10,10 +10,6 @@ import {
   OS_POSITIONS,
   OS_VELOCITY
 } from "./atoms";
-import { toRadians } from "../utils"
-
-
-// import proto
 
 export const selectUser = selector({
   key: "selectUser",
@@ -29,27 +25,25 @@ export const selectUser = selector({
 
 let AISlist = {}
 let last = 0;
-let radarFrame = []
-let isInside = false
-let lastAzimute = -1
-let spokeCount = 0
+// let radarFrame = []
+// let isInside = false
+// let lastAzimute = -1
+// let spokeCount = 0
 
-// Decode distances from spoke length and range metadata
-const decode_distances = (spoke_length, _range) => {
-  const step = _range / spoke_length
-  let distanceArr = []
+// // Decode distances from spoke length and range metadata
+// const decode_distances = (spoke_length, _range) => {
+//   const step = _range / spoke_length
+//   let distanceArr = []
+//   for (let i = 1; i <= spoke_length; i++) {
+//     distanceArr.push(i * step)
+//   }
+//   return distanceArr
+// }
 
-  for (let i = 1; i <= spoke_length; i++) {
-    distanceArr.push(i * step)
-  }
-
-  return distanceArr
-}
-
-// Decode azimuth from integer spoke_direction"
-const decode_azimuth = (spoke_direction) => {
-  return spoke_direction / 4096 * 360
-}
+// // Decode azimuth from integer spoke_direction"
+// const decode_azimuth = (spoke_direction) => {
+//   return spoke_direction / 4096 * 360
+// }
 
 
 
@@ -84,6 +78,9 @@ export const wsMessageParser = selector({
   },
   set: ({ get, set }, latestMessage) => {
 
+    const activPlatformObj = get(atomActivePlatform)
+    const MQTT_PLATFORM_ID =activPlatformObj.MQTTpath
+ 
     switch (latestMessage.topic) {
       // AIS messages  
       case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
@@ -135,7 +132,7 @@ export const wsMessageParser = selector({
         break;
       }
 
-      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/LIDAR\/0\/POINTCLOUD/)?.input: {
+      case latestMessage.topic.match("CROWSNEST/"+MQTT_PLATFORM_ID+"/LIDAR/0/POINTCLOUD")?.input: {
         // console.log(latestMessage.topic);
         // console.log(latestMessage.payload);
         set(lidarObservationAtom, () => (
@@ -160,7 +157,7 @@ export const wsMessageParser = selector({
         break;
       }
 
-      case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0\/SWEEP/)?.input: {
+      case latestMessage.topic.match("CROWSNEST/"+ MQTT_PLATFORM_ID+ "/RADAR/0/SWEEP")?.input: {
         // console.log(latestMessage.topic);
         // console.log(latestMessage.payload.message.toS);
         // let frameR = JSON.parse(latestMessage.payload.toString())

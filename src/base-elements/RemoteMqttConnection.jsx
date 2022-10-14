@@ -41,7 +41,7 @@ export function mqttPublish(topic, qos, payload) {
   })
 }
 
-export default function MqttConnection() {
+export default function RemoteMqttConnection() {
   const [mqttState, setMqttState] = useRecoilState(mqttStateAtom)
   const parseWsMessage = useSetRecoilState(wsMessageParser)
 

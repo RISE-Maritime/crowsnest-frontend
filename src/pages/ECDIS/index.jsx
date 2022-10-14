@@ -13,12 +13,13 @@ export default function Ecdis() {
         sx={{
           position: "relative",
           // height: "calc(100vh - 95px)",
-          height: "92vh",
+          height: "90vh",
           cursor: "crosshair",
         }}
       >
         <SeaChart />
       </Grid>
+
       <Grid
         item
         xs={2}
@@ -26,12 +27,20 @@ export default function Ecdis() {
           display: "grid",
           placeItems: "center",
           position: "relative",
-          height: "90vh",
+          height: "100%",
         }}
       >
         <StatusSideBar />
       </Grid>
-      <Grid item xs={12}>
+      <Grid
+        item
+        xs={12}
+        sx={{
+          display: "grid",
+          position: "relative",
+          height: "calc(10vh - 40px)",
+        }}
+      >
         <ChartControls />
       </Grid>
     </Grid>
