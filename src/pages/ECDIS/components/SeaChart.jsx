@@ -302,7 +302,7 @@ export default function SeaChart() {
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
       sizeUnits: "meters",
-      pointSize: 3,
+      pointSize: 2,
       getPosition: d => d.point,
       // getNormal: d => d.normal,
       getColor: d => [15, 117, 17, d.weight],
@@ -371,10 +371,15 @@ export default function SeaChart() {
       pickable: false,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      pointSize: 4,
+      pointSize: 3,
       getPosition: d => d,
-      // getNormal: d => d.normal,
-      // getColor: d => d.color
+      getNormal: d => [0,0,1],
+      getColor: d => {
+      // console.log(d[2]*100);
+        return[d[2]*100, 0, 0, 255]
+      },
+      getAngle: 45,
+      opacity: 0.8,
     }),
   ]
 

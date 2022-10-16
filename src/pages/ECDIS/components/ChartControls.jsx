@@ -119,18 +119,20 @@ export default function ChartControls() {
   }
 
   const setOsPosChartManual = () => {
-
     setMapSetting({
       ...mapSetting,
       chartFix: "MANUAL",
     })
   }
 
-
   return (
     <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-      <Button onClick={setOsPosChartCenter}>Center OS</Button>
-      <Button onClick={setOsPosChartManual}>Manual</Button>
+      <Button onClick={setOsPosChartCenter} variant={mapSetting.chartFix === "OS" ? "contained" : "outlined"}>
+        Center OS
+      </Button>
+      <Button onClick={setOsPosChartManual} variant={mapSetting.chartFix === "MANUAL" ? "contained" : "outlined"}>
+        Manual
+      </Button>
 
       <IconButton onClick={zoomOut}>
         <ZoomOutIcon />
