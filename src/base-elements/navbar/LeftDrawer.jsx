@@ -70,6 +70,12 @@ export default function LeftDrawer(props) {
           </ListItemIcon>
           <ListItemText primary={"E-Lookout"} />
         </ListItem>
+        <ListItem button key={"E-lookout-V2"} component={Link} to={ROUTES.E_LOOKOUT_V2}>
+          <ListItemIcon>
+            <VrpanoIcon />
+          </ListItemIcon>
+          <ListItemText primary={"E-Lookout-V2"} />
+        </ListItem>
 
         <ListItem
           button

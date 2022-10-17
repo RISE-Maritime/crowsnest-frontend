@@ -25,9 +25,10 @@ const localStorageEffect =
       });
     };
 
+
 // App Settings / State
 export const appState = atom({
-  key: "appState",
+  key: "app_state",
   default: {
     activeView: "Active view",
     activeMode: "DEMO MODE",
@@ -36,13 +37,9 @@ export const appState = atom({
   },
 });
 
-export const themeModeState = atom({
-  key: "themeModeValue",
-  default: "light",
-});
 
 export const userState = atom({
-  key: "user",
+  key: "user_state",
   default: {
     accessToken: "",
     username: "",
@@ -78,7 +75,7 @@ export const playbackState = atom({
 
 
 
-
+// Local DB 
 
 
 // Platforms saved 
@@ -89,6 +86,7 @@ export const atomPlatforms = atom({
       name: "Landkrabban",
       key: "landkrabban",
       mmsi: 2,
+      imo: 2,
       source_position: "DEVISE",
       MQTTpath: "LANDKRABBAN",
       picture: PicLandkrabban
@@ -103,12 +101,12 @@ export const atomPlatforms = atom({
       picture: PicGermanica
     },
     seahorse: {
-      name: "Seahorse/ALVELI",
+      name: "Seahorse",
       key: "seahorse",
-      source_position: "AIS",
+      source_position: "DEVISE",
       MQTTpath: "SEAHORSE",
-      mmsi: 265738540,
-      imo: 0,
+      mmsi: 3,
+      imo: 3,
       picture: PicSeahorse
     }
   },
@@ -148,23 +146,31 @@ export const atomPlatformsAIS = atom({
   ]
 })
 
+
+// --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
+
+
 // Active platform STATIC data 
 export const atomActivePlatform = atom({
   key: "active_platform",
   default: {
-  
-    activePlatformType: "PLATFORM", // [PLATFORM, AIS, DEVICE]
-    platformName: "Seahorse",
-    MQTTpath: "SEAHORSE",
-    mmsi: 3,
-    imo: 3,
-    callsign: "OJTC",
-    ship_type: "PASSENGER",
-    to_bow: 25,
-    to_port: 18,
-    to_starboard: 18,
-    to_stern: 198,
-    picture: ""
+    activePlatformType: "", // [PLATFORM, AIS, DEVICE]
+    platformName: "",
+    MQTTpath: "",
+    mmsi: 0,
+    imo: 0,
+    callsign: "",
+    ship_type: "",
+    to_bow: 20,
+    to_port: 10,
+    to_starboard: 10,
+    to_stern: 80,
+    picture: "",
+    destination: "",
+    draught: 0,
+    operation_state: "",
+    operation_state_s: ""
   },
 })
 
@@ -185,7 +191,7 @@ export const OS_POSITION_SETTING = atom({
     source: "DEVISE",
     status: "normal", // [normal, warning, error] 
     statusText: "Normal",
-    timeCreated: "" 
+    timeCreated: ""
   },
 });
 
@@ -198,7 +204,7 @@ export const OS_POSITIONS = atom({
       longitude: 0.0,  // degrees
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
-      timeCreated: null, 
+      timeCreated: null,
       delay: null // Delay in system 
     },
     GNSS_0: {
@@ -206,7 +212,7 @@ export const OS_POSITIONS = atom({
       longitude: 0.0,  // degrees
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
-      timeCreated: null, 
+      timeCreated: null,
       delay: null // Delay in system 
     },
     DEVISE: {
@@ -215,7 +221,7 @@ export const OS_POSITIONS = atom({
       accuracy: null, // meters 
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
-      timeCreated: null, 
+      timeCreated: null,
       delay: null
     },
     MANUAL: {
@@ -223,14 +229,14 @@ export const OS_POSITIONS = atom({
       longitude: 0.0,  // degrees
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
-      timeCreated: null, 
+      timeCreated: null,
       delay: null
     }
   },
 });
 
 
-// VELOCITY  
+// VELOCITY Ground stabilized  
 
 export const OS_VELOCITY_SETTING = atom({
   key: "os_velocity_stetting",
@@ -244,6 +250,47 @@ export const OS_VELOCITY_SETTING = atom({
 
 export const OS_VELOCITY = atom({
   key: "os_velocity_state",
+  default: {
+    AIS: {
+      sog: 0.0, // knots 
+      cog: 0.0, // degrees
+      rot: 0.0, // degrees per minute 
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    },
+    DEVISE: {
+      sog: 0.0, // units? 
+      cog: 0.0, // units?
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    },
+    MANUAL: {
+      sog: 0.0, // knots 
+      cog: 0.0, // units?
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    }
+  },
+});
+
+
+// HEADING  
+
+export const OS_HEADING_SETTING = atom({
+  key: "os_heading_stetting",
+  default: {
+    source: "DEVICE",
+    status: "normal", // [normal, warning, error] 
+    statusText: "Normal",
+    timeCreated: "" // Delay in system 
+  },
+});
+
+export const OS_HEADING = atom({
+  key: "os_heading_state",
   default: {
     AIS: {
       sog: 0.0, // knots 
@@ -270,6 +317,9 @@ export const OS_VELOCITY = atom({
 });
 
 
+
+// LIDAR 
+
 export const lidarStateAtom = atom({
   key: "lidar_state",
   default: {
@@ -280,10 +330,16 @@ export const lidarStateAtom = atom({
     connected: false
   },
 });
+
 export const lidarObservationAtom = atom({
   key: "lidar_observation_state",
   default: [],
 });
+
+
+
+// RADAR
+
 
 export const radarObservationAtom = atom({
   key: "radar_observation_state",
@@ -291,6 +347,11 @@ export const radarObservationAtom = atom({
 });
 
 
+
+
+
+// -----------------------------------------------------------
+// Bellow to be removed 
 
 
 export const observationsStateAtom = atom({

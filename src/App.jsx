@@ -16,6 +16,7 @@ import PageDataFlow from "./pages/data-flow"
 import PageRemoteControl from "./pages/remote-control"
 import PageBearingRate from "./pages/bearing-rate"
 import ELookout from "./pages/e-lookout"
+import ELookoutV2 from "./pages/e-lookout-v2"
 import DeviceSensors from "./pages/device-sensors"
 // import PageVesselSpinner from "./pages/vesselSpinner";
 // MQTT
@@ -24,14 +25,14 @@ import { mqttSubscribe } from "./base-elements/RemoteMqttConnection"
 import DeviceConnection from "./base-elements/DeviceConnection"
 
 export default function App() {
-  const appObj = useRecoilValue(appState)
+  const app_state = useRecoilValue(appState)
   // -----------------------------------------------------------
   // Global theme
   let theme = createTheme({
     palette: {
-      mode: appObj.appActiveColorTheme, // dark or light (default)
+      mode: app_state.appActiveColorTheme, // dark or light (default)
 
-      ...(appObj.appActiveColorTheme === "light"
+      ...(app_state.appActiveColorTheme === "light"
         ? // Light pallette
           {
             primary: {
@@ -118,6 +119,7 @@ export default function App() {
               <Route exact path={ROUTES.CONNING} element={<PageConning />} />
               <Route exact path={ROUTES.DATA_FLOW} element={<PageDataFlow />} />
               <Route exact path={ROUTES.E_LOOKOUT} element={<ELookout />} />
+              <Route exact path={ROUTES.E_LOOKOUT_V2} element={<ELookoutV2 />} />
               <Route exact path={ROUTES.DEVISE_SENSORS} element={<DeviceSensors />} />
               <Route exact path={ROUTES.REMOTE_CONTROL} element={<PageRemoteControl />} />
             </Routes>

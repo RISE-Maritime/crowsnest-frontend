@@ -1,23 +1,23 @@
-import React from "react";
-import ROUTES from "../../../ROUTES.json";
-import { styled, useTheme } from "@mui/material/styles";
-import { Grid } from "@mui/material";
-import ViewListItem from "./viewListItem";
+import React from "react"
+import ROUTES from "../../../ROUTES.json"
+import { styled, useTheme } from "@mui/material/styles"
+import { Grid } from "@mui/material"
+import ViewListItem from "./viewListItem"
 // Icons
-import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded";
-import MapRoundedIcon from "@mui/icons-material/MapRounded";
-import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
-import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded";
-import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded";
-import VrpanoIcon from '@mui/icons-material/Vrpano';
+import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded"
+import MapRoundedIcon from "@mui/icons-material/MapRounded"
+import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded"
+import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded"
+import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded"
+import VrpanoIcon from "@mui/icons-material/Vrpano"
 
 const GridCenter = styled(Grid)(() => ({
   display: "grid",
   placeItems: "center",
-}));
+}))
 
 export default function viewList() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <Grid container>
@@ -49,18 +49,6 @@ export default function viewList() {
         }
       />
 
-      <ViewListItem
-        routeLink={ROUTES.BEARING_RATE}
-        viewName={" Bearing Rate"}
-        icon={
-          <TrackChangesRoundedIcon
-            sx={{
-              fontSize: "4rem",
-              color: theme.palette.info.main,
-            }}
-          />
-        }
-      />
 
       <ViewListItem
         routeLink={ROUTES.CONNING}
@@ -80,6 +68,32 @@ export default function viewList() {
         viewName={"E-Lookout"}
         icon={
           <VrpanoIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+
+      <ViewListItem
+        routeLink={ROUTES.E_LOOKOUT_V2}
+        viewName={"E-Lookout-v2"}
+        icon={
+          <VrpanoIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+      
+      <ViewListItem
+        routeLink={ROUTES.BEARING_RATE}
+        viewName={" Bearing Rate"}
+        icon={
+          <TrackChangesRoundedIcon
             sx={{
               fontSize: "4rem",
               color: theme.palette.info.main,
@@ -114,5 +128,5 @@ export default function viewList() {
         }
       />
     </Grid>
-  );
+  )
 }

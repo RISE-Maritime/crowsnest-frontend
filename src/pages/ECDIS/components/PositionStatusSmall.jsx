@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import GpsFixedIcon from "@mui/icons-material/GpsFixed"
 import GpsNotFixedIcon from "@mui/icons-material/GpsNotFixed"
 import GpsOffIcon from "@mui/icons-material/GpsOff"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import EditRoundedIcon from "@mui/icons-material/EditRounded"
-import { Button, Typography, Stack, FormControl, TextField, Select, MenuItem, Grid, IconButton } from "@mui/material"
+import { Button, Typography, Stack, FormControl, TextField, Select, MenuItem, Grid, IconButton, InputLabel } from "@mui/material"
 import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import { formatLatitude, formatLongitude } from "../../../utils"
 import { Formik, Form } from "formik"
 import * as yup from "yup"
@@ -36,10 +36,6 @@ export default function PositionStatusSmall() {
   const [posSetting, setPosSetting] = useRecoilState(OS_POSITION_SETTING)
   const [viewManualPosInput, setViewManualPosInput] = useState(false)
 
-  useEffect(() => {
-    console.log("HERE", Object.keys(osPos))
-  }, [])
-
   const handleChangeGNSSsource = event => {
     const newPosSource = event.target.value
     setPosSetting({
@@ -59,22 +55,21 @@ export default function PositionStatusSmall() {
     longMin: null,
   }
 
+  /**
+   * Set manual position
+   * @param {*} values
+   */
   const submitManualPos = values => {
-    console.log("SUBMIT: ", values)
-
     let lat = Number(Number(values.latDeg) + values.latMin / 60)
     let long = Number(Number(values.longDeg) + values.longMin / 60)
 
     setOsPos({
       ...osPos,
-      latitude: lat,
-      longitude: long,
-    })
-
-    console.log("UPDATE: ", {
-      ...osPos,
-      latitude: lat,
-      longitude: long,
+      MANUAL: {
+        ...osPos.MANUAL,
+        latitude: lat,
+        longitude: long,
+      },
     })
   }
 
@@ -84,25 +79,27 @@ export default function PositionStatusSmall() {
 
   return (
     <>
-      <Stack direction="row" justifyContent="space-evenly" alignItems="center">
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ marginTop: "0.5rem", padding: "0.5rem" }}>
         <GpsFixedIcon />
         <Stack direction="column" justifyContent="center" alignItems="flex-end">
           <Typography variant="caption">{formatLatitude(osPos[posSetting.source]?.latitude)} </Typography>
           <Typography variant="caption"> {formatLongitude(osPos[posSetting.source]?.longitude)}</Typography>
         </Stack>
-        {osPos.source === "manual" ? (
+        {posSetting.source === "MANUAL" ? (
           <IconButton size="small" onClick={toggleManualPosInput}>
             <EditRoundedIcon size="small" color="info" />
           </IconButton>
         ) : null}
-        <FormControl variant="standard" size="small" sx={{ minWidth: "3rem" }}>
-          {/* <InputLabel id="select-gnss-source-label">Position sensor</InputLabel> */}
+
+        <FormControl variant="outlined" size="small" sx={{ minWidth: "3rem" }}>
+          <InputLabel id="select-gnss-source-label">Position</InputLabel>
           <Select
             labelId="select-gnss-source-label"
             id="select-gnss-source"
             value={posSetting.source}
             onChange={handleChangeGNSSsource}
-            sx={{ fontSize: "0.7rem" }}
+            label="Position"
+            sx={{fontSize: "0.8rem"}}
           >
             {Object.keys(osPos).map(osPoskey => {
               return (
@@ -119,7 +116,6 @@ export default function PositionStatusSmall() {
         <div>
           <Formik initialValues={initialValuesManual} onSubmit={submitManualPos} validationSchema={validationSchema}>
             {({ handleChange, values, setFieldValue, touched, errors }) => {
-              console.log(errors)
               return (
                 <Form>
                   <Grid container spacing={1} justifyContent="center" alignItems="center">

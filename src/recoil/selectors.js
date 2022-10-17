@@ -8,7 +8,8 @@ import {
   lidarObservationAtom,
   radarObservationAtom,
   OS_POSITIONS,
-  OS_VELOCITY
+  OS_VELOCITY,
+  OS_HEADING
 } from "./atoms";
 
 export const selectUser = selector({
@@ -79,8 +80,8 @@ export const wsMessageParser = selector({
   set: ({ get, set }, latestMessage) => {
 
     const activPlatformObj = get(atomActivePlatform)
-    const MQTT_PLATFORM_ID =activPlatformObj.MQTTpath
- 
+    const MQTT_PLATFORM_ID = activPlatformObj.MQTTpath
+
     switch (latestMessage.topic) {
       // AIS messages  
       case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
@@ -94,24 +95,34 @@ export const wsMessageParser = selector({
         }
 
         const date = new Date();
-        if (date.getTime() - last > 2000) {  // 2000
+        if (date.getTime() - last > 1000) {  // 2000 = 2sec
           last = date.getTime();
 
           //  Update AIS targets list 
           set(targetsAIS, () => Object.values(AISlist))
 
-          // Update OS AIS data references 
+          // Update OS AIS data sensor 
           const active_platform = get(atomActivePlatform)
           if (active_platform.mmsi in AISlist) {  // Check if OS exists
-
-            // console.log("HERE", AISlist[active_platform.mmsi]);
             const os_ais_data = AISlist[active_platform.mmsi]
-            let time_now = new Date();
-            const sec_now = time_now.getSeconds()
-            const sec_diff = os_ais_data.second - sec_now
-            let ais_msg_created = new Date();
+            // console.log("os_ais_data", os_ais_data);
 
-            ais_msg_created.setSeconds(os_ais_data.second)
+
+            set(atomActivePlatform, (currentObj) => ({
+              ...currentObj,
+              shipname: os_ais_data.shipname, // String 
+              destination: os_ais_data.destination, // String 
+              draught: os_ais_data.draught, // Meters 
+              imo: os_ais_data.imo, // Int 
+              mmsi: os_ais_data.mmsi, // Int 
+              operation_state: os_ais_data.maneuver, // TODO: define state accroding to AIS standard
+              operation_state_s: os_ais_data.status, // TODO: define state accroding to AIS standard
+              ship_type: os_ais_data.ship_type, // TODO: define state accroding to AIS standard
+              to_bow: os_ais_data.to_bow,
+              to_port: os_ais_data.to_port,
+              to_starboard: os_ais_data.to_starboard,
+              to_stern: os_ais_data.to_stern,
+            }))
 
             set(OS_POSITIONS, (currentObj) => ({
               ...currentObj,
@@ -119,11 +130,26 @@ export const wsMessageParser = selector({
                 ...currentObj.AIS,
                 latitude: os_ais_data.lat, // degrees 
                 longitude: os_ais_data.lon,  // degrees
-                timeCreated: sec_diff + " sec"
               }
             }))
 
-            // TODO: Add the other ais data to OS realtime data
+            set(OS_VELOCITY, (currentObj) => ({
+              ...currentObj,
+              AIS: {
+                ...currentObj.AIS,
+                cog: os_ais_data.course, // degrees 
+                sog: os_ais_data.speed, // knots 
+                rot: os_ais_data.turn // degrees per minute 
+              }
+            }))
+
+            set(OS_HEADING, (currentObj) => ({
+              ...currentObj,
+              AIS: {
+                ...currentObj.AIS,
+                heading: os_ais_data.heading, // degrees 
+              }
+            }))
 
           }
 
@@ -132,7 +158,7 @@ export const wsMessageParser = selector({
         break;
       }
 
-      case latestMessage.topic.match("CROWSNEST/"+MQTT_PLATFORM_ID+"/LIDAR/0/POINTCLOUD")?.input: {
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/POINTCLOUD")?.input: {
         // console.log(latestMessage.topic);
         // console.log(latestMessage.payload);
         set(lidarObservationAtom, () => (
@@ -157,7 +183,7 @@ export const wsMessageParser = selector({
         break;
       }
 
-      case latestMessage.topic.match("CROWSNEST/"+ MQTT_PLATFORM_ID+ "/RADAR/0/SWEEP")?.input: {
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP")?.input: {
         // console.log(latestMessage.topic);
         // console.log(latestMessage.payload.message.toS);
         // let frameR = JSON.parse(latestMessage.payload.toString())
@@ -281,8 +307,6 @@ export const setDeviceSensorData = selector({
     return null;
   },
   set: ({ set }, newValues) => {
-
-    console.log("DEVISE SENSOR SETTER: ", newValues);
 
     set(OS_POSITIONS, (currentObj) => ({
       ...currentObj,

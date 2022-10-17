@@ -7,5 +7,6 @@
   "DATA_FLOW": "/data_flow",
   "BEARING_RATE": "/bearing_rate",
   "E_LOOKOUT": "/e_lookout",
+  "E_LOOKOUT_V2": "/e_lookout_v2",
   "DEVISE_SENSORS": "/devise_sensors"
 }
