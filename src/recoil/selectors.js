@@ -158,37 +158,76 @@ export const wsMessageParser = selector({
         break;
       }
 
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/GNSS/0/JSON")?.input: {
+        // console.log(latestMessage.topic);
+        //   {
+        //     "sent_at": "2022-10-20T16:04:13.209088+00:00",
+        //     "message": {
+        //         "timestamp": "2022-10-20T16:05:08.010000+00:00",
+        //         "sog": 0.3,(DONE)
+        //         "cog": 137.01,(DONE)
+        //         "rot": 0,(DONE)
+        //         "altitude": 3.89,
+        //         "gps_quality": 5,
+        //         "num_satellites": 10,
+        //         "longitude": 11.568426456,(DONE)
+        //         "latitude": 57.425519807, (DONE)
+        //         "heading": 168.96, (DONE)
+        //         "roll": -55.93,
+        //         "pitch": "",
+        //         "roll_accuracy": 1.706,
+        //         "heading_accuracy": 1.58,
+        //         "std_dev_altitude": 0.155,
+        //         "std_dev_longitude": 0.167,
+        //         "std_dev_latitude": 0.126
+        //     }
+        // }
+        // console.log(latestMessage.payload);
+
+        set(OS_POSITIONS, (currentObj) => ({
+          ...currentObj,
+          GNSS_0: {
+            ...currentObj.GNSS_0,
+            latitude: latestMessage.payload.message.latitude, // degrees 
+            longitude: latestMessage.payload.message.longitude,  // degrees
+            timeCreated: latestMessage.payload.message.timestamp
+          }
+        }))
+
+        set(OS_VELOCITY, (currentObj) => ({
+          ...currentObj,
+          GNSS_0: {
+            ...currentObj.GNSS_0,
+            cog: latestMessage.payload.message.cog, // degrees 
+            sog: latestMessage.payload.message.sog, // knots 
+            rot: latestMessage.payload.message.rot, // degrees per minute
+            timeCreated: latestMessage.payload.message.timestamp 
+          }
+        }))
+
+        set(OS_HEADING, (currentObj) => ({
+          ...currentObj,
+          GNSS_0: {
+            ...currentObj.GNSS_0,
+            heading: latestMessage.payload.message.heading, // degrees
+            timeCreated: latestMessage.payload.message.timestamp 
+          }
+        }))
+        break;
+      }
+
+
       case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/POINTCLOUD")?.input: {
         // console.log(latestMessage.topic);
         // console.log(latestMessage.payload);
         set(lidarObservationAtom, () => (
           latestMessage.payload.message
         ));
-
-
-        // LIDAR connection and transfer rate 
-        const time_sent_at = new Date(latestMessage.payload.sent_at);
-        const time_now = new Date()
-        // const delay = new Date( time_sent_at.getTime() - time_now.getTime())
-        const delay = (time_sent_at - time_now) / 11000 // Convert milliseconds to seconds 
-
-        // console.log("delay", delay);
-
-        set(playbackState, (existing) => ({
-          ...existing,
-          delaySec: delay,
-          connected: true
-        }));
-
         break;
       }
 
       case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP")?.input: {
-        // console.log(latestMessage.topic);
-        // console.log(latestMessage.payload.message.toS);
-        // let frameR = JSON.parse(latestMessage.payload.toString())
         let frameR = latestMessage.payload
-
         let radarFrame = []
         for (let i = 0; i < frameR.message.points.length; i++) {
           const radarPoint = {
@@ -198,9 +237,6 @@ export const wsMessageParser = selector({
           }
           radarFrame.push(radarPoint)
         }
-
-        // console.log(radarFrame);
-
         set(radarObservationAtom, () => (
           radarFrame
         ));
@@ -210,12 +246,10 @@ export const wsMessageParser = selector({
       // case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0\/PROTOBUF/)?.input: {
       //   // console.log(latestMessage.topic);
       //   var message = messages.opendlv_proxy_RadarDetectionReading.deserializeBinary(new Uint8Array(latestMessage.payload))
-
       //   let arrPuls = message.getData()
       //   let range = message.getRange()
       //   let azimuth = decode_azimuth(message.getAzimuth())
       //   let distances = decode_distances(arrPuls.length, range)
-
       //   if (spokeCount % 2 === 0) {
       //     for (let i = 0; i < arrPuls.length; i++) {
       //       // Map from polar to cartesian coordinates
@@ -230,9 +264,7 @@ export const wsMessageParser = selector({
       //       radarFrame.push(radarPoint)
       //     }
       //   }
-
       //   spokeCount += 1
-
       //   if (azimuth < lastAzimute) {  // 2000
       //     set(radarObservationAtom, () => (
       //       radarFrame

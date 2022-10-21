@@ -1,5 +1,5 @@
 import React from "react"
-import { Stack, FormControl, InputLabel, Select, MenuItem, Card, Typography, Grid, CardContent } from "@mui/material"
+import { Stack, FormControl, InputLabel, Select, MenuItem,  Typography, Grid } from "@mui/material"
 import { useRecoilState } from "recoil"
 import { OS_POSITIONS, OS_POSITION_SETTING, OS_VELOCITY_SETTING, OS_VELOCITY } from "../../../recoil/atoms"
 

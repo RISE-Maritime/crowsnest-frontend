@@ -48,7 +48,7 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
     /* eslint-enable */
 
     let pc = null
-    const requestTopic = "CROWSNEST/LANDKRABBA/WEBRTC/" + camID
+    const requestTopic = "CROWSNEST/SEAHORSE/WEBRTC/" + camID
     var config = {
       sdpSemantics: "unified-plan",
       iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }], // Always use a STUN server for ICE

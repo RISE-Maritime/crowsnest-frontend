@@ -241,7 +241,7 @@ export const OS_POSITIONS = atom({
 export const OS_VELOCITY_SETTING = atom({
   key: "os_velocity_stetting",
   default: {
-    source: "AIS",
+    source: "GNSS_0",
     status: "normal", // [normal, warning, error] 
     statusText: "Normal",
     timeCreated: "" // Delay in system 
@@ -260,6 +260,13 @@ export const OS_VELOCITY = atom({
       timeCreated: "" // Delay in system 
     },
     DEVISE: {
+      sog: 0.0, // units? 
+      cog: 0.0, // units?
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    },
+    GNSS_0: {
       sog: 0.0, // units? 
       cog: 0.0, // units?
       status: "normal", // [normal, warning, error] 
@@ -293,22 +300,25 @@ export const OS_HEADING = atom({
   key: "os_heading_state",
   default: {
     AIS: {
-      sog: 0.0, // knots 
-      cog: 0.0, // units?
+      heading: 0.0, // degrees 
+      status: "normal", // [normal, warning, error] 
+      statusText: "Normal",
+      timeCreated: "" // Delay in system 
+    },
+    GNSS_0: {
+      heading: 0.0, // degrees 
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
     DEVISE: {
-      sog: 0.0, // units? 
-      cog: 0.0, // units?
+      heading: 0.0, // degrees
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
     MANUAL: {
-      sog: 0.0, // knots 
-      cog: 0.0, // units?
+      heading: 0.0, // degrees
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
