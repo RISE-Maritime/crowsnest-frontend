@@ -14,7 +14,7 @@ function text2Binary(string) {
     .join(" ")
 }
 
-export default function CamSelect({ refV, refA,  detectFrame }) {
+export default function CamSelectH2({ refV, refA,  detectFrame }) {
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
@@ -48,7 +48,7 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
     /* eslint-enable */
 
     let pc = null
-    const requestTopic = "CROWSNEST/SEAHORSE/WEBRTC/" + camID
+    const requestTopic = "CROWSNEST/SEAHORSE/WEBRTC/2/" + camID 
     var config = {
       sdpSemantics: "unified-plan",
       iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }], // Always use a STUN server for ICE
@@ -136,22 +136,21 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
 
   return (
     <div>
-      <Button onClick={() => startCamera("axis3")}>
+      <Button onClick={() => startCamera("axis4")}>
         <ArrowUpwardIcon sx={{ transform: "rotate(-90deg)" }} />
       </Button>
-      <Button onClick={() => startCamera("axis2")}>
+      <Button onClick={() => startCamera("axis3")}>
         <ArrowUpwardIcon sx={{ transform: "rotate(-25deg)" }} />
       </Button>
-      <Button onClick={() => startCamera("axis4")}>
+      <Button onClick={() => startCamera("axis2")}>
         <ArrowUpwardIcon sx={{ transform: "rotate(25deg)" }} />
       </Button>
       <Button onClick={() => startCamera("axis1")}>
         <ArrowUpwardIcon sx={{ transform: "rotate(90deg)" }} />
       </Button>
-
-
       <Button onClick={() => startCamera("axis3/yolov5")}>YOLO</Button>
 
+ 
     </div>
   )
 }
