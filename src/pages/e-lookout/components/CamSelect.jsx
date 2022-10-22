@@ -149,6 +149,13 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
         <ArrowUpwardIcon sx={{ transform: "rotate(90deg)" }} />
       </Button>
       <Button onClick={() => startCamera("axis3/yolov5")}>YOLO</Button>
+
+      <Button onClick={() => startCamera("axis5")}>
+        <h3>5</h3>
+      </Button>
+      <Button onClick={() => startCamera("axis6")}>
+        <h3>6</h3>
+      </Button>
     </div>
   )
 }
