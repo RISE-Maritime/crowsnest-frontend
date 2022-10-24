@@ -1,55 +1,168 @@
 import React, { useEffect } from "react";
-import { Grid, Box, Stack, Slider } from "@mui/material";
-import { atomOwnShipData } from "../home/components/vesselPicker";
-import { useRecoilValue } from "recoil";
+import { appState } from "../../recoil/atoms";
+import { useRecoilValue, useRecoilState } from "recoil";
+import {
+  observationsStateAtom,
+  actionStateAtom,
+  ownShipDataAtom,
+} from "../../recoil/atoms";
+// import { mqttSubscribe } from "../../base-elements/MqttConnection";
 // Components
-import Pointer from "./components/pointer";
-import TopBar from "./components/topBar";
-
-
+import { Grid, Stack } from "@mui/material";
+import AppWindCurrent from "./components/AppWindCurrent";
+import AppHeadingRotDrift from "./components/AppHeadingRotDrift";
+import AppShipSteering from "./components/AppShipSteering";
+import AppSogCogObj from "./components/AppSogCogObj";
+import AppWeatherData from "./components/AppWeatherData";
+import AppDepthChart from "./components/AppDepthChart";
+import AppRollPitch from "./components/AppRollPitch";
+import ShipPosition from "./components/ShipPosition";
 
 export default function Conning() {
-  const ownShipData = useRecoilValue(atomOwnShipData);
+  const ownShipData = useRecoilValue(ownShipDataAtom);
+  const observations = useRecoilValue(observationsStateAtom);
+  const actions = useRecoilValue(actionStateAtom);
+  const [appObj, setAppObj] = useRecoilState(appState);
 
   useEffect(() => {
-    return () => {};
-  }, [ownShipData]);
+    // Start MQTT subscription
+    // mqttSubscribe("/NTpro/#");
 
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    setAppObj({
+      ...appObj,
+      activeView: "Conning",
+    });
+  }, []);
 
   return (
     <Grid container>
-      <Grid item xs={12}>
-        <TopBar />
+      {/* Column 1 */}
+      <Grid item xs={3} sx={{ height: "calc(100vh - 40px)" }}>
+        <Stack
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          sx={{ width: "100%", height: "100%", position: "relative" }}
+        >
+          <ShipPosition />
+          <AppShipSteering
+            steeringMode={"Demo Mode"}
+            bow1SET={0}
+            bow1ACT={0.1}
+            bow2SET={-0.4}
+            bow2ACT={-0.4}
+            eng1SET={0.8}
+            eng1ACT={-0.5}
+            eng2SET={0.8}
+            eng2ACT={-0.8}
+            rud1SET={actions.ruderSETps}
+            rud1ACT={observations.ruderACTps}
+            rud2SET={actions.ruderSETsb}
+            rud2ACT={observations.ruderACTsb}
+          />
+        </Stack>
       </Grid>
-      <Grid item xs={4} sx={{ display: "grid", placeItems: "center", height: "80vh" }}>
-        <h1>Power management</h1>
-        <h3>Thruster</h3>
-        <h3>Engine</h3>
-        <h3>Rudder</h3>
-        <Pointer direction={value} />
-        <Box sx={{ width: 200 }}>
-          <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-            <Slider aria-label="Volume" value={value} onChange={handleChange} />
-          </Stack>
-        </Box>
-      </Grid>{" "}
-      <Grid item xs={4} sx={{ display: "grid", placeItems: "center", height: "80vh" }}>
-        <h1>Heading: {ownShipData.heading}</h1>
-        <h1>ROT</h1>
-        <h3>SOG {ownShipData.sog}</h3>
-        <h3>COG {ownShipData.cog}</h3>
-        <h3>SOG BOW</h3>
-        <h3>SOG STEEN</h3>
-      </Grid>{" "}
-      <Grid item xs={4} sx={{ display: "grid", placeItems: "center", height: "80vh" }}>
-        <h1>Wind</h1>
-        <h1>Current</h1>
-        <h1>Roll / Heel</h1>
+
+      {/* Column 2 */}
+      <Grid
+        item
+        xs={6}
+        sx={{
+          display: "grid",
+          placeItems: "center",
+          height: "calc(100vh - 40px)",
+        }}
+      >
+        <Grid container>
+          {/* Column 2 Row 1 */}
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "grid",
+              placeItems: "center",
+              height: "15vh",
+            }}
+          >
+            <AppHeadingRotDrift
+              heading={observations.heading}
+              drift={10}
+              driftTo={"port"}
+              rot={observations.rot}
+              rotMax={100}
+            />
+          </Grid>
+          {/* Column 2 Row 2 */}
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "grid",
+              placeItems: "center",
+              height: "calc(85vh - 40px)",
+              position: "relative",
+            }}
+          >
+            <AppSogCogObj
+              showNearbyObj={false}
+              cog={observations.cog}
+              heading={observations.heading}
+              sogFWD={observations.sogBow}
+              sogMID={observations.sog}
+              sogAFT={observations.sogStern}
+              rot={observations.rot}
+              loa={ownShipData.loa}
+              woa={ownShipData.woa}
+              pred_min={0.75}
+              pred_steps={4}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+
+      {/* Column 3 */}
+      <Grid
+        item
+        xs={3}
+        sx={{
+          display: "grid",
+          placeItems: "center",
+          height: "calc(100vh - 40px)",
+        }}
+      >
+        <Grid container>
+          <Grid item xs={12}>
+            <AppWindCurrent
+              heading={observations.heading}
+              windSpeedTrue={10}
+              windSpeedRel={20}
+              windDirTrue={270}
+              windDirRel={180}
+              windDirDistribution={90}
+              currentSpeedTrue={20}
+              currentSpeedRel={10}
+              currentDirTrue={50}
+              currentDirRel={90}
+              currentDirDistribution={40}
+            />
+            <AppWeatherData />
+            <AppDepthChart />
+            <AppRollPitch
+              pitchSET={0}
+              pitchACT={-0.2}
+              pitchACTangle={-2}
+              pitchACTmin={-10}
+              pitchACTmax={10}
+              rollSET={0}
+              rollACT={-3}
+              rollACTangle={-2}
+              rollACTmin={-10}
+              rollACTmax={10}
+            />
+          </Grid>
+          <Grid item xs={12}></Grid>
+          <Grid item xs={12}></Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

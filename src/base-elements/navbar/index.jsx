@@ -1,139 +1,176 @@
 /*
-    Navigation bar 
+  Navigation bar 
+  -----------------
+
+  List of planed components in top bar
+  - App navigation menu
+    - View Name 
+    - View state 
+  - Active vessel ID 
+  - Alerts 
+  - User/profile active
+  - Light / Dark Mode
+  - Apps
+
  */
 
-import React, { useContext, useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import MyContext from "../../context/MyContext";
-import AppBar from "@material-ui/core/AppBar";
-import { Grid, Hidden, Tab, Tabs, Drawer, List, ListItem, ListItemText, ListItemIcon } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import ROUTES from "../../ROUTES.json";
-import { AuthContext } from "../../Auth";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
-import TimelineRounded from "@material-ui/icons/TimelineRounded"
-// Pics
-import LogoShip from "../../resources/logo-ship.png";
-import { Link } from "react-router-dom";
-import FB from "../../FirebaseMy";
+import React, { useEffect, useState } from "react";
+// Recoil
+import { useRecoilState } from "recoil";
+import { appState } from "../../recoil/atoms";
+// Components
+import Clock from "react-live-clock";
+import GridCenter from "../components/GridCenter";
+import LeftDrawer from "./LeftDrawer";
+import RightDrawer from "./RightDrawer";
+import {
+  Grid,
+  AppBar,
+  IconButton,
+  Typography,
+  SwipeableDrawer,
+  Stack,
+  Avatar,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+// Icons & Images
+import LogoCrowsnest from "../../resources/crowsnest.png";
+import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
+import MenuIcon from "@mui/icons-material/Menu";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 
-const useStyles = makeStyles(() => ({
-  logo_container: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-
-    textDecoration: "none",
-    minHeight: "4rem",
-  },
-  logo: {
-    height: "2.3rem",
-    marginLeft: "1rem",
-    marginRight: "0.5rem",
-  },
-  title: {
-    margin: "0px",
-    color: "#fff",
-    "&:avisited": {},
-    "&:hover": {
-      color: "#d1d9e6",
-    },
-  },
-  menu_container: {
-    display: "flex",
-    flexDirection: "row-reverse",
-  },
-  icon: {
-    fontSize: "2rem",
-    marginRight: "0.5rem",
-  },
-  link_text: {
-    "&:avisited": {
-      color: "#A0BF49",
-    },
-    "&:hover": {
-      color: "#000",
-    },
-  },
-  pagesIcones: {},
-  tabs: {},
-}));
-
-const Home = () => {
-  const classes = useStyles();
-  const context = useContext(MyContext);
-  const { currentUser } = useContext(AuthContext);
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const openDrawer = () => {
-    setIsDrawerOpen(true);
-  };
-
-  const closeDrawer = () => {
-    setIsDrawerOpen(false);
-  };
+export default function NavBar() {
+  const theme = useTheme()
+  const [appObj, setAppObj] = useRecoilState(appState);
+  const [drawerState, setDrawerState] = useState({
+    left: false,
+    right: false,
+  });
 
   useEffect(() => {}, []);
 
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setDrawerState({ ...drawerState, [anchor]: open });
+  };
+
+  const ToggleThemeMode = () => {
+    if (appObj.appActiveColorTheme === "light") {
+      setAppObj({
+        ...appObj,
+        appActiveColorTheme: "dark",
+      });
+    } else {
+      setAppObj({
+        ...appObj,
+        appActiveColorTheme: "light",
+      });
+    }
+  };
+
   return (
     <AppBar position="static">
-      <Grid container direction="row" justify="space-between" alignItems="center">
-        <Grid item xs={8} sm={6} md={4} className={classes.logo_container} component={Link} to={ROUTES.HOME}>
-          <img src={LogoShip} alt="logo-ship" className={classes.logo} />
-          <h1 className={classes.title}>MASS Safety</h1>
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        {/* Left side */}
+        <GridCenter item xs={4}>
+          <Stack
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={2}
+          >
+            {/* App navigation button */}
+            <IconButton onClick={toggleDrawer("left", true)}>
+              <MenuIcon sx={{color: theme.palette.primary.contrastText}}/>
+            </IconButton>
+            {/* Active view status text */}
+            <Typography variant={"h6"}>Crowsnest</Typography>
+            {/* Active navigation mode */}
+            <Typography variant={"button"}>{appObj.activeMode}</Typography>
+          </Stack>
+        </GridCenter>
+
+        {/* Active vessel */}
+        <GridCenter item xs={3}>
+          <Typography variant={"subtitle1"}>{appObj.activeVessel}</Typography>
+        </GridCenter>
+
+        {/* Time */}
+        <GridCenter item xs={2}>
+          <Typography variant={"subtitle1"}>
+            <Clock
+              format={"YYYY-MM-D  HH:mm:ss"}
+              ticking={true}
+              timezone={"Europe/Stockholm"}
+            />
+          </Typography>
+        </GridCenter>
+
+        <Grid item xs={3}>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+            spacing={2}
+          >
+            {/* Alarm management */}
+            <NotificationsNoneIcon />
+
+            {/* User profile */}
+            <Avatar src={LogoCrowsnest} sx={{ width: 24, height: 24 }}>
+              D
+            </Avatar>
+
+            {/* Day and night mode (App color theme) */}
+            <IconButton onClick={ToggleThemeMode}>
+              {appObj.appActiveColorTheme === "light" ? (
+                <DarkModeIcon sx={{color: theme.palette.primary.contrastText}}/>
+              ) : (
+                <LightModeIcon sx={{color: theme.palette.primary.contrastText}}/>
+              )}
+            </IconButton>
+
+            {/* Floating mini apps */}
+            <IconButton onClick={toggleDrawer("right", true)}>
+              <AppsRoundedIcon sx={{color: theme.palette.primary.contrastText}}/>
+            </IconButton>
+          </Stack>
         </Grid>
-
-        {currentUser ? (
-          <>
-            <Hidden smDown>
-              <Grid item sm={6}>
-                <Tabs value={context.tab} centered className={classes.tabs}>
-                  {/* <Tab label="Reports" component={Link} to={ROUTES.REPORTS} /> */}
-                  <Tab label="Pre Pare Ship" component={Link} to={ROUTES.PREPARESHIP} />
-                  <Tab label="Report (DEMO)" component={Link} to={ROUTES.REPORTS_DEMO} />
-                  <Tab label="nmea (DEMO)" component={Link} to={ROUTES.NMEA} />
-                </Tabs>
-              </Grid>
-            </Hidden>
-
-            <Grid item xs={1} className={classes.menu_container}>
-              <IconButton edge="start" className={classes.menuButton} color="inherit" onClick={openDrawer}>
-                <MenuIcon className={classes.icon} />
-              </IconButton>
-            </Grid>
-          </>
-        ) : (
-          <></>
-        )}
       </Grid>
 
-      <Drawer anchor={"right"} open={isDrawerOpen} onClose={closeDrawer}>
-        <List>
-          <ListItem
-            button
-            component={Link}
-            to={ROUTES.PREPARESHIP}
-      
-          >
-            <ListItemIcon>
-              <TimelineRounded className={classes.icon} />
-            </ListItemIcon>
-            <ListItemText primary={"PrePareShip"} />
-          </ListItem>
+      {/* Left app navigation menu */}
+      <SwipeableDrawer
+        anchor={"left"}
+        open={drawerState["left"]}
+        onClose={toggleDrawer("left", false)}
+        onOpen={toggleDrawer("left", true)}
+      >
+        <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} />
+      </SwipeableDrawer>
 
-          <ListItem button onClick={() => FB.auth().signOut()} selected={context.tabIndex === 10}>
-            <ListItemIcon>
-              <MeetingRoomIcon className={classes.icon} />
-            </ListItemIcon>
-            <ListItemText primary={"Logout"} />
-          </ListItem>
-        </List>
-      </Drawer>
+      {/* Right mini app selector */}
+      <SwipeableDrawer
+        anchor={"right"}
+        open={drawerState["right"]}
+        onClose={toggleDrawer("right", false)}
+        onOpen={toggleDrawer("right", true)}
+      >
+        <RightDrawer side={"right"} toggleDrawer={toggleDrawer} />
+      </SwipeableDrawer>
     </AppBar>
   );
-};
-
-export default React.memo(Home);
+}

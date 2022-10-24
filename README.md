@@ -41,3 +41,7 @@ The application will then be available at the URL `http://localhost:9999`. Note 
 ## Issues
 
 Plotting maps does not work in _Firefox_ because it is not compatible with `OffscreenCanvas`.
+
+
+
+
