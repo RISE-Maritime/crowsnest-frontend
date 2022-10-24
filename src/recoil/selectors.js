@@ -9,7 +9,9 @@ import {
   radarObservationAtom,
   OS_POSITIONS,
   OS_VELOCITY,
-  OS_HEADING
+  OS_HEADING,
+  atomMqttTopics,
+  atomMqttTopicsUnhandled
 } from "./atoms";
 
 export const selectUser = selector({
@@ -82,9 +84,11 @@ export const wsMessageParser = selector({
     const activPlatformObj = get(atomActivePlatform)
     const MQTT_PLATFORM_ID = activPlatformObj.MQTTpath
 
+
     switch (latestMessage.topic) {
       // AIS messages  
       case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
+
 
         const incomming = latestMessage.payload.message
 
@@ -96,10 +100,22 @@ export const wsMessageParser = selector({
 
         const date = new Date();
         if (date.getTime() - last > 1000) {  // 2000 = 2sec
+          //  MQTT logger topics 
+          set(atomMqttTopics, (currentObj) => ({
+            ...currentObj,
+            "CROWSNEST/EXTERNAL/AIS": {
+              time_received: new Date(),
+              count: currentObj["CROWSNEST/EXTERNAL/AIS"]?.count ? currentObj["CROWSNEST/EXTERNAL/AIS"].count + 1000 : 1000
+
+            }
+          }))
+
           last = date.getTime();
 
           //  Update AIS targets list 
           set(targetsAIS, () => Object.values(AISlist))
+
+
 
           // Update OS AIS data sensor 
           const active_platform = get(atomActivePlatform)
@@ -159,15 +175,27 @@ export const wsMessageParser = selector({
       }
 
       case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/GNSS/0/JSON")?.input: {
+
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/GNSS"]: {
+            time_received: new Date(),
+            timestamp: new Date(latestMessage.payload.message.timestamp),
+            delay_calc: Math.abs((new Date(latestMessage.payload.message.timestamp).getTime() - new Date().getTime()) / 1000),
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/GNSS"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/GNSS"].count + 1 : 1
+          }
+        }))
+
         // console.log(latestMessage.topic);
         //   {
         //     "sent_at": "2022-10-20T16:04:13.209088+00:00",
         //     "message": {
-        //         "timestamp": "2022-10-20T16:05:08.010000+00:00",
+        //         "timestamp": "2022-10-20T16:05:08.010000+00:00", (Kinda)
         //         "sog": 0.3,(DONE)
         //         "cog": 137.01,(DONE)
         //         "rot": 0,(DONE)
-        //         "altitude": 3.89,
+        //         "altitude": 3.89,(DONE)
         //         "gps_quality": 5,
         //         "num_satellites": 10,
         //         "longitude": 11.568426456,(DONE)
@@ -176,10 +204,10 @@ export const wsMessageParser = selector({
         //         "roll": -55.93,
         //         "pitch": "",
         //         "roll_accuracy": 1.706,
-        //         "heading_accuracy": 1.58,
-        //         "std_dev_altitude": 0.155,
-        //         "std_dev_longitude": 0.167,
-        //         "std_dev_latitude": 0.126
+        //         "heading_accuracy": 1.58, (DONE)
+        //         "std_dev_altitude": 0.155,(DONE)
+        //         "std_dev_longitude": 0.167,(DONE)
+        //         "std_dev_latitude": 0.126(DONE)
         //     }
         // }
         // console.log(latestMessage.payload);
@@ -188,9 +216,15 @@ export const wsMessageParser = selector({
           ...currentObj,
           GNSS_0: {
             ...currentObj.GNSS_0,
+            timeCreated: latestMessage.payload.message.timestamp,
             latitude: latestMessage.payload.message.latitude, // degrees 
             longitude: latestMessage.payload.message.longitude,  // degrees
-            timeCreated: latestMessage.payload.message.timestamp
+            altitude: latestMessage.payload.message.altitude,
+            gps_quality: latestMessage.payload.message.gps_quality,
+            std_dev_altitude: latestMessage.payload.message.std_dev_altitude,
+            std_dev_longitude: latestMessage.payload.message.std_dev_longitude,
+            std_dev_latitude: latestMessage.payload.message.std_dev_latitude,
+
           }
         }))
 
@@ -201,7 +235,7 @@ export const wsMessageParser = selector({
             cog: latestMessage.payload.message.cog, // degrees 
             sog: latestMessage.payload.message.sog, // knots 
             rot: latestMessage.payload.message.rot, // degrees per minute
-            timeCreated: latestMessage.payload.message.timestamp 
+            timeCreated: latestMessage.payload.message.timestamp
           }
         }))
 
@@ -209,8 +243,10 @@ export const wsMessageParser = selector({
           ...currentObj,
           GNSS_0: {
             ...currentObj.GNSS_0,
+            timeCreated: latestMessage.payload.message.timestamp,
             heading: latestMessage.payload.message.heading, // degrees
-            timeCreated: latestMessage.payload.message.timestamp 
+            heading_accuracy: latestMessage.payload.message.heading_accuracy
+
           }
         }))
         break;
@@ -218,8 +254,19 @@ export const wsMessageParser = selector({
 
 
       case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/POINTCLOUD")?.input: {
-        // console.log(latestMessage.topic);
-        // console.log(latestMessage.payload);
+
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR"]: {
+            time_received: new Date(),
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR"].count + 1 : 1,
+            timestamp: new Date(latestMessage.payload.message.sent_at),
+            delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+
+          }
+        }))
+
         set(lidarObservationAtom, () => (
           latestMessage.payload.message
         ));
@@ -227,6 +274,18 @@ export const wsMessageParser = selector({
       }
 
       case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP")?.input: {
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]: {
+            time_received: new Date(),
+            timestamp: new Date(latestMessage.payload.message.sent_at),
+            delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"].count + 1 : 1
+
+          }
+        }))
+
         let frameR = latestMessage.payload
         let radarFrame = []
         for (let i = 0; i < frameR.message.points.length; i++) {
@@ -243,38 +302,7 @@ export const wsMessageParser = selector({
         break;
       }
 
-      // case latestMessage.topic.match(/^CROWSNEST\/LANDKRABBA\/RADAR\/0\/PROTOBUF/)?.input: {
-      //   // console.log(latestMessage.topic);
-      //   var message = messages.opendlv_proxy_RadarDetectionReading.deserializeBinary(new Uint8Array(latestMessage.payload))
-      //   let arrPuls = message.getData()
-      //   let range = message.getRange()
-      //   let azimuth = decode_azimuth(message.getAzimuth())
-      //   let distances = decode_distances(arrPuls.length, range)
-      //   if (spokeCount % 2 === 0) {
-      //     for (let i = 0; i < arrPuls.length; i++) {
-      //       // Map from polar to cartesian coordinates
-      //       let x = distances[i] * Math.cos(toRadians(azimuth))
-      //       let y = distances[i] * Math.sin(toRadians(azimuth))
-      //       let points = [x, y]
-      //       const radarPoint = {
-      //         point: points,
-      //         weight: arrPuls[i],
-      //         distance: distances[i]
-      //       }
-      //       radarFrame.push(radarPoint)
-      //     }
-      //   }
-      //   spokeCount += 1
-      //   if (azimuth < lastAzimute) {  // 2000
-      //     set(radarObservationAtom, () => (
-      //       radarFrame
-      //     ));
-      //     // console.log("frame", radarFrame);
-      //     radarFrame = []
-      //   }
-      //   lastAzimute = azimuth
-      //   break;
-      // }
+
 
       case "/NTpro/playback":
         set(playbackState, (existing) => ({
@@ -322,6 +350,14 @@ export const wsMessageParser = selector({
         break;
 
       default:
+        //  MQTT logger topics 
+        set(atomMqttTopicsUnhandled, (currentObj) => ({
+          ...currentObj,
+          [latestMessage.topic]: {
+            time_received: new Date(),
+            count: currentObj[latestMessage.topic]?.count ? currentObj[latestMessage.topic].count + 1 : 1
+          }
+        }))
       // console.log("Unknown message of type " + latestMessage.topic);
       // console.log(latestMessage.payload.message);
     }

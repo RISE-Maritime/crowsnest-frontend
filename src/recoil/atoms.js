@@ -103,7 +103,7 @@ export const atomPlatforms = atom({
     seahorse: {
       name: "Seahorse",
       key: "seahorse",
-      source_position: "DEVISE",
+      source_position: "GNSS_0",
       MQTTpath: "SEAHORSE",
       mmsi: 3,
       imo: 3,
@@ -155,20 +155,20 @@ export const atomPlatformsAIS = atom({
 export const atomActivePlatform = atom({
   key: "active_platform",
   default: {
-    activePlatformType: "", // [PLATFORM, AIS, DEVICE]
-    platformName: "",
-    MQTTpath: "",
-    mmsi: 0,
-    imo: 0,
+    activePlatformType: "PLATFORM", // [PLATFORM, AIS, DEVICE]
+    platformName: "Seahorse",
+    MQTTpath: "SEAHORSE",
+    mmsi: 3,
+    imo: 3,
     callsign: "",
     ship_type: "",
-    to_bow: 20,
-    to_port: 10,
-    to_starboard: 10,
-    to_stern: 80,
-    picture: "",
+    to_bow: 4,
+    to_port: 1,
+    to_starboard: 1,
+    to_stern: 1,
+    picture: PicSeahorse,
     destination: "",
-    draught: 0,
+    draught: 0.5,
     operation_state: "",
     operation_state_s: ""
   },
@@ -188,7 +188,7 @@ export const atomActivePlatform = atom({
 export const OS_POSITION_SETTING = atom({
   key: "os_position_stetting",
   default: {
-    source: "DEVISE",
+    source: "GNSS_0",
     status: "normal", // [normal, warning, error] 
     statusText: "Normal",
     timeCreated: ""
@@ -202,6 +202,10 @@ export const OS_POSITIONS = atom({
     AIS: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
+      altitude: 0.0, // meters
+      std_dev_altitude: 0.0,
+      std_dev_longitude: 0.0,
+      std_dev_latitude: 0.0,
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: null,
@@ -210,6 +214,10 @@ export const OS_POSITIONS = atom({
     GNSS_0: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
+      altitude: 0.0, // meters
+      std_dev_altitude: 0.0,
+      std_dev_longitude: 0.0,
+      std_dev_latitude: 0.0,
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: null,
@@ -218,6 +226,10 @@ export const OS_POSITIONS = atom({
     DEVISE: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
+      altitude: 0.0, // meters
+      std_dev_altitude: 0.0,
+      std_dev_longitude: 0.0,
+      std_dev_latitude: 0.0,
       accuracy: null, // meters 
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
@@ -227,6 +239,10 @@ export const OS_POSITIONS = atom({
     MANUAL: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
+      altitude: 0.0, // meters
+      std_dev_altitude: 0.0,
+      std_dev_longitude: 0.0,
+      std_dev_latitude: 0.0,
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: null,
@@ -289,7 +305,7 @@ export const OS_VELOCITY = atom({
 export const OS_HEADING_SETTING = atom({
   key: "os_heading_stetting",
   default: {
-    source: "DEVICE",
+    source: "GNSS_0",
     status: "normal", // [normal, warning, error] 
     statusText: "Normal",
     timeCreated: "" // Delay in system 
@@ -301,24 +317,28 @@ export const OS_HEADING = atom({
   default: {
     AIS: {
       heading: 0.0, // degrees 
+      heading_accuracy: 0.0,
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
     GNSS_0: {
       heading: 0.0, // degrees 
+      heading_accuracy: 0.0,
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
     DEVISE: {
       heading: 0.0, // degrees
+      heading_accuracy: 0.0,
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
     MANUAL: {
       heading: 0.0, // degrees
+      heading_accuracy: 0.0,
       status: "normal", // [normal, warning, error] 
       statusText: "Normal",
       timeCreated: "" // Delay in system 
@@ -350,13 +370,24 @@ export const lidarObservationAtom = atom({
 
 // RADAR
 
-
 export const radarObservationAtom = atom({
   key: "radar_observation_state",
   default: [],
 });
 
 
+// -----------------------------------------------------------
+// Data Flow 
+
+export const atomMqttTopics = atom({
+  key: "atom_mqtt_topics",
+  default: {},
+});
+
+export const atomMqttTopicsUnhandled = atom({
+  key: "atom_mqtt_topics_unhandled",
+  default: {},
+});
 
 
 

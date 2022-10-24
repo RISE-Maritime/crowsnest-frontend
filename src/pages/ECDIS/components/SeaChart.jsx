@@ -1,4 +1,4 @@
-import React, {  useEffect } from "react"
+import React, { useEffect } from "react"
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import "mapbox-gl/dist/mapbox-gl.css"
@@ -245,28 +245,6 @@ export default function SeaChart() {
       },
     }),
 
-    // OWN SHIP symbol
-    new IconLayer({
-      id: "icon-layer",
-      data: [{ pos: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude] }],
-      pickable: false,
-      billboard: false,
-      getIcon: d => {
-        return {
-          url: PicOwnShipBlack,
-          width: 400,
-          height: 400,
-          anchorY: 200,
-        }
-      },
-      sizeUnits: "common",
-      sizeMinPixels: 10,
-      sizeMaxPixels: 25,
-
-      getPosition: d => d.pos,
-      getSize: d => 5,
-    }),
-
     // AIS targets
     new VesselContourLayer({
       id: "vessel-contour-layer",
@@ -373,13 +351,35 @@ export default function SeaChart() {
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
       pointSize: 3,
       getPosition: d => d,
-      getNormal: d => [0,0,1],
+      getNormal: d => [0, 0, 1],
       getColor: d => {
-      // console.log(d[2]*100);
-        return[d[2]*100, 0, 0, 255]
+        // console.log(d[2]*100);
+        return [d[2] * 100, 0, 0, 255]
       },
       getAngle: 45,
       opacity: 0.8,
+    }),
+
+    // OWN SHIP symbol
+    new IconLayer({
+      id: "icon-layer",
+      data: [{ pos: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude] }],
+      pickable: false,
+      billboard: false,
+      getIcon: d => {
+        return {
+          url: PicOwnShipBlack,
+          width: 400,
+          height: 400,
+          anchorY: 200,
+        }
+      },
+      sizeUnits: "common",
+      sizeMinPixels: 10,
+      sizeMaxPixels: 25,
+
+      getPosition: d => d.pos,
+      getSize: d => 5,
     }),
   ]
 
