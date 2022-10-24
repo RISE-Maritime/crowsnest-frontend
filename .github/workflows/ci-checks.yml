@@ -11,5 +11,3 @@ jobs:
         run: npm ci
       - name: Format with Prettier
         run: npx prettier --write .
-      - name: Check code with ESlint
-        run: npx eslint src --fix --ext .js,.jsx
