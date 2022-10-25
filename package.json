@@ -2,6 +2,7 @@
   "name": "crowsnest_web_app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/ecdis",
   "dependencies": {
     "@deck.gl/aggregation-layers": "^8.8.13",
     "@deck.gl/geo-layers": "^8.8.13",

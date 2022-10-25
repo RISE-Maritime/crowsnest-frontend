@@ -110,7 +110,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <Router>
+        <Router basename="/ecdis">
           <BasePage>
             <Routes>
               <Route exact path={ROUTES.HOME} element={<PageHome />} />
