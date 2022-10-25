@@ -13,6 +13,7 @@ export default function StatusSideBar() {
       </Grid>
       <Grid item xs={12}>
         <OsInfo/>
+        <br/>
       </Grid>
       <Grid item xs={12}>
         <AisInfo />
