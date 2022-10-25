@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
-import "mapbox-gl/dist/mapbox-gl.css"
+// import "mapbox-gl/dist/mapbox-gl.css"
 import { Map } from "react-map-gl"
 import { HeatmapLayer } from "@deck.gl/aggregation-layers"
 import DeckGL from "@deck.gl/react"
