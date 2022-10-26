@@ -1,0 +1,7 @@
+version: "3"
+services:
+  web-app:
+    build: .
+    # image
+    restart: unless-stopped
+    network_mode: "host"

@@ -91,7 +91,7 @@ export default function SeaChart() {
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
   const [mapState, setMapState] = useRecoilState(atomMapState)
   const [mapSetting, setMapSetting] = useRecoilState(atomMapSetting)
-  const [layersShowing, setLayersShowing] = useRecoilState(atomLayersShowing)
+  const layersShowing = useRecoilValue(atomLayersShowing)
 
   const os_pos = useRecoilValue(OS_POSITIONS)
   const os_pos_setting = useRecoilValue(OS_POSITION_SETTING)
@@ -339,7 +339,7 @@ export default function SeaChart() {
       getPosition: d => d.point,
       getRadius: d => d.distance / 11,
       getFillColor: d => [255, 140, 0, d.weight],
-      getLineColor: d => [0, 0, 0],
+      getLineColor: () => [0, 0, 0],
       visible: false,
     }),
 
@@ -351,7 +351,7 @@ export default function SeaChart() {
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
       pointSize: 3,
       getPosition: d => d,
-      getNormal: d => [0, 0, 1],
+      getNormal: () => [0, 0, 1],
       getColor: d => {
         // console.log(d[2]*100);
         return [d[2] * 100, 0, 0, 255]
@@ -366,7 +366,7 @@ export default function SeaChart() {
       data: [{ pos: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude] }],
       pickable: false,
       billboard: false,
-      getIcon: d => {
+      getIcon: () => {
         return {
           url: PicOwnShipBlack,
           width: 400,
@@ -379,7 +379,7 @@ export default function SeaChart() {
       sizeMaxPixels: 25,
 
       getPosition: d => d.pos,
-      getSize: d => 5,
+      getSize: () => 5,
     }),
   ]
 
