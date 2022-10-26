@@ -1,15 +1,15 @@
 import React from "react"
 import { Stack, FormControl, InputLabel, Select, MenuItem,  Typography, Grid } from "@mui/material"
-import { useRecoilState } from "recoil"
-import { OS_POSITIONS, OS_POSITION_SETTING, OS_VELOCITY_SETTING, OS_VELOCITY, OS_HEADING, OS_HEADING_SETTING } from "../../../recoil/atoms"
+import { useRecoilState, useRecoilValue } from "recoil"
+import {  OS_POSITION_SETTING, OS_VELOCITY_SETTING, OS_VELOCITY, OS_HEADING, OS_HEADING_SETTING } from "../../../recoil/atoms"
 
 export default function OsInfo() {
-  const [osPos, setOsPos] = useRecoilState(OS_POSITIONS)
+ 
   const [posSetting, setPosSetting] = useRecoilState(OS_POSITION_SETTING)
-  const [osVelocity, setOsVelocity] = useRecoilState(OS_VELOCITY)
-  const [osVelocitySetting, setOsVelocitySetting] = useRecoilState(OS_VELOCITY_SETTING)
-  const [osHeading, setOsHeading] = useRecoilState(OS_HEADING)
-  const [osHeadingSetting, setOsHeadingSetting] = useRecoilState(OS_HEADING_SETTING)
+  const osVelocity = useRecoilValue(OS_VELOCITY)
+  const osVelocitySetting = useRecoilValue(OS_VELOCITY_SETTING)
+  const osHeading = useRecoilValue(OS_HEADING)
+  const osHeadingSetting = useRecoilValue(OS_HEADING_SETTING)
 
   const handleChangeGNSSsource = event => {
     const newPosSource = event.target.value

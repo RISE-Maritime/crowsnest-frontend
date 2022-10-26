@@ -17,7 +17,7 @@ import { useTheme } from "@mui/material/styles"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
 import ZoomInIcon from "@mui/icons-material/ZoomIn"
 import { atomMapState, atomMapSetting, atomLayersTaggable, atomLayersShowing } from "./SeaChart"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 
 const ITEM_HEIGHT = 48
@@ -40,10 +40,10 @@ function getStyles(layersTaggable, name, theme) {
 export default function ChartControls() {
   const [mapState, setMapState] = useRecoilState(atomMapState)
   const [mapSetting, setMapSetting] = useRecoilState(atomMapSetting)
-  const [layersTaggable, setLayersTaggable] = useRecoilState(atomLayersTaggable)
+  const layersTaggable = useRecoilValue(atomLayersTaggable)
   const [layersShowing, setLayersShowing] = useRecoilState(atomLayersShowing)
-  const [osPos, setOsPos] = useRecoilState(OS_POSITIONS)
-  const [osPosSetting, setOsPosSetting] = useRecoilState(OS_POSITION_SETTING)
+  const osPos = useRecoilValue(OS_POSITIONS)
+  const osPosSetting = useRecoilValue(OS_POSITION_SETTING)
 
   const zoomOut = () => {
     setMapState({

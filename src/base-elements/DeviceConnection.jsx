@@ -2,7 +2,7 @@
   Device sensor connection   
 
 */
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import {  useSetRecoilState } from "recoil"
 import { setDeviceSensorData } from "../recoil/selectors"
 
@@ -19,15 +19,6 @@ function error(err) {
 export default function DeviceConnection() {
   const setDeviceSensors = useSetRecoilState(setDeviceSensorData)
 
-  const [deviceData, setDeviceData] = useState({
-    latitude: 0,
-    longitude: 0,
-    accuracy: null,
-    altitude: null,
-    altitudeAccuracy: null,
-    heading: null,
-    speed: null,
-  })
 
   useEffect(() => {
     navigator.geolocation.watchPosition(success, error, options)

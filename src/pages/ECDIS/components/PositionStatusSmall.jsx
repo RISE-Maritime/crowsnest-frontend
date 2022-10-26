@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import GpsFixedIcon from "@mui/icons-material/GpsFixed"
-import GpsNotFixedIcon from "@mui/icons-material/GpsNotFixed"
-import GpsOffIcon from "@mui/icons-material/GpsOff"
+// import GpsNotFixedIcon from "@mui/icons-material/GpsNotFixed"
+// import GpsOffIcon from "@mui/icons-material/GpsOff"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import EditRoundedIcon from "@mui/icons-material/EditRounded"
 import { Button, Typography, Stack, FormControl, TextField, Select, MenuItem, Grid, IconButton, InputLabel } from "@mui/material"
@@ -115,7 +115,9 @@ export default function PositionStatusSmall() {
       {viewManualPosInput ? (
         <div>
           <Formik initialValues={initialValuesManual} onSubmit={submitManualPos} validationSchema={validationSchema}>
-            {({ handleChange, values, setFieldValue, touched, errors }) => {
+          {({ handleChange, touched, errors }) => {
+            // {({ handleChange, values, setFieldValue, touched, errors }) => {
+              
               return (
                 <Form>
                   <Grid container spacing={1} justifyContent="center" alignItems="center">
