@@ -376,6 +376,13 @@ export const radarObservationAtom = atom({
 });
 
 
+export const AtomShoreRadarObservation = atom({
+  key: "atom_shore_radar_observation",
+  default: [],
+});
+
+
+
 // -----------------------------------------------------------
 // Data Flow 
 

@@ -1,6 +1,13 @@
 import React, { useEffect } from "react"
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { lidarObservationAtom, targetsAIS, radarObservationAtom, OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
+import {
+  lidarObservationAtom,
+  targetsAIS,
+  radarObservationAtom,
+  OS_POSITIONS,
+  OS_POSITION_SETTING,
+  AtomShoreRadarObservation,
+} from "../../../recoil/atoms"
 // import "mapbox-gl/dist/mapbox-gl.css"
 import { Map } from "react-map-gl"
 import { HeatmapLayer } from "@deck.gl/aggregation-layers"
@@ -98,6 +105,7 @@ export default function SeaChart() {
 
   const AIStargets = useRecoilValue(targetsAIS)
   const radarFrames = useRecoilValue(radarObservationAtom)
+  const shoreRadarFrames = useRecoilValue(AtomShoreRadarObservation)
   const lidarObservations = useRecoilValue(lidarObservationAtom)
 
   // // State of the map
@@ -131,7 +139,7 @@ export default function SeaChart() {
   }
 
   const layers = [
-    // SEA CHART
+    // SEA CHART ENIRO
     new TileLayer({
       id: "tail-layer-enior",
       visible: layersShowing.includes("ENIRO"),
@@ -153,6 +161,30 @@ export default function SeaChart() {
       },
     }),
 
+      // SEA CHART NAVICO
+      new TileLayer({
+        id: "tail-layer-navico",
+        visible: true,
+        data: "https://backend.navionics.com/tile/{z}/{x}/{y}?LAYERS=config_1_20.00_0&TRANSPARENT=FALSE&UGC=TRUE&theme=0&navtoken=eyJrZXkiOiJOQVZJT05JQ1NfV0VCQVBQX1AwMSIsImtleURvbWFpbiI6IndlYmFwcC5uYXZpb25pY3MuY29tIiwicmVmZXJlciI6IndlYmFwcC5uYXZpb25pY3MuY29tIiwicmFuZG9tIjoxNjY3NDcxOTk2NDE4fQ",
+        minZoom: 0,
+        maxZoom: 19,
+        tileSize: 256,
+  
+        renderSubLayers: props => {
+          const {
+            bbox: { west, south, east, north },
+          } = props.tile
+  
+          return new BitmapLayer(props, {
+            data: null,
+            image: props.data,
+            bounds: [west, south, east, north],
+          })
+        },
+      }),
+  
+
+    // Open street map
     new TileLayer({
       id: "tail-layer-open-street-map",
       visible: layersShowing.includes("Street map"),
@@ -176,6 +208,7 @@ export default function SeaChart() {
       },
     }),
 
+    // Satellite map
     new TileLayer({
       id: "tail-layer-satellite",
       visible: layersShowing.includes("Satellite"),
@@ -199,6 +232,7 @@ export default function SeaChart() {
       },
     }),
 
+    // Dark Map
     new TileLayer({
       id: "tail-layer-dark",
       visible: layersShowing.includes("Dark"),
@@ -222,6 +256,7 @@ export default function SeaChart() {
       },
     }),
 
+    // Open Sea Mark
     new TileLayer({
       id: "tail-layer-sea-marks",
       visible: layersShowing.includes("Sea Marks"),
@@ -273,19 +308,35 @@ export default function SeaChart() {
       },
     }),
 
-    new PointCloudLayer({
-      id: "radar-point-cloud-layer",
-      data: radarFrames,
-      pickable: false,
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
-      sizeUnits: "meters",
-      pointSize: 2,
-      getPosition: d => d.point,
-      // getNormal: d => d.normal,
-      getColor: d => [15, 117, 17, d.weight],
-      visible: false,
-    }),
+    // OS radar layer
+    // new PointCloudLayer({
+    //   id: "radar-point-cloud-layer",
+    //   data: radarFrames,
+    //   pickable: false,
+    //   coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+    //   coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
+    //   sizeUnits: "meters",
+    //   pointSize: 2,
+    //   getPosition: d => d.point,
+    //   // getNormal: d => d.normal,
+    //   // getColor: d => [15, 117, 17, d.weight],
+    //   visible: false,
+    // }),
+
+    // Shore radar / Landkrabban
+    // new PointCloudLayer({
+    //   id: "shore-radar-point",
+    //   data: shoreRadarFrames,
+    //   pickable: false,
+    //   coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+    //   coordinateOrigin: [57.7, 11.94], //Longitude, latitude
+    //   sizeUnits: "meters",
+    //   pointSize: 2,
+    //   getPosition: d => d.point,
+    //   // getNormal: d => d.normal,
+    //   getColor: d => [76, 168, 50, d.weight],
+    //   visible: false,
+    // }),
 
     // new HexagonLayer({
     //   id: "hexagon-layer",
@@ -321,28 +372,46 @@ export default function SeaChart() {
       opacity: 1,
     }),
 
-    // This one
-    new ScatterplotLayer({
-      id: "radar-scatterplot-layer",
-      data: radarFrames,
+    new HeatmapLayer({
+      id: "shore-radar-heatmapLayer",
+      data: shoreRadarFrames,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      pickable: true,
-      billboard: false,
-      opacity: 0.5,
-      stroked: false,
-      filled: true,
-      radiusScale: 1,
-      radiusMinPixels: 0,
-      radiusMaxPixels: 100,
-      // lineWidthMinPixels: 1,
+      coordinateOrigin: [(os_pos[os_pos_setting.source].longitude - 0.002), os_pos[os_pos_setting.source].latitude],
       getPosition: d => d.point,
-      getRadius: d => d.distance / 11,
-      getFillColor: d => [255, 140, 0, d.weight],
-      getLineColor: () => [0, 0, 0],
-      visible: false,
+      getWeight: d => d.weight,
+      aggregation: "MEAN", // SUM or MEAN
+      weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
+      threshold: 0.0001,
+      radiusPixels: mapState.zoom * 1.5,
+      intensity: 1, // (viewstate.zoom * 30) / 1,
+      visible: true,
+      opacity: 1,
     }),
 
+    // This one
+    // new ScatterplotLayer({
+    //   id: "radar-scatterplot-layer",
+    //   data: radarFrames,
+    //   coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+    //   coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
+    //   pickable: true,
+    //   billboard: false,
+    //   opacity: 0.5,
+    //   stroked: false,
+    //   filled: true,
+    //   radiusScale: 1,
+    //   radiusMinPixels: 0,
+    //   radiusMaxPixels: 100,
+    //   // lineWidthMinPixels: 1,
+    //   getPosition: d => d.point,
+    //   getRadius: d => d.distance / 11,
+    //   getFillColor: d => [255, 140, 0, d.weight],
+    //   getLineColor: () => [0, 0, 0],
+    //   visible: false,
+    // }),
+
+
+    //  LIDAR layer 
     new PointCloudLayer({
       id: "lidar-point-cloud-layer",
       data: lidarObservations,
