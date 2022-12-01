@@ -254,7 +254,7 @@ export const wsMessageParser = selector({
       }
 
 
-      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/POINTCLOUD")?.input: {
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/NUP")?.input: {
 
         //  MQTT logger topics 
         set(atomMqttTopics, (currentObj) => ({
@@ -308,11 +308,11 @@ export const wsMessageParser = selector({
         //  MQTT logger topics 
         set(atomMqttTopics, (currentObj) => ({
           ...currentObj,
-          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]: {
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/NUP"]: {
             time_received: new Date(),
             timestamp: new Date(latestMessage.payload.message.sent_at),
             delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
-            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"].count + 1 : 1
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/NUP"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/NUP"].count + 1 : 1
 
           }
         }))
