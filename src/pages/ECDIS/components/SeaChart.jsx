@@ -361,7 +361,11 @@ export default function SeaChart() {
       data: radarFrames,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      getPosition: d => d.point,
+      // getPosition: d => {
+      //   // console.log("HERE",d)
+      //   return [d[1],d[0]]
+      // },  
+      getPosition: d => d.point, // SWEEP
       getWeight: d => d.weight,
       aggregation: "MEAN", // SUM or MEAN
       weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
@@ -377,7 +381,8 @@ export default function SeaChart() {
       data: shoreRadarFrames,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [(os_pos[os_pos_setting.source].longitude - 0.002), os_pos[os_pos_setting.source].latitude],
-      getPosition: d => d.point,
+      
+      getPosition: d => d.point, 
       getWeight: d => d.weight,
       aggregation: "MEAN", // SUM or MEAN
       weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
