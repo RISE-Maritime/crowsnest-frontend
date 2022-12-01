@@ -11,7 +11,8 @@ import {
   OS_VELOCITY,
   OS_HEADING,
   atomMqttTopics,
-  atomMqttTopicsUnhandled
+  atomMqttTopicsUnhandled,
+  AtomShoreRadarObservation
 } from "./atoms";
 
 export const selectUser = selector({
@@ -253,7 +254,7 @@ export const wsMessageParser = selector({
       }
 
 
-      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/POINTCLOUD")?.input: {
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/NUP")?.input: {
 
         //  MQTT logger topics 
         set(atomMqttTopics, (currentObj) => ({
@@ -273,15 +274,45 @@ export const wsMessageParser = selector({
         break;
       }
 
-      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP")?.input: {
+      //  TODO: HEADUP
+      // case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP")?.input: {
+      //   //  MQTT logger topics 
+      //   set(atomMqttTopics, (currentObj) => ({
+      //     ...currentObj,
+      //     ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]: {
+      //       time_received: new Date(),
+      //       timestamp: new Date(latestMessage.payload.message.sent_at),
+      //       delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+      //       count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"].count + 1 : 1
+
+      //     }
+      //   }))
+
+      //   let frameR = latestMessage.payload
+      //   let radarFrame = []
+      //   for (let i = 0; i < frameR.message.points.length; i++) {
+      //     const radarPoint = {
+      //       point: frameR.message.points[i],
+      //       weight: frameR.message.weights[i],
+      //       distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
+      //     }
+      //     radarFrame.push(radarPoint)
+      //   }
+      //   set(radarObservationAtom, () => (
+      //     radarFrame
+      //   ));
+      //   break;
+      // }
+
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/NUP")?.input: {
         //  MQTT logger topics 
         set(atomMqttTopics, (currentObj) => ({
           ...currentObj,
-          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]: {
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/NUP"]: {
             time_received: new Date(),
             timestamp: new Date(latestMessage.payload.message.sent_at),
             delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
-            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR"].count + 1 : 1
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/NUP"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/NUP"].count + 1 : 1
 
           }
         }))
@@ -301,6 +332,37 @@ export const wsMessageParser = selector({
         ));
         break;
       }
+
+      case latestMessage.topic.match("CROWSNEST/LANDKRABBA/RADAR/0/SWEEP")?.input: {
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          ["CROWSNEST/LANDKRABBA/RADAR"]: {
+            time_received: new Date(),
+            timestamp: new Date(latestMessage.payload.message.sent_at),
+            delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+            count: currentObj["CROWSNEST/LANDKRABBA/RADAR"]?.count ? currentObj["CROWSNEST/LANDKRABBA/RADAR"].count + 1 : 1
+
+          }
+        }))
+
+        let frameR = latestMessage.payload
+        let radarFrame = []
+        for (let i = 0; i < frameR.message.points.length; i++) {
+          const radarPoint = {
+            point: frameR.message.points[i],
+            weight: frameR.message.weights[i],
+            distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
+          }
+          radarFrame.push(radarPoint)
+        }
+     
+        set(AtomShoreRadarObservation, () => (
+          radarFrame
+        ));
+        break;
+      }
+
 
 
 
