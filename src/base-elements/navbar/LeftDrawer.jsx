@@ -19,6 +19,8 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import VrpanoIcon from '@mui/icons-material/Vrpano';
 import EdgesensorHighIcon from '@mui/icons-material/EdgesensorHigh';
+import SettingsIcon from '@mui/icons-material/Settings';
+
 
 export default function LeftDrawer(props) {
   return (
@@ -110,6 +112,12 @@ export default function LeftDrawer(props) {
             <InsightsRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Data flow"} />
+        </ListItem>
+        <ListItem button key={"settings"} component={Link} to={ROUTES.SETTINGS}>
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Settings"} />
         </ListItem>
       </List>
     </Box>
