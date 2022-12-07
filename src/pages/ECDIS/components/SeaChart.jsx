@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import { calcPosFromBearingDistance } from "../../../utils"
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import {
   lidarObservationAtom,
@@ -6,18 +7,22 @@ import {
   radarObservationAtom,
   OS_POSITIONS,
   OS_POSITION_SETTING,
+  OS_HEADING,
+  OS_HEADING_SETTING,
   AtomShoreRadarObservation,
 } from "../../../recoil/atoms"
 // import "mapbox-gl/dist/mapbox-gl.css"
-import { Map } from "react-map-gl"
+import { Map, StaticMap } from "react-map-gl"
 import { HeatmapLayer } from "@deck.gl/aggregation-layers"
 import DeckGL from "@deck.gl/react"
 import VesselContourLayer from "../../../base-elements/custom-deckgl-layers/vessel-contour-layer"
 import { PointCloudLayer } from "@deck.gl/layers"
 import { COORDINATE_SYSTEM } from "@deck.gl/core"
-import { BitmapLayer, IconLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { BitmapLayer, IconLayer, LineLayer } from "@deck.gl/layers"
 import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
+import { MapView, FirstPersonView } from "@deck.gl/core"
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 // Atoms
 export const vesselTargetsAtom = atom({
@@ -91,7 +96,6 @@ function getTooltip({ object }) {
   )
 }
 
-const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoieXlkZGVldHQiLCJhIjoiY2t0eGEyNjJhMWI0NjJxcW53dGNrMmk2eSJ9.6bkGb4cvC5pbb8sisIScSw"
 
 export default function SeaChart() {
   const setClickInfo = useSetRecoilState(clickInfoAtom)
@@ -102,6 +106,8 @@ export default function SeaChart() {
 
   const os_pos = useRecoilValue(OS_POSITIONS)
   const os_pos_setting = useRecoilValue(OS_POSITION_SETTING)
+  const os_heading = useRecoilValue(OS_HEADING)
+  const os_heading_setting = useRecoilValue(OS_HEADING_SETTING)
 
   const AIStargets = useRecoilValue(targetsAIS)
   const radarFrames = useRecoilValue(radarObservationAtom)
@@ -117,6 +123,15 @@ export default function SeaChart() {
   //   maxZoom: 24,
   //   maxPitch: 85,
   // })
+
+  // Viewport settings
+  const INITIAL_VIEW_STATE = {
+    longitude: -122.41669,
+    latitude: 37.7853,
+    zoom: 13,
+    pitch: 0,
+    bearing: 0,
+  }
 
   useEffect(() => {
     if (mapSetting.chartFix === "OS") {
@@ -160,29 +175,6 @@ export default function SeaChart() {
         })
       },
     }),
-
-      // SEA CHART NAVICO
-      new TileLayer({
-        id: "tail-layer-navico",
-        visible: true,
-        data: "https://backend.navionics.com/tile/{z}/{x}/{y}?LAYERS=config_1_20.00_0&TRANSPARENT=FALSE&UGC=TRUE&theme=0&navtoken=eyJrZXkiOiJOQVZJT05JQ1NfV0VCQVBQX1AwMSIsImtleURvbWFpbiI6IndlYmFwcC5uYXZpb25pY3MuY29tIiwicmVmZXJlciI6IndlYmFwcC5uYXZpb25pY3MuY29tIiwicmFuZG9tIjoxNjY3NDcxOTk2NDE4fQ",
-        minZoom: 0,
-        maxZoom: 19,
-        tileSize: 256,
-  
-        renderSubLayers: props => {
-          const {
-            bbox: { west, south, east, north },
-          } = props.tile
-  
-          return new BitmapLayer(props, {
-            data: null,
-            image: props.data,
-            bounds: [west, south, east, north],
-          })
-        },
-      }),
-  
 
     // Open street map
     new TileLayer({
@@ -364,7 +356,7 @@ export default function SeaChart() {
       // getPosition: d => {
       //   // console.log("HERE",d)
       //   return [d[1],d[0]]
-      // },  
+      // },
       getPosition: d => d.point, // SWEEP
       getWeight: d => d.weight,
       aggregation: "MEAN", // SUM or MEAN
@@ -380,9 +372,9 @@ export default function SeaChart() {
       id: "shore-radar-heatmapLayer",
       data: shoreRadarFrames,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [(os_pos[os_pos_setting.source].longitude - 0.002), os_pos[os_pos_setting.source].latitude],
-      
-      getPosition: d => d.point, 
+      coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
+
+      getPosition: d => d.point,
       getWeight: d => d.weight,
       aggregation: "MEAN", // SUM or MEAN
       weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
@@ -415,8 +407,7 @@ export default function SeaChart() {
     //   visible: false,
     // }),
 
-
-    //  LIDAR layer 
+    //  LIDAR layer
     new PointCloudLayer({
       id: "lidar-point-cloud-layer",
       data: lidarObservations,
@@ -455,6 +446,17 @@ export default function SeaChart() {
       getPosition: d => d.pos,
       getSize: () => 5,
     }),
+
+    new LineLayer({
+      id: 'heading-line-layer',
+      visible: true,
+      data: [{ pos: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], heading: os_heading[os_heading_setting.source].heading }],
+      pickable: true,
+      getWidth: 2,
+      getSourcePosition: d => d.pos,
+      getTargetPosition: d => calcPosFromBearingDistance(d.pos[1],d.pos[0],d.heading,10),
+      getColor: d => [0, 0, 0]
+    })
   ]
 
   const hoverMapCursor = e => {
@@ -477,24 +479,14 @@ export default function SeaChart() {
     <DeckGL
       layers={layers}
       viewState={mapState}
+      initialViewState={INITIAL_VIEW_STATE}
       onViewStateChange={e => changeViewState(e)}
       onHover={e => hoverMapCursor(e)}
       controller={{ dragPan: true, doubleClickZoom: false }}
       getTooltip={getTooltip}
       getCursor={() => "crosshair"}
     >
-      <Map
-        mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
-        fog={{
-          range: [-1, 2],
-          "horizon-blend": 0.3,
-          color: "white",
-          "high-color": "#add8e6",
-          "space-color": "#d8f2ff",
-          "star-intensity": 0.0,
-        }}
-        // mapStyle="mapbox://styles/mapbox/streets-v9"
-      />
+ 
     </DeckGL>
   )
 }

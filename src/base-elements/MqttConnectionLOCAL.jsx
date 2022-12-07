@@ -1,37 +1,31 @@
 import React, { useEffect } from "react"
 import mqtt from "precompiled-mqtt"
-import { atom, useSetRecoilState, useRecoilState } from "recoil"
+import { useSetRecoilState, useRecoilState } from "recoil"
 import { wsMessageParser } from "../recoil/selectors"
+import {atomMQTTLocalState} from "../recoil/atoms"
 
 /* eslint-disable */
-const host = process.env.REACT_APP_MQTT_BROKER_ADDRESS
+// const host = process.env.REACT_APP_MQTT_BROKER_ADDRESS
+const host = "ws://localhost:80/mqtt"
 
 const options = {
   clientId: "crowsnest_app_" + Math.random(),
   connectTimeout: 4000,
-  username: process.env.REACT_APP_MQTT_USERNAME,
-  password: process.env.REACT_APP_MQTT_PASSWORD,
+  // username: process.env.REACT_APP_MQTT_USERNAME,
+  // password: process.env.REACT_APP_MQTT_PASSWORD,
   protocolVersion: 5,
 }
 /* eslint-enable */
 
 let client = mqtt.connect(host, options)
 
-export const mqttMessageAtom = atom({
-  key: "mqtt_message",
-  default: { topic: "", payload: null },
-})
 
-export const mqttStateAtom = atom({
-  key: "mqtt_state",
-  default: { connected: false },
-})
 
-export function mqttSubscribe(topic) {
+export function mqttSubscribeLOCAL(topic) {
   client.subscribe(topic, err => console.log(err))
 }
 
-export function mqttPublish(topic, qos, payload) {
+export function mqttPublishLOCAL(topic, qos, payload) {
   payload = JSON.stringify(payload)
 
   client.publish(topic, payload, { qos }, error => {
@@ -41,8 +35,8 @@ export function mqttPublish(topic, qos, payload) {
   })
 }
 
-export default function RemoteMqttConnection() {
-  const [mqttState, setMqttState] = useRecoilState(mqttStateAtom)
+export default function MqttConnectionLOCAL() {
+  const [mqttState, setMqttState] = useRecoilState(atomMQTTLocalState)
   const parseWsMessage = useSetRecoilState(wsMessageParser)
 
   useEffect(() => {

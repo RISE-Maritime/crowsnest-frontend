@@ -386,6 +386,24 @@ export const AtomShoreRadarObservation = atom({
 // -----------------------------------------------------------
 // Data Flow 
 
+// Remote MQTT 
+
+export const atomMqttRemoteAccount = atom({
+  key: "atom_mqtt_remote_account",
+  default: {
+    username: "",
+    password: "",
+    isLoading: false,
+  },
+});
+
+export const atomMqttRemoteState = atom({
+  key: "atom_mqtt_remote_state",
+  default: { connected: false },
+})
+
+// Local MQTT
+
 export const atomMqttTopics = atom({
   key: "atom_mqtt_topics",
   default: {},
@@ -396,6 +414,10 @@ export const atomMqttTopicsUnhandled = atom({
   default: {},
 });
 
+export const atomMQTTLocalState = atom({
+  key: "atom_mqtt_local_state",
+  default: { connected: false },
+})
 
 
 // -----------------------------------------------------------

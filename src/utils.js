@@ -1,3 +1,5 @@
+const EARTH_RADIUS = 6378.1;
+
 export function formatTime(s) {
   const dtFormat = new Intl.DateTimeFormat("en-GB", {
     timeStyle: "medium",
@@ -26,7 +28,7 @@ export function formatDirection(direction) {
 }
 
 export function formatLatitude(latitudeInDegrees, pression = 2) {
- 
+
   let latString = ""
 
   if ((typeof latitudeInDegrees) === "number") {
@@ -135,4 +137,27 @@ export function calcBearingBetween(lat1, lon1, lat2, lon2) {
   brng = toDegrees(brng);
   brng = (brng + 360) % 360
   return brng.toFixed(1);
+}
+
+
+/**
+ * Calculate end position from position with bearing and distance 
+ * @param  {[float]} lat1 latitude start
+ * @param  {[float]} lon1 longitude start
+ * @param  {[float]} lat2 latitude end
+ * @param  {[float]} lon2 longitude end
+ * @return {[float]} bearing in degrees from start 
+ */
+export function calcPosFromBearingDistance(latitude, longitude, bearing, nauticalMiles) {
+
+  const bearing_rad = toRadians(bearing);
+  const distance = nauticalMiles * 1.852;
+
+  const init_lat = toRadians(latitude)
+  const init_lon = toRadians(longitude)
+
+  const final_lat = (180 / Math.PI) * (Math.asin(Math.sin(init_lat) * Math.cos(distance / EARTH_RADIUS) + Math.cos(init_lat) * Math.sin(distance / EARTH_RADIUS) * Math.cos(bearing_rad)));
+  const final_lon = (180 / Math.PI) * (init_lon + Math.atan2(Math.sin(bearing_rad) * Math.sin(distance / EARTH_RADIUS) * Math.cos(init_lat), Math.cos(distance / EARTH_RADIUS) - Math.sin(init_lat) * Math.sin(final_lat)));
+
+  return [final_lon, final_lat];
 }

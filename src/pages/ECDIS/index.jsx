@@ -13,6 +13,7 @@ export default function Ecdis() {
         sx={{
           position: "relative",
           // height: "calc(100vh - 95px)",
+          padding: "0px",
           height: "90vh",
           cursor: "crosshair",
         }}

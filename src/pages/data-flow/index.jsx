@@ -6,8 +6,10 @@ import DataConnectionState from "./components/ConnectionStatus"
 import DataConnectionMQTT from "./components/ConnectionMQTT"
 // Recoil
 import { useRecoilValue } from "recoil"
-import { mqttStateAtom } from "../../base-elements/RemoteMqttConnection"
+
 import { lidarStateAtom } from "../../recoil/atoms"
+import { atomMQTTLocalState, atomMqttRemoteState } from "../../recoil/atoms"
+import MqttFlowIN from "./components/MqttFlowIN"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -16,12 +18,13 @@ const GridCenter = styled(Grid)(({ theme }) => ({
   borderColor: theme.palette.primary.main,
   borderRadius: "0.4rem",
   margin: "1rem",
-  padding: "0.5rem"
-}));
+  padding: "0.5rem",
+}))
 
 export default function DataFlow() {
   const theme = useTheme()
-  const mqttState = useRecoilValue(mqttStateAtom)
+  const mqttRemoteState = useRecoilValue(atomMqttRemoteState)
+  const mqttLocalState = useRecoilValue(atomMQTTLocalState)
   const lidarSate = useRecoilValue(lidarStateAtom)
 
   return (
@@ -38,18 +41,20 @@ export default function DataFlow() {
         <h1>Data flow & Sources</h1>
       </Grid>
       <GridCenter item xs={12}>
-        <DataConnectionMQTT connectionName={"MQTT RISE Cloud Broker"} isConnected={mqttState.connected} />
+        <DataConnectionMQTT conn={"REMOTE"} connectionName={"MQTT RISE Cloud Broker"} isConnected={mqttRemoteState.connected} />
       </GridCenter>
 
-      <Grid item xs={12}>
-        <DataConnectionState connectionName={"MQTT Local Broker"} isConnected={false} />
-      </Grid>
+      <GridCenter item xs={12}>
+        <DataConnectionMQTT conn={"LOCAL"} connectionName={"MQTT Local Broker"} isConnected={mqttLocalState.connected} />
+      </GridCenter>
 
-      <Grid item xs={12}>
+      <GridCenter item xs={12}>
         <DataConnectionState connectionName={"Own Device"} isConnected={true} delay={lidarSate.delaySec} />
-      </Grid>
+      </GridCenter>
+
+      <GridCenter item xs={12}>
+        <MqttFlowIN />
+      </GridCenter>
     </Grid>
   )
 }
-
-
