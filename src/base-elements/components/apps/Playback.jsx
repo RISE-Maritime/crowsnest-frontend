@@ -7,7 +7,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/Lock";
 import { playbackState } from "../../../recoil/atoms";
 import { useRecoilState } from "recoil";
-import { mqttPublish } from "../../RemoteMqttConnection";
+// import { mqttPublishRemote } from "../../MqttConnectionREMOTE";
 
 const TinyText = styled(Typography)({
   fontSize: "0.75rem",
@@ -39,14 +39,14 @@ export default function Playback({ setIsDraggable, isDraggable }) {
 
     let payload = { actionPlay: action };
 
-    mqttPublish(topic, qos, payload);
+    // mqttPublishRemote(topic, qos, payload);
   };
 
   const changeTimePointer = (value) => {
     let topic = "/playback/action";
     let qos = 0;  
     let payload = { timeLinePos: value };
-    mqttPublish(topic, qos, payload);
+    // mqttPublishRemote(topic, qos, payload);
 
     setPlaybackObj({
       ...playbackObj,

@@ -18,10 +18,9 @@ import PageBearingRate from "./pages/bearing-rate"
 import ELookout from "./pages/e-lookout"
 import ELookoutV2 from "./pages/e-lookout-v2"
 import DeviceSensors from "./pages/device-sensors"
-// import PageVesselSpinner from "./pages/vesselSpinner";
 // MQTT
-import RemoteMqttConnection from "./base-elements/RemoteMqttConnection"
-import { mqttSubscribe } from "./base-elements/RemoteMqttConnection"
+import MqttConnectionLOCAL from "./base-elements/MqttConnectionLOCAL"
+import { mqttSubscribeLOCAL } from "./base-elements/MqttConnectionLOCAL"
 import DeviceConnection from "./base-elements/DeviceConnection"
 
 export default function App() {
@@ -97,15 +96,16 @@ export default function App() {
   })
 
   theme = responsiveFontSizes(theme)
-
+  /* eslint-disable */
   useEffect(() => {
-    mqttSubscribe("CROWSNEST/#")
+    mqttSubscribeLOCAL("CROWSNEST/#")
   }, [])
+  /* eslint-enable */
 
   return (
     <>
-      <RemoteMqttConnection />
-      <DeviceConnection/>
+      <MqttConnectionLOCAL />
+      <DeviceConnection />
 
       <ThemeProvider theme={theme}>
         <CssBaseline />
