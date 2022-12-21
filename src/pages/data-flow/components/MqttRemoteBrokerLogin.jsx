@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import mqtt from "precompiled-mqtt"
-import { Formik, Form, useFormik } from "formik"
+import {  useFormik } from "formik"
 import * as yup from "yup"
 import { Grid, TextField, Stack, Button } from "@mui/material"
 import { wsMessageParser } from "../../../recoil/selectors"
@@ -39,6 +39,7 @@ export default function MqttBrokerLogin() {
     if (client) {
       client.on("connect", () => {
         console.log("Connected to REMOTE MQTT broker!")
+        client.subscribe("CROWSNEST/#", err => console.log(err))
         setMqttState({
           ...mqttState,
           connected: true,
@@ -60,6 +61,7 @@ export default function MqttBrokerLogin() {
       })
 
       client.on("message", (topic, payload) => {
+        console.log("Message received: ", topic, payload.toString())
         parseWsMessage({ topic: topic, payload: JSON.parse(payload.toString()) })
         // parseWsMessage({ topic: topic, payload: payload })
       })
@@ -115,15 +117,19 @@ export default function MqttBrokerLogin() {
     }
 
     let initClient = mqtt.connect(mqttHost, newMqttOptions)
+    
+    // setMqttOptions(newMqttOptions)
+
+    // setMqttRemoteAccount({
+    //   ...mqttRemoteAccount,
+    //   username: values.username,
+    //   password: values.password,
+    // })
+
+    initClient.subscribe("CROWSNEST/#", err => console.log(err))
+
+    // Making client global
     setClient(initClient)
-    setMqttOptions(newMqttOptions)
-
-    setMqttRemoteAccount({
-      ...mqttRemoteAccount,
-      username: values.username,
-      password: values.password,
-    })
-
     return values
   }
 

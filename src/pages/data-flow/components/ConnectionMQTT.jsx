@@ -33,7 +33,7 @@ export default function ConnectionMQTT({ conn, connectionName, isConnected }) {
           {conn === "REMOTE" && <MqttRemoteBrokerLogin />}
         </Stack>
       </Grid>
-
+      
     </Grid>
   )
 }
