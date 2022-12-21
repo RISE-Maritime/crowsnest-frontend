@@ -1,16 +1,18 @@
 import React, { useEffect } from "react"
-import { Stack } from "@mui/material"
+import { Grid, Stack } from "@mui/material"
 import CamStream from "./components/CamStream"
+import BearingLines from "./components/BearingLines"
 
 export default function CamLookout() {
   useEffect(() => {}, [])
 
   return (
-    <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
-      <CamStream ID={"3"} />
-      <CamStream ID={"2"} />
-      <CamStream ID={"4"} />
-      <CamStream ID={"1"} />
-    </Stack>
+    <Grid direction="row" justifyContent="center" alignItems="center" spacing={0}>
+       <Grid item xs={6} sx={{ border: "solid" }}>
+        <CamStream ID={"axis1"} />
+        <BearingLines/>
+        </Grid>
+      {/* <CamStream ID={"1"} /> */}
+    </Grid>
   )
 }

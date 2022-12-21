@@ -1,11 +1,10 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { Grid } from "@mui/material"
 import CamStream from "./components/CamStream"
 import BearingLines from "./components/BearingLines"
 import CamStreamYOLO from "./components/CamStreamYOLO"
 
 export default function CamLookout() {
-  useEffect(() => {}, [])
 
   return (
     <Grid container>

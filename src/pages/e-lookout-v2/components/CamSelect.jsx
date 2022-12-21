@@ -15,6 +15,7 @@ function text2Binary(string) {
 }
 
 export default function CamSelect({ refV, refA,  detectFrame }) {
+  
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
@@ -48,6 +49,7 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
     /* eslint-enable */
 
     let pc = null
+    // const requestTopic = "CROWSNEST/LANDKRABBA/WEBRTC/" + camID
     const requestTopic = "CROWSNEST/LANDKRABBA/WEBRTC/" + camID
     var config = {
       sdpSemantics: "unified-plan",
@@ -136,19 +138,10 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
 
   return (
     <div>
-      <Button onClick={() => startCamera("axis4")}>
+      <Button onClick={() => startCamera("a")}>
         <ArrowUpwardIcon sx={{ transform: "rotate(-90deg)" }} />
       </Button>
-      <Button onClick={() => startCamera("axis3")}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(-25deg)" }} />
-      </Button>
-      <Button onClick={() => startCamera("axis2")}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(25deg)" }} />
-      </Button>
-      <Button onClick={() => startCamera("axis1")}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(90deg)" }} />
-      </Button>
-      <Button onClick={() => startCamera("axis3/yolov5")}>YOLO</Button>
+     
     </div>
   )
 }
