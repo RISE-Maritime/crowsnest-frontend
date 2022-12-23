@@ -1,18 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
-
 import { Grid, Typography, Stack } from "@mui/material"
 // Icons
 import CheckIcon from "@mui/icons-material/CheckCircle"
 import CloseIcon from "@mui/icons-material/Cancel"
-import { useRecoilValue } from "recoil"
-import { atomMqttTopics, atomMqttTopicsUnhandled } from "../../../recoil/atoms"
 import MqttRemoteBrokerLogin from "./MqttRemoteBrokerLogin"
 
 export default function ConnectionMQTT({ conn, connectionName, isConnected }) {
-  let mqtt_topics = useRecoilValue(atomMqttTopics)
-  let mqtt_topics_unhandled = useRecoilValue(atomMqttTopicsUnhandled)
-
   return (
     <Grid container>
       {/* Connection state indicator and Broker Login */}

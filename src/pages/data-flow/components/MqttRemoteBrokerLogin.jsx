@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
 import mqtt from "precompiled-mqtt"
-import {  useFormik } from "formik"
+import { useFormik } from "formik"
 import * as yup from "yup"
 import { Grid, TextField, Stack, Button } from "@mui/material"
 import { wsMessageParser } from "../../../recoil/selectors"
-import { atomMqttRemoteAccount, atomMqttRemoteState } from "../../../recoil/atoms"
+import { atomMqttRemoteState } from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
 
 const validationSchema = yup.object({
@@ -12,9 +12,10 @@ const validationSchema = yup.object({
   password: yup.string().required("Required"),
 })
 
-const initialValuesManual = {
+const initFormValuesManual = {
   username: "",
   password: "",
+  mqttRemoteHost: "wss://crowsnest.mo.ri.se:443/mqtt",
 }
 
 const initMqttOptions = {
@@ -25,13 +26,9 @@ const initMqttOptions = {
   protocolVersion: 5,
 }
 
-const initMqttHost = "wss://crowsnest.mo.ri.se:443/mqtt"
-
 export default function MqttBrokerLogin() {
-  const [mqttRemoteAccount, setMqttRemoteAccount] = useRecoilState(atomMqttRemoteAccount)
   const [mqttState, setMqttState] = useRecoilState(atomMqttRemoteState)
-  const [mqttOptions, setMqttOptions] = useState(initMqttOptions)
-  const [mqttHost, setMqttHost] = useState(initMqttHost)
+
   const [client, setClient] = useState(null)
   const parseWsMessage = useSetRecoilState(wsMessageParser)
 
@@ -68,18 +65,9 @@ export default function MqttBrokerLogin() {
     }
   }, [client])
 
-  const mqttConnect = () => {
-    mqttSubscribeRemote("CROWSNEST/#")
-  }
-
-  function mqttSubscribeRemote(topic) {
-    client.subscribe(topic, err => console.log(err))
-  }
-
   // Make to global function
   function mqttPublishRemote(topic, qos, payload) {
     payload = JSON.stringify(payload)
-
     client.publish(topic, payload, { qos }, error => {
       if (error) {
         console.log("Publish error: ", error)
@@ -101,30 +89,21 @@ export default function MqttBrokerLogin() {
 
   const formik = useFormik({
     validationSchema: validationSchema,
-    initialValues: initialValuesManual,
+    initialValues: initFormValuesManual,
     onSubmit: values => {
       submitAndConnect(values)
     },
   })
 
   const submitAndConnect = values => {
-    console.log(values)
-
+    console.log("Connecting to REMOTE MQTT: ", values)
     let newMqttOptions = {
-      ...mqttOptions,
+      ...initMqttOptions,
       username: values.username,
       password: values.password,
     }
 
-    let initClient = mqtt.connect(mqttHost, newMqttOptions)
-    
-    // setMqttOptions(newMqttOptions)
-
-    // setMqttRemoteAccount({
-    //   ...mqttRemoteAccount,
-    //   username: values.username,
-    //   password: values.password,
-    // })
+    let initClient = mqtt.connect(values.mqttRemoteHost, newMqttOptions)
 
     initClient.subscribe("CROWSNEST/#", err => console.log(err))
 
@@ -139,6 +118,20 @@ export default function MqttBrokerLogin() {
         <div>
           <form onSubmit={formik.handleSubmit}>
             <Grid container spacing={1} justifyContent="center" alignItems="flex-start">
+              <Grid item xs={12}>
+                <TextField
+                  id="mqttRemoteHost"
+                  label="Host URL"
+                  fullWidth
+                  variant="filled"
+                  size="small"
+                  defaultValue={formik.values.mqttRemoteHost}
+                  onChange={formik.handleChange}
+                  error={formik.touched.mqttRemoteHost && Boolean(formik.errors.mqttRemoteHost)}
+                  helperText={formik.touched.mqttRemoteHost && formik.errors.mqttRemoteHost}
+                />
+              </Grid>
+
               <Grid item xs={5}>
                 <TextField
                   id="username"
