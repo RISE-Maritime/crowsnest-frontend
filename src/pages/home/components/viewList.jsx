@@ -10,6 +10,7 @@ import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded"
 import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded"
 import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded"
 import VrpanoIcon from "@mui/icons-material/Vrpano"
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const GridCenter = styled(Grid)(() => ({
   display: "grid",
@@ -120,6 +121,19 @@ export default function viewList() {
         viewName={"Data Flow"}
         icon={
           <InsightsRoundedIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+
+<ViewListItem
+        routeLink={ROUTES.SETTINGS}
+        viewName={"Settings"}
+        icon={
+          <SettingsIcon
             sx={{
               fontSize: "4rem",
               color: theme.palette.info.main,

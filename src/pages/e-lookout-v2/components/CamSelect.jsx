@@ -14,14 +14,14 @@ function text2Binary(string) {
     .join(" ")
 }
 
-export default function CamSelect({ refV, refA,  detectFrame }) {
+export default function CamSelect({ refV, refA, detectFrame, ID }) {
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
     }
 
     refV.current.addEventListener("play", event => {
-      event 
+      event
       const modelPromise = cocoSsd.load()
       // modelPromise.detect()
       Promise.all([modelPromise, refV])
@@ -33,7 +33,7 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
         })
     })
 
-    console.log("(1) start con" + camID)
+    console.log("(1) start camera: " + camID)
 
     /* eslint-disable */
     const options = {
@@ -136,19 +136,9 @@ export default function CamSelect({ refV, refA,  detectFrame }) {
 
   return (
     <div>
-      <Button onClick={() => startCamera("axis4")}>
+      <Button onClick={() => startCamera(ID)}>
         <ArrowUpwardIcon sx={{ transform: "rotate(-90deg)" }} />
       </Button>
-      <Button onClick={() => startCamera("axis3")}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(-25deg)" }} />
-      </Button>
-      <Button onClick={() => startCamera("axis2")}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(25deg)" }} />
-      </Button>
-      <Button onClick={() => startCamera("axis1")}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(90deg)" }} />
-      </Button>
-      <Button onClick={() => startCamera("axis3/yolov5")}>YOLO</Button>
     </div>
   )
 }

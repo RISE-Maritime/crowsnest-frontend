@@ -372,8 +372,8 @@ export default function SeaChart() {
       id: "shore-radar-heatmapLayer",
       data: shoreRadarFrames,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
-
+      coordinateOrigin: [11.88666, 57.68577],
+      // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
       getPosition: d => d.point,
       getWeight: d => d.weight,
       aggregation: "MEAN", // SUM or MEAN

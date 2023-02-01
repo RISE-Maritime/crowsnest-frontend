@@ -53,6 +53,16 @@ export default function MapCursorInfo() {
             )}
             nm
             <br />
+            DIST:{" "}
+            {calcDistanceBetween(
+              mapCursor.latitude,
+              mapCursor.longitude,
+              osPos[osPosSetting.source].latitude,
+              osPos[osPosSetting.source].longitude,
+              "m"
+            )}
+            meter
+            <br />
             BRG:
             {calcBearingBetween(
               osPos[osPosSetting.source].latitude,

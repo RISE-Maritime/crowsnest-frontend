@@ -90,7 +90,7 @@ export function formatLongitude(longitudeInDegrees, pression = 2) {
  * @param  {[float]} lon2 longitude end
  * @return {[float]} distance in nautical miles
  */
-export function calcDistanceBetween(lat1, lon1, lat2, lon2) {
+export function calcDistanceBetween(lat1, lon1, lat2, lon2, unit = "nm") {
   var R = 6371; // km
   var dLat = toRadians(lat2 - lat1);
   var dLon = toRadians(lon2 - lon1);
@@ -101,10 +101,19 @@ export function calcDistanceBetween(lat1, lon1, lat2, lon2) {
     Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   var d = R * c;
-  let nm = d / 1.852
+  if (unit === "nm") {
+    let nm = d / 1.852
+    return nm.toFixed(2)
+  } if (unit === "km") {
+    return d.toFixed(2)
+  } else {
+    let meters = d * 1000
+    return meters.toFixed(2)
+  }
 
-  return nm.toFixed(2)
 }
+
+
 
 // Converts numeric degrees to radians
 export function toRadians(Value) {
