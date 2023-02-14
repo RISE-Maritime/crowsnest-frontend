@@ -356,6 +356,9 @@ export const wsMessageParser = selector({
           }
           radarFrame.push(radarPoint)
         }
+
+        console.log(radarFrame);
+
      
         set(AtomShoreRadarObservation, () => (
           radarFrame
