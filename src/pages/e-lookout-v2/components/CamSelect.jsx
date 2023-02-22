@@ -81,16 +81,14 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
       .then(function () {
         // wait for ICE gathering to complete
         return new Promise(function (resolve) {
-          console.log("HERE? ONE")
+         
           if (pc.iceGatheringState === "complete") {
-            console.log("HERE? TWO (did not run but made it)")
+        
             resolve()
           } else {
             // eslint-disable-next-line no-inner-declarations
             function checkState() {
-              console.log("HERE? THREE (checkState)")
               if (pc.iceGatheringState === "complete") {
-                console.log("HERE? THREE (checkState+complete)")
                 pc.removeEventListener("icegatheringstatechange", checkState)
                 resolve()
               }
@@ -101,7 +99,7 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
         })
       })
       .then(function () {
-        console.log("Humm.. ")
+      
         var offer = pc.localDescription
         var payload = JSON.stringify({
           sdp: offer.sdp,

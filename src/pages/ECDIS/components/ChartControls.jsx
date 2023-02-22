@@ -196,7 +196,7 @@ export default function ChartControls() {
       </FormControl>
 
       {/* SENSOR LAYERS SELECTOR */}
-      <FormControl sx={{ width: 300 }} size="small">
+      <FormControl sx={{ width: 500 }} size="small">
         <InputLabel id="sensor-layer-chip-label">Sensor Layers</InputLabel>
         <Select
           labelId="sensor-layer-chip-label"

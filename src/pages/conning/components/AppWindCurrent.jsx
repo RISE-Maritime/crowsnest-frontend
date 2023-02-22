@@ -379,9 +379,9 @@ export default function AppWindCurrent(props) {
           >
             <tspan x="0" y="0">
               R{" "}
-              {props.windSpeedRel <= 99
-                ? "0" + props.windSpeedRel + "°"
-                : props.windSpeedRel + "°"}
+              {props.windDirRel <= 99
+                ? "0" + props.windDirRel + "°"
+                : props.windDirRel + "°"}
             </tspan>
           </text>
           <text
