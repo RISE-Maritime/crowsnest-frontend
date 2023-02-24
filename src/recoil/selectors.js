@@ -286,7 +286,7 @@ export const wsMessageParser = selector({
           WIND_0: {
             ...currentObj.WIND_0,
             timeCreated: latestMessage.payload.message.timestamp,
-            wind_angle: latestMessage.payload.message.wind_angle, 
+            wind_angle: latestMessage.payload.message.wind_angle != null ? latestMessage.payload.message.wind_angle : currentObj.WIND_0.wind_angle, 
             wind_speed: latestMessage.payload.message.wind_speed, 
             reference_angel: latestMessage.payload.message.reference_angel,
             status: "normal", // [normal, warning, error] 
