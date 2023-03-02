@@ -94,7 +94,7 @@ export const atomSensorLayersTaggable = atom({
 
 export const atomSensorLayersShowing = atom({
   key: "atom_sensor_layers_showing",
-  default: ["AIS"],
+  default: ["AIS", "OS Radar Heatmap", "Shore Radar Heatmap MEAN",],
 })
 
 function getTooltip({ object }) {
@@ -380,7 +380,7 @@ export default function SeaChart() {
       data: shoreRadarFrames,
       visible: sensorLayerShowing.includes("Shore Radar Heatmap SUM"),
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [11.88666, 57.68577],
+      coordinateOrigin: [11.88663, 57.68576],
       // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
       getPosition: d => {
         return d.point
@@ -406,7 +406,7 @@ export default function SeaChart() {
       data: shoreRadarFrames,
       visible: sensorLayerShowing.includes("Shore Radar Heatmap MEAN"),
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [11.88666, 57.68577],
+      coordinateOrigin: [11.8861, 57.6855],
       // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
       getPosition: d => {
         return d.point
