@@ -16,7 +16,7 @@ import React from "react"
 import { useTheme } from "@mui/material/styles"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
 import ZoomInIcon from "@mui/icons-material/ZoomIn"
-import { atomMapState, atomMapSetting, atomLayersTaggable, atomLayersShowing } from "./SeaChart"
+import { atomMapState, atomMapSetting, atomLayersTaggable, atomLayersShowing, atomSensorLayersShowing, atomSensorLayersTaggable } from "./SeaChart"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 
@@ -42,6 +42,8 @@ export default function ChartControls() {
   const [mapSetting, setMapSetting] = useRecoilState(atomMapSetting)
   const layersTaggable = useRecoilValue(atomLayersTaggable)
   const [layersShowing, setLayersShowing] = useRecoilState(atomLayersShowing)
+  const sensorLayersTaggable = useRecoilValue(atomSensorLayersTaggable)
+  const [sensorLayersShowing, setSensorLayersShowing] = useRecoilState(atomSensorLayersShowing)
   const osPos = useRecoilValue(OS_POSITIONS)
   const osPosSetting = useRecoilValue(OS_POSITION_SETTING)
 
@@ -105,6 +107,19 @@ export default function ChartControls() {
       typeof value === "string" ? value.split(",") : value
     )
   }
+
+  const handleChangeSensorLayer = event => {
+    const {
+      target: { value },
+    } = event
+    setSensorLayersShowing(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    )
+  }
+
+
+  
 
   const setOsPosChartCenter = () => {
     setMapState({
@@ -174,6 +189,33 @@ export default function ChartControls() {
         >
           {layersTaggable.map(name => (
             <MenuItem key={name} value={name} style={getStyles(layersTaggable, name, theme)}>
+              {name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* SENSOR LAYERS SELECTOR */}
+      <FormControl sx={{ width: 500 }} size="small">
+        <InputLabel id="sensor-layer-chip-label">Sensor Layers</InputLabel>
+        <Select
+          labelId="sensor-layer-chip-label"
+          id="sensor-layer-chip"
+          multiple
+          value={sensorLayersShowing}
+          onChange={handleChangeSensorLayer}
+          input={<OutlinedInput id="select-sensor-layer-chip" label="Chart Layers" />}
+          renderValue={selected => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map(value => (
+                <Chip key={value} label={value} size="small" />
+              ))}
+            </Box>
+          )}
+          MenuProps={MenuProps}
+        >
+          {sensorLayersTaggable.map(name => (
+            <MenuItem key={name} value={name} style={getStyles(sensorLayersTaggable, name, theme)}>
               {name}
             </MenuItem>
           ))}

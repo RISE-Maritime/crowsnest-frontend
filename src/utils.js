@@ -170,3 +170,49 @@ export function calcPosFromBearingDistance(latitude, longitude, bearing, nautica
 
   return [final_lon, final_lat];
 }
+
+
+/**
+ * Calculate True Wind Speed from Relative 
+ * @param  {[float]} heading heading (degrees)
+ * @param  {[float]} sog speed over ground (knots)
+ * @param  {[float]} wind_speed_rel Wind speed relative (meters per second)
+ * @param  {[float]} wind_dir_rel Wind direction relative (degrees)
+ * @return {[float]} True wind speed in meters per second  
+ */
+export function calc_wind_speed_and_dir_true(heading, sog, wind_speed_rel, wind_dir_rel) {
+  let sog_ms
+  if (sog == 0) {
+    sog_ms = 0.001
+  } else {
+    let KNOTS_TO_METERS_PER_SECOND_FACTOR = 1.944
+    sog_ms = sog / KNOTS_TO_METERS_PER_SECOND_FACTOR
+  }
+  let true_wind_speed = Math.sqrt(
+    sog_ms ** 2 + wind_speed_rel ** 2 - 2 * sog_ms * wind_speed_rel * Math.cos(toRadians(wind_dir_rel))
+  )
+  let true_wind_dir = toDegrees(Math.acos((wind_speed_rel ** 2 - true_wind_speed ** 2 - sog_ms ** 2) / (2 * true_wind_speed * sog_ms)))
+  true_wind_dir = heading + wind_dir_rel
+
+  if (true_wind_dir > 360) {
+    true_wind_dir = true_wind_dir - 360
+  }
+  return { speed: true_wind_speed, direction: true_wind_dir }
+}
+
+
+/**
+ * Calculate True Wind Direction from Relative 
+ * @param  {[float]} sog speed over ground (knots)
+ * @param  {[float]} wind_speed_rel Wind speed relative (meters per second)
+ * @param  {[float]} wind_dir_rel Wind direction relative (degrees)
+ * @return {[float]} True wind speed in meters per second  
+ */
+export function calc_wind_direction_true(sog, wind_speed_rel, wind_dir_rel) {
+  let KNOTS_TO_METERS_PER_SECOND_FACTOR = 1.944
+  let sog_ms = sog / KNOTS_TO_METERS_PER_SECOND_FACTOR
+  let true_wind_speed = Math.sqrt(
+    sog_ms ** 2 + wind_speed_rel ** 2 - 2 * sog_ms * wind_speed_rel * Math.cos(toRadians(wind_dir_rel))
+  )
+  return true_wind_speed
+}

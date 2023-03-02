@@ -382,6 +382,44 @@ export const AtomShoreRadarObservation = atom({
 });
 
 
+/* message example
+{ 
+  "sent_at": "2023-02-17T15:27:27.930746+00:00", 
+  "message": 
+    {
+      "wind_angle": 95, 
+      "reference": "R", 
+      "wind_speed": 0.1, 
+      "wind_speed_units": "M", 
+      "status": "A"
+    }}
+*/
+
+// WIND 
+export const OS_WIND_SETTING = atom({
+  key: "os_wind_stetting",
+  default: {
+    source: "WIND_0",
+    reference_angel: "R",
+    status: "normal", // [normal, warning, error] 
+    statusText: "Normal",
+    timeCreated: "" // Delay in system 
+  },
+});
+
+export const OS_WIND = atom({
+  key: "os_wind_state",
+  default: {
+    WIND_0: {
+      wind_angle: 0, 
+      wind_speed: 0.0, 
+      reference_angel: "R",
+      status: "normal", // [normal, warning, error] 
+      statusText: "A", // A NMEA?
+      timeCreated: "" // Delay in system 
+    }
+  }
+})
 
 // -----------------------------------------------------------
 // Data Flow 

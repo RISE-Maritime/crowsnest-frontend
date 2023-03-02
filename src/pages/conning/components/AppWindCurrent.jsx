@@ -358,7 +358,7 @@ export default function AppWindCurrent(props) {
             
           >
             <tspan x="0" y="0">
-              {props.windSpeedTrue + " m/s"}
+              {Math.round(props.windSpeedTrue*10)/10 + " m/s"}
             </tspan>
           </text>
           <text
@@ -368,7 +368,7 @@ export default function AppWindCurrent(props) {
             transform="translate(1444 182)"
           >
             <tspan x="0" y="0">
-              {"R " + props.windSpeedRel + " m/s"}
+              {"R " + Math.round(props.windSpeedRel*10)/10 + " m/s"}
             </tspan>
           </text>
           <text
@@ -379,9 +379,9 @@ export default function AppWindCurrent(props) {
           >
             <tspan x="0" y="0">
               R{" "}
-              {props.windSpeedRel <= 99
-                ? "0" + props.windSpeedRel + "°"
-                : props.windSpeedRel + "°"}
+              {props.windDirRel <= 99
+                ? "0" + props.windDirRel + "°"
+                : props.windDirRel + "°"}
             </tspan>
           </text>
           <text
@@ -391,9 +391,9 @@ export default function AppWindCurrent(props) {
             transform="translate(1810 151)"
           >
             <tspan x="0" y="0">
-              {props.windSpeedTrue <= 99
-                ? "0" + props.windSpeedTrue + "°"
-                : props.windSpeedTrue + "°"}
+              { props.windDirTrue <= 99
+                ? "0" + Math.round(props.windDirTrue) + "°"
+                : Math.round(props.windDirTrue)+ "°"}
             </tspan>
           </text>
           <text

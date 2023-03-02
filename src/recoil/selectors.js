@@ -12,7 +12,8 @@ import {
   OS_HEADING,
   atomMqttTopics,
   atomMqttTopicsUnhandled,
-  AtomShoreRadarObservation
+  AtomShoreRadarObservation,
+  OS_WIND
 } from "./atoms";
 
 export const selectUser = selector({
@@ -254,6 +255,51 @@ export const wsMessageParser = selector({
       }
 
 
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/WIND/0/JSON")?.input: {
+
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/WIND/0/JSON"]: {
+            time_received: new Date(),
+            timestamp: new Date(latestMessage.payload.message.timestamp),
+            delay_calc: Math.abs((new Date(latestMessage.payload.message.timestamp).getTime() - new Date().getTime()) / 1000),
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/WIND/0/JSON"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/WIND/0/JSON"].count + 1 : 1
+          }
+        }))
+
+        /* message example
+        { 
+          "sent_at": "2023-02-17T15:27:27.930746+00:00", 
+          "message": 
+            {
+              "wind_angle": 95, 
+              "reference": "R", 
+              "wind_speed": 0.1, 
+              "wind_speed_units": "M", 
+              "status": "A"
+            }}
+        */
+
+        set(OS_WIND, (currentObj) => ({
+          ...currentObj,
+          WIND_0: {
+            ...currentObj.WIND_0,
+            timeCreated: latestMessage.payload.message.timestamp,
+            wind_angle: latestMessage.payload.message.wind_angle != null ? latestMessage.payload.message.wind_angle : currentObj.WIND_0.wind_angle, 
+            wind_speed: latestMessage.payload.message.wind_speed, 
+            reference_angel: latestMessage.payload.message.reference_angel,
+            status: "normal", // [normal, warning, error] 
+            statusText: latestMessage.payload.message.status, // A NMEA?
+
+            heading: latestMessage.payload.message.heading, // degrees
+            heading_accuracy: latestMessage.payload.message.heading_accuracy
+
+          }
+        }))
+        break;
+      }
+
       case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/LIDAR/0/NUP")?.input: {
 
         //  MQTT logger topics 
@@ -356,7 +402,7 @@ export const wsMessageParser = selector({
           }
           radarFrame.push(radarPoint)
         }
-     
+
         set(AtomShoreRadarObservation, () => (
           radarFrame
         ));

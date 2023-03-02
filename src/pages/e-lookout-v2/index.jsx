@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { Grid, Stack } from "@mui/material"
+import { Grid } from "@mui/material"
 import CamStream from "./components/CamStream"
 import BearingLines from "./components/BearingLines"
 
@@ -12,7 +12,6 @@ export default function CamLookout() {
         <CamStream ID={"axis1"} />
         <BearingLines/>
         </Grid>
-      {/* <CamStream ID={"1"} /> */}
     </Grid>
   )
 }

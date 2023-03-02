@@ -5,6 +5,8 @@ import {
   observationsStateAtom,
   actionStateAtom,
   ownShipDataAtom,
+  OS_HEADING_SETTING,
+  OS_HEADING
 } from "../../recoil/atoms";
 // import { mqttSubscribe } from "../../base-elements/MqttConnection";
 // Components
@@ -23,6 +25,9 @@ export default function Conning() {
   const observations = useRecoilValue(observationsStateAtom);
   const actions = useRecoilValue(actionStateAtom);
   const [appObj, setAppObj] = useRecoilState(appState);
+
+  const [osHeading, setOsHeading] = useRecoilState(OS_HEADING)
+  const [osHeadingSetting, setOsHeadingSetting] = useRecoilState(OS_HEADING_SETTING)
 
   useEffect(() => {
     // Start MQTT subscription
@@ -133,7 +138,7 @@ export default function Conning() {
         <Grid container>
           <Grid item xs={12}>
             <AppWindCurrent
-              heading={observations.heading}
+              heading={osHeading[osHeadingSetting.source]?.heading}
               windSpeedTrue={10}
               windSpeedRel={20}
               windDirTrue={270}
