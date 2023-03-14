@@ -28,6 +28,8 @@ export const selectUser = selector({
   },
 });
 
+const reguarExp = new RegExp(/CROWSNEST\/\w{1,55}\/HW\/0\/JSON/);
+
 let AISlist = {}
 let last = 0;
 // let radarFrame = []
@@ -91,7 +93,6 @@ export const wsMessageParser = selector({
       // AIS messages  
       case latestMessage.topic.match(/^CROWSNEST\/EXTERNAL\/AIS/)?.input: {
 
-
         const incomming = latestMessage.payload.message
 
         AISlist[incomming.mmsi] = {
@@ -107,8 +108,8 @@ export const wsMessageParser = selector({
             ...currentObj,
             "CROWSNEST/EXTERNAL/AIS": {
               time_received: new Date(),
-              count: currentObj["CROWSNEST/EXTERNAL/AIS"]?.count ? currentObj["CROWSNEST/EXTERNAL/AIS"].count + 1000 : 1000
-
+              count: currentObj["CROWSNEST/EXTERNAL/AIS"]?.count ? currentObj["CROWSNEST/EXTERNAL/AIS"].count + 1000 : 1000,
+              list_ship_unique: currentObj["CROWSNEST/EXTERNAL/AIS"]?.list_ship_unique ? [...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique, { time: new Date(), ships_count: Object.keys(AISlist).length }] : [{ time: new Date(),   ships_count: Object.keys(AISlist).length }]
             }
           }))
 
@@ -286,8 +287,8 @@ export const wsMessageParser = selector({
           WIND_0: {
             ...currentObj.WIND_0,
             timeCreated: latestMessage.payload.message.timestamp,
-            wind_angle: latestMessage.payload.message.wind_angle != null ? latestMessage.payload.message.wind_angle : currentObj.WIND_0.wind_angle, 
-            wind_speed: latestMessage.payload.message.wind_speed, 
+            wind_angle: latestMessage.payload.message.wind_angle != null ? latestMessage.payload.message.wind_angle : currentObj.WIND_0.wind_angle,
+            wind_speed: latestMessage.payload.message.wind_speed,
             reference_angel: latestMessage.payload.message.reference_angel,
             status: "normal", // [normal, warning, error] 
             statusText: latestMessage.payload.message.status, // A NMEA?
@@ -408,6 +409,42 @@ export const wsMessageParser = selector({
         ));
         break;
       }
+
+    
+      case latestMessage.topic.match(/CROWSNEST\/\w{1,55}..\/HW\/0\/JSON/)?.input: {
+      // case /CROWSNEST\/\w{1,55}\/HW/0/JSON/g.test(latestMessage.topic):{
+
+
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          [latestMessage.topic]: {
+            time_received: new Date(),
+            timestamp: new Date(latestMessage.payload.message.sent_at),
+            delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+            count: currentObj[latestMessage.topic]?.count ? currentObj[latestMessage.topic].count + 1 : 1
+
+          }
+        }))
+
+        let msg = latestMessage.payload
+        console.log(msg);
+        // let radarFrame = []
+        // for (let i = 0; i < frameR.message.points.length; i++) {
+        //   const radarPoint = {
+        //     point: frameR.message.points[i],
+        //     weight: frameR.message.weights[i],
+        //     distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
+        //   }
+        //   radarFrame.push(radarPoint)
+        // }
+
+        // set(AtomShoreRadarObservation, () => (
+        //   radarFrame
+        // ));
+        break;
+      }
+
 
 
 

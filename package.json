@@ -16,6 +16,7 @@
     "@tensorflow-models/coco-ssd": "^2.2.2",
     "@tensorflow/tfjs": "^3.21.0",
     "@turf/turf": "^6.5.0",
+    "canvasjs": "^1.8.3",
     "cra-template": "^1.2.0",
     "deck.gl": "^8.8.20",
     "formik": "^2.2.9",

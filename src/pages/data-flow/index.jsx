@@ -10,6 +10,8 @@ import { useRecoilValue } from "recoil"
 import { lidarStateAtom } from "../../recoil/atoms"
 import { atomMQTTLocalState, atomMqttRemoteState } from "../../recoil/atoms"
 import MqttFlowIN from "./components/MqttFlowIN"
+import StatsAIS from "./components/StatsAIS"
+import StatsHW from "./components/StatsHW"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -54,6 +56,13 @@ export default function DataFlow() {
 
       <GridCenter item xs={12}>
         <MqttFlowIN />
+      </GridCenter>
+
+      <GridCenter item xs={12}>
+        <StatsAIS />
+      </GridCenter>
+      <GridCenter item xs={12}>
+        <StatsHW />
       </GridCenter>
     </Grid>
   )

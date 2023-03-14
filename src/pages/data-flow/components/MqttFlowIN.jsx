@@ -17,8 +17,8 @@ export default function MqttFlowIN() {
               <b> {topic}</b>
               <br />
               Received: {mqtt_topics[topic]?.time_received.toLocaleString("sv-SV")}
-              <br />
-              Rec Timestamp: {mqtt_topics[topic]?.timestamp?.toLocaleString("sv-SV")}
+              {/* <br />
+              Rec Timestamp: {mqtt_topics[topic]?.timestamp?.toLocaleString("sv-SV")} */}
               <br />
               Network delay: {mqtt_topics[topic]?.delay_calc ? "-" + mqtt_topics[topic]?.delay_calc + " sec" : ""}
               <br />
