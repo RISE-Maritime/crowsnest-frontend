@@ -20,7 +20,7 @@ import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import VrpanoIcon from '@mui/icons-material/Vrpano';
 import EdgesensorHighIcon from '@mui/icons-material/EdgesensorHigh';
 import SettingsIcon from '@mui/icons-material/Settings';
-
+import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
 
 export default function LeftDrawer(props) {
   return (
@@ -113,11 +113,17 @@ export default function LeftDrawer(props) {
           </ListItemIcon>
           <ListItemText primary={"Data flow"} />
         </ListItem>
+        <ListItem button key={"configuration"} component={Link} to={ROUTES.CONFIGURATION}>
+          <ListItemIcon>
+            <DirectionsBoatIcon />
+          </ListItemIcon>
+          <ListItemText primary={"OS configuration"} />
+        </ListItem>
         <ListItem button key={"settings"} component={Link} to={ROUTES.SETTINGS}>
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>
-          <ListItemText primary={"Settings"} />
+          <ListItemText primary={"APP Settings"} />
         </ListItem>
       </List>
     </Box>
