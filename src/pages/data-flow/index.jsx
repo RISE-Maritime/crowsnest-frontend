@@ -6,7 +6,6 @@ import DataConnectionState from "./components/ConnectionStatus"
 import DataConnectionMQTT from "./components/ConnectionMQTT"
 // Recoil
 import { useRecoilValue } from "recoil"
-
 import { lidarStateAtom } from "../../recoil/atoms"
 import { atomMQTTLocalState, atomMqttRemoteState } from "../../recoil/atoms"
 import MqttFlowIN from "./components/MqttFlowIN"
@@ -55,14 +54,15 @@ export default function DataFlow() {
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <MqttFlowIN />
+        <StatsAIS />
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <StatsAIS />
-      </GridCenter>
-      <GridCenter item xs={12}>
         <StatsHW />
+      </GridCenter>
+
+      <GridCenter item xs={12}>
+        <MqttFlowIN />
       </GridCenter>
     </Grid>
   )

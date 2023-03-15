@@ -20,7 +20,7 @@ export default function StatsAIS() {
         </Grid>
         <Grid item xs={12}></Grid>
 
-        <Grid container xs={12}>
+        <Grid container>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
               <Paper elevation={3} sx={{ width: "11rem", textAlign: "center" }}>
@@ -35,7 +35,6 @@ export default function StatsAIS() {
 
               <Paper elevation={3} sx={{ width: "11rem", textAlign: "center" }}>
                 <Typography variant="h5">
-                  {" "}
                   {mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.time_received.toLocaleTimeString("sv-SV")}
                 </Typography>
                 <Typography variant="body1">Last update</Typography>
@@ -44,14 +43,18 @@ export default function StatsAIS() {
             <br />
             <ChartTimeLineValues data_list={mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.list_ship_unique} />
           </Grid>
-          <Grid item xs={6}      sx={{
-          position: "relative",
-          // height: "calc(100vh - 95px)",
-          padding: "0px",
-          height: "300px",
-          cursor: "crosshair",
-        }}>
-            <MapAISsmallPlot AISlist={AISlist}/>
+          <Grid
+            item
+            xs={6}
+            sx={{
+              position: "relative",
+              // height: "calc(100vh - 95px)",
+              padding: "0px",
+              height: "300px",
+              cursor: "crosshair",
+            }}
+          >
+            <MapAISsmallPlot AISlist={AISlist} />
           </Grid>
         </Grid>
       </Grid>

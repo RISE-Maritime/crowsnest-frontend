@@ -13,7 +13,8 @@ import {
   atomMqttTopics,
   atomMqttTopicsUnhandled,
   AtomShoreRadarObservation,
-  OS_WIND
+  OS_WIND,
+  atomHWlog
 } from "./atoms";
 
 export const selectUser = selector({
@@ -109,7 +110,7 @@ export const wsMessageParser = selector({
             "CROWSNEST/EXTERNAL/AIS": {
               time_received: new Date(),
               count: currentObj["CROWSNEST/EXTERNAL/AIS"]?.count ? currentObj["CROWSNEST/EXTERNAL/AIS"].count + 1000 : 1000,
-              list_ship_unique: currentObj["CROWSNEST/EXTERNAL/AIS"]?.list_ship_unique ? [...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique, { time: new Date(), ships_count: Object.keys(AISlist).length }] : [{ time: new Date(),   ships_count: Object.keys(AISlist).length }]
+              list_ship_unique: currentObj["CROWSNEST/EXTERNAL/AIS"]?.list_ship_unique ? [...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique, { time: new Date(), ships_count: Object.keys(AISlist).length }] : [{ time: new Date(), ships_count: Object.keys(AISlist).length }]
             }
           }))
 
@@ -410,38 +411,50 @@ export const wsMessageParser = selector({
         break;
       }
 
-    
-      case latestMessage.topic.match(/CROWSNEST\/\w{1,55}..\/HW\/0\/JSON/)?.input: {
-      // case /CROWSNEST\/\w{1,55}\/HW/0/JSON/g.test(latestMessage.topic):{
 
+      case latestMessage.topic.match(/CROWSNEST\/\w{1,55}..\/HW\/0\/JSON/)?.input: {
+        // case /CROWSNEST\/\w{1,55}\/HW/0/JSON/g.test(latestMessage.topic):{
+
+        let sent_at = new Date(latestMessage.payload.sent_at)
+        let network_delay = Math.abs((sent_at.getTime() - new Date().getTime()) / 1000)
 
         //  MQTT logger topics 
         set(atomMqttTopics, (currentObj) => ({
           ...currentObj,
           [latestMessage.topic]: {
             time_received: new Date(),
-            timestamp: new Date(latestMessage.payload.message.sent_at),
-            delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+            timestamp: sent_at,
+            delay_calc: network_delay,
             count: currentObj[latestMessage.topic]?.count ? currentObj[latestMessage.topic].count + 1 : 1
 
           }
         }))
 
-        let msg = latestMessage.payload
-        console.log(msg);
-        // let radarFrame = []
-        // for (let i = 0; i < frameR.message.points.length; i++) {
-        //   const radarPoint = {
-        //     point: frameR.message.points[i],
-        //     weight: frameR.message.weights[i],
-        //     distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
-        //   }
-        //   radarFrame.push(radarPoint)
-        // }
+        let msg = latestMessage.payload.message
 
-        // set(AtomShoreRadarObservation, () => (
-        //   radarFrame
-        // ));
+
+        console.log(msg);
+
+
+        //  Atom HW logger 
+        set(atomHWlog, (currentObj) => ({
+          ...currentObj,
+          [latestMessage.topic]: {
+            "received_at": new Date(),
+            "network_delay": network_delay,
+            "op_system": msg.op_system,
+            "sys_name": msg.sys_name,
+            "boot_time": msg.boot_time,
+            "ram_size": msg.ram_size,
+            "cpu_load_procreant": msg.cpu_load_procreant,
+            "cpu_load_trend": currentObj[latestMessage.topic]?.cpu_load_trend ? [...currentObj[latestMessage.topic].cpu_load_trend, { time: sent_at, load: msg.cpu_load_procreant }] : [{ time: sent_at, load: msg.cpu_load_procreant }],
+            "cpu_temp": msg.cpu_temp,
+            "cpu_temp_trend": currentObj[latestMessage.topic]?.cpu_temp_trend ? [...currentObj[latestMessage.topic].cpu_temp_trend, { time: sent_at, load: msg.cpu_temp }] : [{ time: sent_at, load: msg.cpu_temp }],
+            "ram_usage": msg.ram_usage,
+            "ram_usage_trend": currentObj[latestMessage.topic]?.ram_usage_trend ? [...currentObj[latestMessage.topic].ram_usage_trend, { time: sent_at, load: msg.ram_usage }] : [{ time: sent_at, load: msg.ram_usage }]
+
+          }
+        }))
         break;
       }
 

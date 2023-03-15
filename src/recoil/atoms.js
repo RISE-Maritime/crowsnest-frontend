@@ -421,6 +421,7 @@ export const OS_WIND = atom({
   }
 })
 
+
 // -----------------------------------------------------------
 // Data Flow 
 
@@ -456,6 +457,44 @@ export const atomMQTTLocalState = atom({
   key: "atom_mqtt_local_state",
   default: { connected: false },
 })
+
+
+// HW monitoring 
+
+export const atomHWlog = atom({
+  key: "atom_hw_log",
+  default: {  },
+  // default: { 
+  //   "/CROWSNEST/EXAMPLE/HW/0/JSON": {
+
+  //     "gpus": [],
+  //     "partition": [
+  //       {
+  //         "device": "/dev/sda2",
+  //         "mountpoint": "/etc/resolv.conf",
+  //         "total_size": "115.78GB",
+  //         "used_size": "17.23GB",
+  //         "free_size": "92.62GB",
+  //         "percent_used": 15.7
+  //       },
+  //       {
+  //         "device": "/dev/sda2",
+  //         "mountpoint": "/etc/hostname",
+  //         "total_size": "115.78GB",
+  //         "used_size": "17.23GB",
+  //         "free_size": "92.62GB",
+  //         "percent_used": 15.7
+  //       },
+  
+  //     ]
+  //   }
+   
+
+
+  //  },
+})
+
+
 
 
 // -----------------------------------------------------------
