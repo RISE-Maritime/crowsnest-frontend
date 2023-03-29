@@ -370,17 +370,25 @@ export const lidarObservationAtom = atom({
 
 // RADAR
 
-export const radarObservationAtom = atom({
-  key: "radar_observation_state",
+export const OS_RADAR_0 = atom({
+  key: "radar_observation_state_0",
   default: [],
 });
 
+export const OS_RADAR_1 = atom({
+  key: "radar_observation_state_1",
+  default: [],
+});
 
 export const AtomShoreRadarObservation = atom({
   key: "atom_shore_radar_observation",
   default: [],
 });
 
+export const AtomShoreRadar_1 = atom({
+  key: "atom_shore_radar_1",
+  default: [],
+});
 
 /* message example
 { 
