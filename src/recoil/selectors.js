@@ -446,7 +446,7 @@ export const wsMessageParser = selector({
         let msg = latestMessage.payload.message
 
 
-        console.log(msg);
+        // console.log(msg);
 
 
         //  Atom HW logger 
