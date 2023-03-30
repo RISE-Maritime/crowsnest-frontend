@@ -12,6 +12,7 @@ import {
   AtomShoreRadar_1,
   OS_RADAR_0,
   OS_RADAR_1,
+  AtomShoreRadarSetting
 } from "../../../recoil/atoms"
 
 import { HeatmapLayer } from "@deck.gl/aggregation-layers"
@@ -24,6 +25,7 @@ import { HexagonLayer } from "@deck.gl/aggregation-layers"
 import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
 import "mapbox-gl/dist/mapbox-gl.css"
+import { DepthwiseConv2dNativeBackpropInput } from "@tensorflow/tfjs"
 
 // Atoms
 export const vesselTargetsAtom = atom({
@@ -134,7 +136,10 @@ export default function SeaChart() {
   const radarFrames_1 = useRecoilValue(OS_RADAR_1)
   const shoreRadarFrames = useRecoilValue(AtomShoreRadarObservation)
   const shoreRadarFrames_1 = useRecoilValue(AtomShoreRadar_1)
+  const shoreRadarSetting = useRecoilValue(AtomShoreRadarSetting)
   const lidarObservations = useRecoilValue(lidarObservationAtom)
+
+  
 
   // Viewport settings
   const INITIAL_VIEW_STATE = {
@@ -466,15 +471,16 @@ export default function SeaChart() {
           coordinateOrigin: [11.8861, 57.6855],
           // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
           getPosition: d => {
-            return d.point
+            
+            return d.distance <= shoreRadarSetting.range_change ? null : d.point
           },
-          getWeight: d => d.weight,
+          getWeight: d => d.distance <= shoreRadarSetting.range_change ? null : d.weight,
           aggregation: "MEAN", // SUM or MEAN
           weightsTextureSize: 512, //  default 2048 Smaller texture sizes lead to visible pixelation.
           threshold: 0.1,
           radiusPixels: mapState.zoom * 2.5,
           intensity: 1, // (mapState.zoom * 30) / 1,
-          opacity: 0.3,
+          // getFillColor: d => [186, 12, 0, (d.distance <= shoreRadarSetting.range_change ? 0.2: 1)],
 
         }),
 
