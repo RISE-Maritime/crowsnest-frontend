@@ -4,12 +4,16 @@ import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import {
   lidarObservationAtom,
   targetsAIS,
-  radarObservationAtom,
   OS_POSITIONS,
   OS_POSITION_SETTING,
   OS_HEADING,
   OS_HEADING_SETTING,
   AtomShoreRadarObservation,
+  AtomShoreRadar_1,
+  OS_RADAR_0,
+  OS_RADAR_1,
+  AtomShoreRadarSetting,
+  AtomOSRadarSetting,
 } from "../../../recoil/atoms"
 
 import { HeatmapLayer } from "@deck.gl/aggregation-layers"
@@ -22,6 +26,7 @@ import { HexagonLayer } from "@deck.gl/aggregation-layers"
 import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
 import "mapbox-gl/dist/mapbox-gl.css"
+import { DepthwiseConv2dNativeBackpropInput } from "@tensorflow/tfjs"
 
 // Atoms
 export const vesselTargetsAtom = atom({
@@ -82,19 +87,23 @@ export const atomSensorLayersTaggable = atom({
   key: "atom_sensor_layers_taggable",
   default: [
     "AIS",
-    "OS Radar Point",
-    "OS Radar Hexagon",
-    "OS Radar Heatmap",
-    "Shore Radar Heatmap SUM",
-    "Shore Radar Heatmap MEAN",
-    "Shore Radar Scatter",
+    "OS Radar-0 Point", // Done , no cut off
+    "OS Radar-1 Point",
+    "OS Radar-0 Heatmap",
+    "OS Radar-1 Heatmap",
+
+    "Shore Radar-0 Heatmap",
+    "Shore Radar-1 Heatmap",
+    "Shore Radar-0 Scatter",
+    "Shore Radar-1 Scatter",
+
     "OS LIDAR 3D-point",
   ],
 })
 
 export const atomSensorLayersShowing = atom({
   key: "atom_sensor_layers_showing",
-  default: ["AIS", "OS Radar Heatmap", "Shore Radar Heatmap MEAN",],
+  default: ["AIS", "OS Radar-0 Heatmap", "OS Radar-1 Heatmap", "Shore Radar-0 Heatmap", "Shore Radar-1 Heatmap"],
 })
 
 function getTooltip({ object }) {
@@ -128,8 +137,13 @@ export default function SeaChart() {
   const os_heading_setting = useRecoilValue(OS_HEADING_SETTING)
 
   const AIStargets = useRecoilValue(targetsAIS)
-  const radarFrames = useRecoilValue(radarObservationAtom)
+  const radarFrames_0 = useRecoilValue(OS_RADAR_0)
+  const radarFrames_1 = useRecoilValue(OS_RADAR_1)
   const shoreRadarFrames = useRecoilValue(AtomShoreRadarObservation)
+  const shoreRadarFrames_1 = useRecoilValue(AtomShoreRadar_1)
+  const shoreRadarSetting = useRecoilValue(AtomShoreRadarSetting)
+  const OSRadarSetting = useRecoilValue(AtomOSRadarSetting)
+
   const lidarObservations = useRecoilValue(lidarObservationAtom)
 
   // Viewport settings
@@ -323,45 +337,39 @@ export default function SeaChart() {
       opacity: 0.8,
     }),
 
-    // OS Radar point cloud
+    // OS Radar 0 point cloud
     new PointCloudLayer({
-      id: "radar-point-cloud-layer",
-      data: radarFrames,
-      visible: sensorLayerShowing.includes("OS Radar Point"),
+      id: "radar-0-point-cloud-layer",
+      data: radarFrames_0,
+      visible: sensorLayerShowing.includes("OS Radar-0 Point"),
       pickable: false,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
       sizeUnits: "meters",
       pointSize: 2,
       getPosition: d => d.point,
-      // getNormal: d => d.normal,
-      // getColor: d => [15, 117, 17, d.weight],
     }),
 
-    // OS Radar hexagon
-    new HexagonLayer({
-      id: "os-radar-hexagon-layer",
-      data: radarFrames,
-      visible: sensorLayerShowing.includes("OS Radar Hexagon"),
-      pickable: true,
+    // OS Radar 1 point cloud
+    new PointCloudLayer({
+      id: "radar-1-point-cloud-layer",
+      data: radarFrames_1,
+      visible: sensorLayerShowing.includes("OS Radar-1 Point"),
+      pickable: false,
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos.longitude, os_pos.latitude],
-      extruded: true,
-      radius: 3,
-      elevationScale: 1,
-      elevationRange: [0, 20],
-      getPosition: d => d.point,
-      getColorWeight: d => d.weight,
-      getElevationWeight: d => d.weight,
-      colorAggregation: "MEAN",
-      elevationAggregation: "SUM",
+      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
+      sizeUnits: "meters",
+      pointSize: 2,
+      getPosition: d => {
+        return d.distance <= OSRadarSetting.range_change ? null : d.point
+      },
     }),
 
-    // OS Radar heatmap
+    // OS Radar-0 heatmap
     new HeatmapLayer({
-      id: "os-radar-heatmapLayer",
-      data: radarFrames,
-      visible: sensorLayerShowing.includes("OS Radar Heatmap"),
+      id: "os-radar-0-heatmapLayer",
+      data: radarFrames_0,
+      visible: sensorLayerShowing.includes("OS Radar-0 Heatmap"),
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
       getPosition: d => d.point, // SWEEP
@@ -371,43 +379,53 @@ export default function SeaChart() {
       threshold: 0.0001,
       radiusPixels: mapState.zoom * 1.5,
       intensity: 1, // (viewstate.zoom * 30) / 1,
-      opacity: 1,
-    }),
-
-    // Shore Radar heatmap SUM
-    new HeatmapLayer({
-      id: "shore-radar-heatmapLayer-sum",
-      data: shoreRadarFrames,
-      visible: sensorLayerShowing.includes("Shore Radar Heatmap SUM"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [11.88663, 57.68576],
-      // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
-      getPosition: d => {
-        return d.point
-      },
-      getWeight: d => d.weight,
-      aggregation: "SUM", // SUM or MEAN
-      weightsTextureSize: 512, //  default 2048 Smaller texture sizes lead to visible pixelation.
-      threshold: 1,
-      radiusPixels: 15,
-      intensity: 1000, // (mapState.zoom * 30) / 1,
-
       opacity: 0.3,
-      colorDomain: [0, 255],
       colorRange: [
-        [0, 190, 0, 190],
-        [0, 255, 0, 255],
+        [25, 0, 0, 25],
+        [85, 0, 0, 85],
+        [127, 0, 0, 127],
+        [170, 0, 0, 170],
+        [190, 0, 0, 190],
+        [255, 0, 0, 255],
       ],
     }),
 
-    // Shore Radar heatmap MEAN
+    // OS Radar-1 heatmap
     new HeatmapLayer({
-      id: "shore-radar-heatmapLayer-mean",
+      id: "os-radar-1-heatmapLayer-mean",
+      data: radarFrames_1,
+      visible: sensorLayerShowing.includes("OS Radar-1 Heatmap"),
+      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
+      getPosition: d => {
+        return d.distance <= OSRadarSetting.range_change ? null : d.point
+      },
+      getWeight: d => {
+        return d.distance <= OSRadarSetting.range_change ? null : d.weight
+      },
+      aggregation: "MEAN", // SUM or MEAN
+      weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
+      threshold: 0.0001,
+      radiusPixels: mapState.zoom * 1.5,
+      intensity: 1, // (viewstate.zoom * 30) / 1,
+      opacity: 0.4,
+      colorRange: [
+        [25, 0, 0, 25],
+        [85, 0, 0, 85],
+        [127, 0, 0, 127],
+        [170, 0, 0, 170],
+        [190, 0, 0, 190],
+        [255, 0, 0, 255],
+      ],
+    }),
+
+    // Shore Radar-0 heatmap MEAN
+    new HeatmapLayer({
+      id: "shore-radar-0-heatmapLayer-mean",
       data: shoreRadarFrames,
-      visible: sensorLayerShowing.includes("Shore Radar Heatmap MEAN"),
+      visible: sensorLayerShowing.includes("Shore Radar-0 Heatmap"),
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [11.8861, 57.6855],
-      // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
       getPosition: d => {
         return d.point
       },
@@ -417,23 +435,51 @@ export default function SeaChart() {
       threshold: 0.1,
       radiusPixels: mapState.zoom * 2.5,
       intensity: 1, // (mapState.zoom * 30) / 1,
-
       opacity: 0.3,
-      // colorRange: [
-      //   [0, 25, 0, 25],
-      //   [0, 85, 0, 85],
-      //   [0, 127, 0, 127],
-      //   [0, 170, 0, 170],
-      //   [0, 190, 0, 190],
-      //   [0, 255, 0, 255]
-      // ],
+      colorRange: [
+        [0, 25, 0, 25],
+        [0, 85, 0, 85],
+        [0, 127, 0, 127],
+        [0, 170, 0, 170],
+        [0, 190, 0, 190],
+        [0, 255, 0, 255],
+      ],
     }),
 
-    // Shore Radar scatter
+    // Shore Radar-1 heatmap MEAN
+    new HeatmapLayer({
+      id: "shore-radar-1-heatmapLayer-mean",
+      data: shoreRadarFrames_1,
+      // visible: true,
+      visible: sensorLayerShowing.includes("Shore Radar-1 Heatmap"),
+      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+      coordinateOrigin: [11.8861, 57.6855],
+      // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
+      getPosition: d => {
+        return d.distance <= shoreRadarSetting.range_change ? null : d.point
+      },
+      getWeight: d => (d.distance <= shoreRadarSetting.range_change ? null : d.weight),
+      aggregation: "MEAN", // SUM or MEAN
+      weightsTextureSize: 512, //  default 2048 Smaller texture sizes lead to visible pixelation.
+      threshold: 0.1,
+      radiusPixels: mapState.zoom * 2.5,
+      intensity: 1, // (mapState.zoom * 30) / 1,
+      opacity: 0.4,
+      colorRange: [
+        [0, 25, 0, 25],
+        [0, 85, 0, 85],
+        [0, 127, 0, 127],
+        [0, 170, 0, 170],
+        [0, 190, 0, 190],
+        [0, 255, 0, 255],
+      ],
+    }),
+
+    // Shore Radar-0 scatter
     new ScatterplotLayer({
-      id: "shore-radar-scatterplot-layer",
+      id: "shore-radar-0-scatterplot-layer",
       data: shoreRadarFrames,
-      visible: sensorLayerShowing.includes("Shore Radar Scatter"),
+      visible: sensorLayerShowing.includes("Shore Radar-0 Scatter"),
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [11.88666, 57.68577],
       opacity: 0.3,
@@ -444,6 +490,28 @@ export default function SeaChart() {
       radiusMaxPixels: 100,
       lineWidthMinPixels: 1,
       getPosition: d => d.point,
+      getRadius: d => 5, //d.distance * 0.01,
+      getFillColor: d => [186, 12, 0, d.weight],
+      getLineColor: d => [0, 0, 0, 0],
+    }),
+
+    // Shore Radar-1 scatter
+    new ScatterplotLayer({
+      id: "shore-radar-0-scatterplot-layer",
+      data: shoreRadarFrames_1,
+      visible: sensorLayerShowing.includes("Shore Radar-1 Scatter"),
+      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
+      coordinateOrigin: [11.88666, 57.68577],
+      opacity: 0.3,
+      // stroked: true,
+      filled: true,
+      radiusScale: 1,
+      radiusMinPixels: 1,
+      radiusMaxPixels: 100,
+      lineWidthMinPixels: 1,
+      getPosition: d => {
+        return d.distance <= shoreRadarSetting.range_change ? null : d.point
+      },
       getRadius: d => 5, //d.distance * 0.01,
       getFillColor: d => [186, 12, 0, d.weight],
       getLineColor: d => [0, 0, 0, 0],
