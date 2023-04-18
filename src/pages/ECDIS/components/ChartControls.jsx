@@ -11,6 +11,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  TextField
 } from "@mui/material"
 import React from "react"
 import { useTheme } from "@mui/material/styles"
@@ -19,6 +20,8 @@ import ZoomInIcon from "@mui/icons-material/ZoomIn"
 import { atomMapState, atomMapSetting, atomLayersTaggable, atomLayersShowing, atomSensorLayersShowing, atomSensorLayersTaggable } from "./SeaChart"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
+import RadarRangeChange from "./RadarRangeChange"
+import RadarOSRangeChange from "./RadarOSRangeChange"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -221,6 +224,12 @@ export default function ChartControls() {
           ))}
         </Select>
       </FormControl>
+
+      {/* Radar range shore radar */}
+      <RadarRangeChange/>
+      <RadarOSRangeChange/>
+  
+
     </Stack>
   )
 }
