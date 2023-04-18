@@ -394,7 +394,7 @@ export default function SeaChart() {
     new HeatmapLayer({
       id: "os-radar-1-heatmapLayer-mean",
       data: radarFrames_1,
-      visible: sensorLayerShowing.includes("OS Radar-1 Heatmap MEAN"),
+      visible: sensorLayerShowing.includes("OS Radar-1 Heatmap"),
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
       getPosition: d => {

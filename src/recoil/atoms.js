@@ -387,7 +387,7 @@ export const AtomShoreRadarSetting = atom({
 
 export const AtomOSRadarSetting = atom({
   key: "atom_OS_radar_setting",
-  default: {range_change: 5000},
+  default: {range_change: 50  },
 });
 
 export const AtomShoreRadarObservation = atom({
