@@ -97,7 +97,7 @@ export default function PlatformPicker() {
   }
 
   // Activating DEVICE as OS
-  const setDeviseAsOS = () => {
+  const setDeviceAsOS = () => {
     setActivePlatform({
       ...activePlatform,
       activePlatformType: "DEVICE",
@@ -109,7 +109,7 @@ export default function PlatformPicker() {
 
     set_position_setting({
       ...position_setting,
-      source: "DEVISE",
+      source: "DEVICE",
     })
   }
 
@@ -202,12 +202,12 @@ export default function PlatformPicker() {
         </BoxStyled>
 
         <BoxStyled>
-          <Typography variant="h5">Devise</Typography>
+          <Typography variant="h5">Device</Typography>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
             <Button
               color="secondary"
-              variant={"DEVISE" === activePlatform.activePlatformType ? "contained" : "outlined"}
-              onClick={setDeviseAsOS}
+              variant={"DEVICE" === activePlatform.activePlatformType ? "contained" : "outlined"}
+              onClick={setDeviceAsOS}
             >
               Use device sensors as source
             </Button>

@@ -87,14 +87,14 @@ export const atomPlatforms = atom({
       key: "landkrabban",
       mmsi: 2,
       imo: 2,
-      source_position: "DEVISE",
+      source_position: "DEVICE",
       MQTTpath: "LANDKRABBAN",
       picture: PicLandkrabban
     },
     germanica: {
       name: "Stena Germainca",
       key: "germanica",
-      source_position: "DEVISE",
+      source_position: "DEVICE",
       MQTTpath: "GERMANICA",
       mmsi: 266331000,
       imo: 9145176,
@@ -223,7 +223,7 @@ export const OS_POSITIONS = atom({
       timeCreated: null,
       delay: null // Delay in system 
     },
-    DEVISE: {
+    DEVICE: {
       latitude: 0.0, // degrees 
       longitude: 0.0,  // degrees
       altitude: 0.0, // meters
@@ -275,7 +275,7 @@ export const OS_VELOCITY = atom({
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
-    DEVISE: {
+    DEVICE: {
       sog: 0.0, // units? 
       cog: 0.0, // units?
       status: "normal", // [normal, warning, error] 
@@ -329,7 +329,7 @@ export const OS_HEADING = atom({
       statusText: "Normal",
       timeCreated: "" // Delay in system 
     },
-    DEVISE: {
+    DEVICE: {
       heading: 0.0, // degrees
       heading_accuracy: 0.0,
       status: "normal", // [normal, warning, error] 

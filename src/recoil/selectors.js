@@ -549,7 +549,7 @@ export const setDeviceSensorData = selector({
 
     set(OS_POSITIONS, (currentObj) => ({
       ...currentObj,
-      DEVISE: {
+      DEVISCE: {
         latitude: newValues.latitude, // degrees 
         longitude: newValues.longitude,  // degrees
         accuracy: newValues.accuracy,
@@ -563,7 +563,7 @@ export const setDeviceSensorData = selector({
 
     set(OS_VELOCITY, (currentObj) => ({
       ...currentObj,
-      DEVISE: {
+      DEVICE: {
         sog: newValues.speed, // units? 
         cog: newValues.heading, // units?
         status: "normal", // [normal, warning, error] 
