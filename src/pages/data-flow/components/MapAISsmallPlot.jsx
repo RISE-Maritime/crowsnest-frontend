@@ -1,32 +1,18 @@
 import React, { useState } from "react"
 import DeckGL from "@deck.gl/react"
 import { TileLayer } from "@deck.gl/geo-layers"
-import { BitmapLayer, IconLayer, LineLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { BitmapLayer, ScatterplotLayer } from "@deck.gl/layers"
 
 // Viewport settings
 const INITIAL_VIEW_STATE = {
-  longitude: -122.41669,
-  latitude: 37.7853,
-  zoom: 13,
+  longitude: 13,
+  latitude: 61,
+  zoom: 3,
   pitch: 0,
   bearing: 0,
 }
 
 export default function MapAISsmallPlot({ AISlist }) {
-  const [mapState, setMapState] = useState({
-    longitude: 13,
-    latitude: 61,
-    zoom: 3,
-    pitch: 0,
-    bearing: 0,
-  })
-
-  const changeViewState = e => {
-    setMapState({
-      ...e.viewState,
-    })
-  }
-
   const layers = [
     // Dark Map
     new TileLayer({
@@ -90,12 +76,8 @@ export default function MapAISsmallPlot({ AISlist }) {
     <div>
       <DeckGL
         layers={layers}
-        viewState={mapState}
         initialViewState={INITIAL_VIEW_STATE}
-        onViewStateChange={e => changeViewState(e)}
-        // onHover={e => hoverMapCursor(e)}
         controller={{ dragPan: true, doubleClickZoom: false }}
-        // getTooltip={getTooltip}
         getCursor={() => "crosshair"}
       ></DeckGL>
     </div>

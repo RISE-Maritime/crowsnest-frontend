@@ -58,9 +58,9 @@ export default function MqttBrokerLogin() {
       })
 
       client.on("message", (topic, payload) => {
-        console.log("Message received: ", topic, payload.toString())
+        // console.log("Message received: ", topic, payload.toString())
         parseWsMessage({ topic: topic, payload: JSON.parse(payload.toString()) })
-        // parseWsMessage({ topic: topic, payload: payload })
+     
       })
     }
   }, [client])
