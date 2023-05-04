@@ -113,7 +113,7 @@ export default function NavBar() {
         <GridCenter item xs={2}>
           <Typography variant={"subtitle1"}>
             <Clock
-              format={"YYYY-MM-D  HH:mm:ss"}
+              format={"YYYY-MM-DD  HH:mm:ss"}
               ticking={true}
               timezone={"Europe/Stockholm"}
             />

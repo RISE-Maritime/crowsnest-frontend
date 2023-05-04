@@ -17,7 +17,9 @@ import {
   OS_WIND,
   atomHWlog,
   OS_RADAR_0,
+  OS_RADAR_0_SWEEP,
   OS_RADAR_1,
+  OS_RADAR_1_SWEEP,
 } from "./atoms";
 
 export const selectUser = selector({
@@ -334,6 +336,35 @@ export const wsMessageParser = selector({
         break;
       }
 
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP")?.input: {
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP"]: {
+            time_received: new Date(),
+            timestamp: new Date(latestMessage.payload.message.sent_at),
+            delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/0/SWEEP"].count + 1 : 1
+
+          }
+        }))
+
+        let frameR = latestMessage.payload
+        let radarFrameList = []
+        for (let i = 0; i < frameR.message.points.length; i++) {
+          const radarPoint = {
+            point: frameR.message.points[i],
+            weight: frameR.message.weights[i],
+            distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
+          }
+          radarFrameList.push(radarPoint)
+        }
+        set(OS_RADAR_0_SWEEP, () => (
+          radarFrameList
+        ));
+        break;
+      }
+
       case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/1/NUP")?.input: {
         //  MQTT logger topics 
         set(atomMqttTopics, (currentObj) => ({
@@ -357,6 +388,34 @@ export const wsMessageParser = selector({
           radarFrame.push(radarPoint)
         }
         set(OS_RADAR_1, () => (
+          radarFrame
+        ));
+        break;
+      }
+
+      case latestMessage.topic.match("CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/1/SWEEP")?.input: {
+        //  MQTT logger topics 
+        set(atomMqttTopics, (currentObj) => ({
+          ...currentObj,
+          ["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/1/SWEEP"]: {
+            time_received: new Date(),
+            timestamp: new Date(latestMessage.payload.message.sent_at),
+            delay_calc: Math.abs((new Date(latestMessage.payload.sent_at).getTime() - new Date().getTime()) / 1000),
+            count: currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/1/SWEEP"]?.count ? currentObj["CROWSNEST/" + MQTT_PLATFORM_ID + "/RADAR/1/SWEEP"].count + 1 : 1
+          }
+        }))
+
+        let frameR = latestMessage.payload
+        let radarFrame = []
+        for (let i = 0; i < frameR.message.points.length; i++) {
+          const radarPoint = {
+            point: frameR.message.points[i],
+            weight: frameR.message.weights[i],
+            distance: Math.sqrt(Math.abs(frameR.message.points[i][0]) ** 2 + Math.abs(frameR.message.points[i][1]) ** 2)
+          }
+          radarFrame.push(radarPoint)
+        }
+        set(OS_RADAR_1_SWEEP, () => (
           radarFrame
         ));
         break;

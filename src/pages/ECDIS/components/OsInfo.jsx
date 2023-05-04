@@ -1,10 +1,9 @@
 import React from "react"
-import { Stack, FormControl, InputLabel, Select, MenuItem,  Typography, Grid } from "@mui/material"
+import { Stack, FormControl, InputLabel, Select, MenuItem, Typography, Grid } from "@mui/material"
 import { useRecoilState, useRecoilValue } from "recoil"
-import {  OS_POSITION_SETTING, OS_VELOCITY_SETTING, OS_VELOCITY, OS_HEADING, OS_HEADING_SETTING } from "../../../recoil/atoms"
+import { OS_POSITION_SETTING, OS_VELOCITY_SETTING, OS_VELOCITY, OS_HEADING, OS_HEADING_SETTING } from "../../../recoil/atoms"
 
 export default function OsInfo() {
- 
   const [posSetting, setPosSetting] = useRecoilState(OS_POSITION_SETTING)
   const osVelocity = useRecoilValue(OS_VELOCITY)
   const osVelocitySetting = useRecoilValue(OS_VELOCITY_SETTING)
@@ -20,7 +19,7 @@ export default function OsInfo() {
   }
 
   return (
-    <div>
+    <div >
       <hr style={{ width: "100%" }} />
       <Grid container sx={{ padding: "0.5rem" }}>
         <Grid item xs={12}>
@@ -47,29 +46,39 @@ export default function OsInfo() {
             </FormControl>
           </Stack>
         </Grid>
+
         <Grid item xs={12}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <div style={{ textAlign: "center" }}>
-              <Typography variant="caption">Heading</Typography>
-              <Typography variant="subtitle1">{osHeading[osHeadingSetting.source]?.heading}°</Typography>
-            </div>
-          </Stack>
-        </Grid>
-        <Grid item xs={12}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-            <div style={{ textAlign: "center" }}>
-              <Typography variant="caption">COG</Typography>
-              <Typography variant="subtitle1">{osVelocity[osVelocitySetting.source]?.cog}°</Typography>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <Typography variant="caption">SOG</Typography>
-              <Typography variant="subtitle1">{osVelocity[osVelocitySetting.source]?.sog}kts</Typography>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <Typography variant="caption">ROT</Typography>
-              <Typography variant="subtitle1">{osVelocity[osVelocitySetting.source]?.rot}°/min</Typography>
-            </div>
-          </Stack>
+          <Grid container>
+            <Grid item xs={6}>
+              <div style={{ textAlign: "center" }}>
+                <Typography variant="caption">Heading</Typography>
+                <Typography variant="subtitle1">{osHeading[osHeadingSetting.source]?.heading?.toFixed(1)}°</Typography>
+              </div>
+            </Grid>
+
+            <Grid item xs={6}>
+              <div style={{ textAlign: "center" }}>
+                <Typography variant="caption">COG</Typography>
+                <Typography variant="subtitle1">{osVelocity[osVelocitySetting.source]?.cog?.toFixed(1)}°</Typography>
+              </div>
+            </Grid>
+
+            <Grid item xs={6}>
+              <div style={{ textAlign: "center" }}>
+                <Typography variant="caption">SOG</Typography>
+                <Typography variant="subtitle1">{osVelocity[osVelocitySetting.source]?.sog?.toFixed(1)}kts</Typography>
+              </div>
+            </Grid>
+
+            <Grid item xs={6}>
+              <div style={{ textAlign: "center" }}>
+                <Typography variant="caption">ROT</Typography>
+                <Typography variant="subtitle1">{osVelocity[osVelocitySetting.source]?.rot?.toFixed(1)}°/min</Typography>
+              </div>
+            </Grid>
+          </Grid>
+
+          <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}></Stack>
         </Grid>
       </Grid>
       <hr style={{ width: "100%" }} />

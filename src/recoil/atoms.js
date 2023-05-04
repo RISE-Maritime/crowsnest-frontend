@@ -375,8 +375,19 @@ export const OS_RADAR_0 = atom({
   default: [],
 });
 
+export const OS_RADAR_0_SWEEP = atom({
+  key: "radar_observation_state_0_sweep",
+  default: [],
+});
+
+
 export const OS_RADAR_1 = atom({
   key: "radar_observation_state_1",
+  default: [],
+});
+
+export const OS_RADAR_1_SWEEP = atom({
+  key: "radar_observation_state_1_sweep",
   default: [],
 });
 
