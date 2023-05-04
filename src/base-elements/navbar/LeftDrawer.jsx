@@ -93,14 +93,14 @@ export default function LeftDrawer(props) {
 
         <ListItem
           button
-          key={"DEVISE_SENSOR"}
+          key={"DEVICE_SENSOR"}
           component={Link}
-          to={ROUTES.DEVISE_SENSORS}
+          to={ROUTES.DEVICE_SENSORS}
         >
           <ListItemIcon>
             <EdgesensorHighIcon />
           </ListItemIcon>
-          <ListItemText primary={"Devise Sensors"} />
+          <ListItemText primary={"Device Sensors"} />
         </ListItem>
 
 

@@ -8,7 +8,7 @@ export default function AisInfo() {
 
   return (
     <div>
-      <Typography variant={"h5"}> AisInfo</Typography>
+      <Typography variant={"subtitle1"} sx={{"margin": "0.3rem"}}> AIS Info</Typography>
       {chartQueryInfo.layer === "ais" ? (
         <Typography variant={"subtitle1"}>
           Name: {chartQueryInfo.object.shipname}

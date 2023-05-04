@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import mqtt from "precompiled-mqtt"
 import { useSetRecoilState, useRecoilState } from "recoil"
 import { wsMessageParser } from "../recoil/selectors"
-import {atomMQTTLocalState} from "../recoil/atoms"
+import { atomMQTTLocalState } from "../recoil/atoms"
 
 /* eslint-disable */
 // const host = process.env.REACT_APP_MQTT_BROKER_ADDRESS
@@ -19,10 +19,12 @@ const options = {
 
 let client = mqtt.connect(host, options)
 
-
-
 export function mqttSubscribeLOCAL(topic) {
-  client.subscribe(topic, err => console.log(err))
+  client.subscribe(topic, err => {
+    if (err) {
+      console.log(topic, err)
+    }
+  })
 }
 
 export function mqttPublishLOCAL(topic, qos, payload) {
@@ -40,9 +42,8 @@ export default function MqttConnectionLOCAL() {
   const parseWsMessage = useSetRecoilState(wsMessageParser)
 
   useEffect(() => {
-
     client.on("connect", () => {
-      console.log("Connected to MQTT broker!")
+      console.log("Connected to LOCAL MQTT broker!")
       setMqttState({
         ...mqttState,
         connected: true,

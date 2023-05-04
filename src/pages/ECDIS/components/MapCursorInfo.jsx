@@ -1,14 +1,19 @@
 import React, { useState } from "react"
 import { mapCursorPosAtom } from "./SeaChart"
-import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
+import { OS_POSITIONS, OS_POSITION_SETTING, OS_VELOCITY_SETTING, OS_VELOCITY } from "../../../recoil/atoms"
 import { useRecoilValue } from "recoil"
 import { formatLatitude, formatLongitude, calcDistanceBetween, calcBearingBetween } from "../../../utils"
 import { Stack, Typography, Grid } from "@mui/material"
 
 export default function MapCursorInfo() {
   const mapCursor = useRecoilValue(mapCursorPosAtom)
+  
   const osPos = useRecoilValue(OS_POSITIONS)
   const osPosSetting = useRecoilValue(OS_POSITION_SETTING)
+
+  const osVelocitySetting = useRecoilValue(OS_VELOCITY_SETTING)
+  const osVelocity = useRecoilValue(OS_VELOCITY)
+  
   const [displayOptions, setDisplayOptions] = useState({
     positionInDegrees: false,
   })
@@ -23,9 +28,9 @@ export default function MapCursorInfo() {
     <Stack>
       <hr style={{ width: "100%" }} />
 
-      <Typography variant="overline">Cursor</Typography>
+      <Typography variant="overline" style={{padding: "0.5rem"}}>Cursor</Typography>
 
-      <Grid container>
+      <Grid container sx={{padding: "0.5rem"}}>
         <Grid item xs={5}>
           {displayOptions.positionInDegrees ? (
             <div onClick={togglePositionUnit} style={{ minWidth: "50%" }}>
@@ -79,7 +84,7 @@ export default function MapCursorInfo() {
                 mapCursor.longitude,
                 osPos[osPosSetting.source].latitude,
                 osPos[osPosSetting.source].longitude
-              ) * 10
+              ) * osVelocity[osVelocitySetting.source].sog
             ).toFixed(1)}
             min
           </Typography>

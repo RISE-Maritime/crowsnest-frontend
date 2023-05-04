@@ -124,7 +124,7 @@ export default function App() {
               <Route exact path={ROUTES.SETTINGS} element={<PageSettings />} />
               <Route exact path={ROUTES.E_LOOKOUT} element={<ELookout />} />
               <Route exact path={ROUTES.E_LOOKOUT_V2} element={<ELookoutV2 />} />
-              <Route exact path={ROUTES.DEVISE_SENSORS} element={<DeviceSensors />} />
+              <Route exact path={ROUTES.DEVICE_SENSORS} element={<DeviceSensors />} />
               <Route exact path={ROUTES.REMOTE_CONTROL} element={<PageRemoteControl />} />
             </Routes>
           </BasePage>

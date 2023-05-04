@@ -10,5 +10,5 @@
   "BEARING_RATE": "/bearing_rate",
   "E_LOOKOUT": "/e_lookout",
   "E_LOOKOUT_V2": "/e_lookout_v2",
-  "DEVISE_SENSORS": "/devise_sensors"
+  "DEVICE_SENSORS": "/device_sensors"
 }

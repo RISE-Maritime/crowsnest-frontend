@@ -51,7 +51,7 @@ export default function DeviceSensors() {
 
   return (
     <div>
-      <h2>Devise sensors TEST</h2>
+      <h2>Device sensors TEST</h2>
       <h2>GNSS</h2>
       <p>
         Lat: {position.latitude}
