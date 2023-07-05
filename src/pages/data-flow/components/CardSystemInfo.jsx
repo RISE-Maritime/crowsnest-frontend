@@ -1,6 +1,6 @@
 import React from "react"
 import moment from "moment"
-import { Typography, Grid, Paper, Stack } from "@mui/material"
+import { Typography, Paper } from "@mui/material"
 
 export default function CardSystemInfo({ op_system, boot_time, received_at, network_delay, ram_size }) {
   return (

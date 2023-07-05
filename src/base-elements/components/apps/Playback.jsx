@@ -21,31 +21,31 @@ export default function Playback({ setIsDraggable, isDraggable }) {
   const [playbackObj, setPlaybackObj] = useRecoilState(playbackState);
 
   const playPause = () => {
-    let action = "";
+    // let action = "";
 
     setPlaybackObj({
       ...playbackObj,
       is_playing: !playbackObj.is_playing,
     });
 
-    let topic = "/playback/action";
-    let qos = 0;
+    // let topic = "/playback/action";
+    // let qos = 0;
 
     if (!playbackObj.is_playing === true) {
-      action = "start";
+      // action = "start";
     } else {
-      action = "stop";
+      // action = "stop";
     }
 
-    let payload = { actionPlay: action };
+    // let payload = { actionPlay: action };
 
     // mqttPublishRemote(topic, qos, payload);
   };
 
   const changeTimePointer = (value) => {
-    let topic = "/playback/action";
-    let qos = 0;  
-    let payload = { timeLinePos: value };
+    // let topic = "/playback/action";
+    // let qos = 0;  
+    // let payload = { timeLinePos: value };
     // mqttPublishRemote(topic, qos, payload);
 
     setPlaybackObj({

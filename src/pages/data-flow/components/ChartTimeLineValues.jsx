@@ -3,36 +3,36 @@ import { Typography, Paper } from "@mui/material";
 import { LineChart, Line,XAxis,YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import moment from "moment";
 
-const data = [
-  {
-    name: "-6H",
-    tmp: -2,
-  },
-  {
-    name: "-5H",
-    tmp: 10,
-  },
-  {
-    name: "-4H",
-    tmp: 8,
-  },
-  {
-    name: "-3H",
-    tmp: 7,
-  },
-  {
-    name: "-2H",
-    tmp: 11,
-  },
-  {
-    name: "-1H",
-    tmp: 12,
-  },
-  {
-    name: "Now",
-    tmp: 11,
-  },
-];
+// const data = [
+//   {
+//     name: "-6H",
+//     tmp: -2,
+//   },
+//   {
+//     name: "-5H",
+//     tmp: 10,
+//   },
+//   {
+//     name: "-4H",
+//     tmp: 8,
+//   },
+//   {
+//     name: "-3H",
+//     tmp: 7,
+//   },
+//   {
+//     name: "-2H",
+//     tmp: 11,
+//   },
+//   {
+//     name: "-1H",
+//     tmp: 12,
+//   },
+//   {
+//     name: "Now",
+//     tmp: 11,
+//   },
+// ];
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {

@@ -3,6 +3,7 @@ import { Button } from "@mui/material"
 import mqtt from "precompiled-mqtt"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import "@tensorflow/tfjs"
+// eslint-disable-next-line
 import * as cocoSsd from "@tensorflow-models/coco-ssd"
 
 function text2Binary(string) {

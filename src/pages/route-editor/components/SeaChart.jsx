@@ -24,10 +24,11 @@ import VesselContourLayer from "../../../base-elements/custom-deckgl-layers/vess
 import { PointCloudLayer } from "@deck.gl/layers"
 import { COORDINATE_SYSTEM } from "@deck.gl/core"
 import { BitmapLayer, IconLayer, LineLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { HexagonLayer } from "@deck.gl/aggregation-layers"
 import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
 import "mapbox-gl/dist/mapbox-gl.css"
-
+import { DepthwiseConv2dNativeBackpropInput } from "@tensorflow/tfjs"
 
 // Atoms
 export const vesselTargetsAtom = atom({
@@ -545,9 +546,9 @@ export default function SeaChart() {
       radiusMaxPixels: 100,
       lineWidthMinPixels: 1,
       getPosition: d => d.point,
-      getRadius: () => 5, //d.distance * 0.01,
+      getRadius: d => 5, //d.distance * 0.01,
       getFillColor: d => [186, 12, 0, d.weight],
-      getLineColor: () => [0, 0, 0, 0],
+      getLineColor: d => [0, 0, 0, 0],
     }),
 
     // Shore Radar-1 scatter
@@ -567,9 +568,9 @@ export default function SeaChart() {
       getPosition: d => {
         return d.distance <= shoreRadarSetting.range_change ? null : d.point
       },
-      getRadius: () => 5, //d.distance * 0.01,
+      getRadius: d => 5, //d.distance * 0.01,
       getFillColor: d => [186, 12, 0, d.weight],
-      getLineColor: () => [0, 0, 0, 0],
+      getLineColor: d => [0, 0, 0, 0],
     }),
 
     // OWN SHIP symbol
@@ -607,7 +608,7 @@ export default function SeaChart() {
       getWidth: 2,
       getSourcePosition: d => d.pos,
       getTargetPosition: d => calcPosFromBearingDistance(d.pos[1], d.pos[0], d.heading, 10),
-      getColor: () => [0, 0, 0],
+      getColor: d => [0, 0, 0],
     }),
   ]
 
