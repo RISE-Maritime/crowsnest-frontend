@@ -9,6 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  ListItemButton
 } from "@mui/material";
 // Icons
 import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded";
@@ -21,6 +22,7 @@ import VrpanoIcon from '@mui/icons-material/Vrpano';
 import EdgesensorHighIcon from '@mui/icons-material/EdgesensorHigh';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
+import RouteIcon from '@mui/icons-material/Route';
 
 export default function LeftDrawer(props) {
   return (
@@ -33,22 +35,21 @@ export default function LeftDrawer(props) {
       onKeyDown={props.toggleDrawer(props.side, false)}
     >
       <List>
-        <ListItem button key={"Home"} component={Link} to={ROUTES.HOME}>
+        <ListItemButton key={"Home"} component={Link} to={ROUTES.HOME}>
           <ListItemIcon>
             <HomeRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Home"} />
-        </ListItem>
+        </ListItemButton>
 
-        <ListItem button key={"ECDIS"} component={Link} to={ROUTES.ECDIS}>
+        <ListItemButton key={"ECDIS"} component={Link} to={ROUTES.ECDIS}>
           <ListItemIcon>
             <MapRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"ECDIS"} />
-        </ListItem>
+        </ListItemButton>
 
-        <ListItem
-          button
+        <ListItemButton
           key={"BEARING_RATE"}
           component={Link}
           to={ROUTES.BEARING_RATE}
@@ -57,30 +58,30 @@ export default function LeftDrawer(props) {
             <TrackChangesIcon />
           </ListItemIcon>
           <ListItemText primary={"Bearing Rate"} />
-        </ListItem>
+        </ListItemButton>
 
-        <ListItem button key={"Conning"} component={Link} to={ROUTES.CONNING}>
+        <ListItemButton key={"Conning"} component={Link} to={ROUTES.CONNING}>
           <ListItemIcon>
             <SpeedRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Conning"} />
-        </ListItem>
+        </ListItemButton>
 
-        <ListItem button key={"E-lookout"} component={Link} to={ROUTES.E_LOOKOUT}>
+        <ListItemButton key={"E-lookout"} component={Link} to={ROUTES.E_LOOKOUT}>
           <ListItemIcon>
             <VrpanoIcon />
           </ListItemIcon>
           <ListItemText primary={"E-Lookout  (Seahorse)"} />
-        </ListItem>
-        <ListItem button key={"E-lookout-V2"} component={Link} to={ROUTES.E_LOOKOUT_V2}>
+        </ListItemButton>
+
+        <ListItemButton key={"E-lookout-V2"} component={Link} to={ROUTES.E_LOOKOUT_V2}>
           <ListItemIcon>
             <VrpanoIcon />
           </ListItemIcon>
           <ListItemText primary={"E-Lookout (Landkrabban)"} />
-        </ListItem>
+        </ListItemButton>
 
-        <ListItem
-          button
+        <ListItemButton
           key={"remoteControl"}
           component={Link}
           to={ROUTES.REMOTE_CONTROL}
@@ -89,10 +90,20 @@ export default function LeftDrawer(props) {
             <SportsEsportsRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Remote Control"} />
-        </ListItem>
+        </ListItemButton>
 
-        <ListItem
-          button
+        <ListItemButton
+          key={"route_editor"}
+          component={Link}
+          to={ROUTES.ROUTE_EDITOR}
+        >
+          <ListItemIcon>
+            <RouteIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Route Editor"} />
+        </ListItemButton>
+
+        <ListItemButton
           key={"DEVICE_SENSOR"}
           component={Link}
           to={ROUTES.DEVICE_SENSORS}
@@ -101,30 +112,30 @@ export default function LeftDrawer(props) {
             <EdgesensorHighIcon />
           </ListItemIcon>
           <ListItemText primary={"Device Sensors"} />
-        </ListItem>
+        </ListItemButton>
 
 
       </List>
       <Divider />
       <List>
-        <ListItem button key={"data"} component={Link} to={ROUTES.DATA_FLOW}>
+        <ListItemButton key={"data"} component={Link} to={ROUTES.DATA_FLOW}>
           <ListItemIcon>
             <InsightsRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Data flow"} />
-        </ListItem>
-        <ListItem button key={"configuration"} component={Link} to={ROUTES.CONFIGURATION}>
+        </ListItemButton>
+        <ListItemButton key={"configuration"} component={Link} to={ROUTES.CONFIGURATION}>
           <ListItemIcon>
             <DirectionsBoatIcon />
           </ListItemIcon>
           <ListItemText primary={"OS configuration"} />
-        </ListItem>
-        <ListItem button key={"settings"} component={Link} to={ROUTES.SETTINGS}>
+        </ListItemButton>
+        <ListItemButton key={"settings"} component={Link} to={ROUTES.SETTINGS}>
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>
           <ListItemText primary={"APP Settings"} />
-        </ListItem>
+        </ListItemButton>
       </List>
     </Box>
   );

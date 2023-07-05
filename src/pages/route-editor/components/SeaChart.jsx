@@ -24,11 +24,9 @@ import VesselContourLayer from "../../../base-elements/custom-deckgl-layers/vess
 import { PointCloudLayer } from "@deck.gl/layers"
 import { COORDINATE_SYSTEM } from "@deck.gl/core"
 import { BitmapLayer, IconLayer, LineLayer, ScatterplotLayer } from "@deck.gl/layers"
-import { HexagonLayer } from "@deck.gl/aggregation-layers"
 import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
 import "mapbox-gl/dist/mapbox-gl.css"
-import { DepthwiseConv2dNativeBackpropInput } from "@tensorflow/tfjs"
 
 // Atoms
 export const vesselTargetsAtom = atom({

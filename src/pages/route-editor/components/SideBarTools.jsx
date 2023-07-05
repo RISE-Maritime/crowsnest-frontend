@@ -5,7 +5,7 @@ import MapCursorInfo from "./MapCursorInfo"
 import AisInfo from "./AisInfo"
 import OsInfo from "./OsInfo"
 
-export default function StatusSideBar() {
+export default function SideBarTools() {
   return (
     <Grid container sx={{ height: "100%" }}>
       <Grid item xs={12}>

@@ -11,6 +11,7 @@ import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded"
 import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded"
 import VrpanoIcon from "@mui/icons-material/Vrpano"
 import SettingsIcon from '@mui/icons-material/Settings';
+import RouteIcon from '@mui/icons-material/Route';
 
 const GridCenter = styled(Grid)(() => ({
   display: "grid",
@@ -89,7 +90,7 @@ export default function viewList() {
           />
         }
       />
-      
+
       <ViewListItem
         routeLink={ROUTES.BEARING_RATE}
         viewName={" Bearing Rate"}
@@ -117,6 +118,19 @@ export default function viewList() {
       />
 
       <ViewListItem
+        routeLink={ROUTES.ROUTE_EDITOR}
+        viewName={"Rout Editor"}
+        icon={
+          <RouteIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+
+      <ViewListItem
         routeLink={ROUTES.DATA_FLOW}
         viewName={"Data Flow"}
         icon={
@@ -129,7 +143,7 @@ export default function viewList() {
         }
       />
 
-<ViewListItem
+      <ViewListItem
         routeLink={ROUTES.SETTINGS}
         viewName={"Settings"}
         icon={

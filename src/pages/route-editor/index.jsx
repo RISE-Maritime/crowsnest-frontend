@@ -1,8 +1,73 @@
+{/**
+  Route Editor Page
+  -----------------
+
+  This page is for editing a route. It is a full screen page with a chart
+
+  Route properties and functions:
+    - Track line
+    - Waypoints
+    - Navigable area
+    - Safety buffer zone
+    - Grounding line 
+
+  Route format is a JSON object with the following structure:
+
+  {
+    "name": "Route name",
+    "description": "Route description",
+
+    "settings": {
+      "polylineMinDistanceBetweenPoints": 10,
+      "polylineMinDistanceUnits": "m",
+    }
+
+    "waypoints": [
+      {
+        "name": "Waypoint name",
+        "description": "Waypoint description",
+        "position": {
+          "latitude": 0,
+          "longitude": 0
+        },
+        "radius": 0,
+        "radiusUnits": "m",
+        "bearing": 0,
+        "bearingUnits": "deg",
+        "speed": 0,
+        "speedUnits": "kn",
+        "turn": 0,
+        "turnUnits": "deg",
+        "turnDirection": "port",
+        "turnRate": 0,
+        "turnRateUnits": "deg/min",
+        "turnRadius": 0,
+        "turnRadiusUnits": "m",
+        
+        "xteLinePort": 0,
+        "xteUnits": "m",
+        
+        "xteLineStarboard": 0,
+        "xteUnits": "m",
+
+        "xtePolygon": [],
+        "xtePolygonUnits": "m",
+
+        "xtSafetyZonePolygon": [],
+        "xteSafetyZonePolygonUnits": "m",
+
+        "groundingLinePolygon": [],
+        "groundingLinePolygonUnits": "m",
+        
+  }
+
+*/}
+
 import React from "react"
 import { Grid } from "@mui/material"
-import StatusSideBar from "./components/StatusSideBarNEW"
+import SideBarTools from "./components/SideBarTools"
 import SeaChart from "./components/SeaChart"
-import ChartControls from "./components/ChartControls"
+import RouteTableEditor from "./components/RouteTableEditor"
 
 export default function RouteEditor() {
 
@@ -13,9 +78,8 @@ export default function RouteEditor() {
         xs={10}
         sx={{
           position: "relative",
-          // height: "calc(100vh - 95px)",
           padding: "0px",
-          height: "90vh",
+          height: "70vh",
           cursor: "crosshair",
         }}
       >
@@ -32,18 +96,19 @@ export default function RouteEditor() {
           height: "100%",
         }}
       >
-        <StatusSideBar />
+        <SideBarTools />
       </Grid>
+      
       <Grid
         item
         xs={12}
         sx={{
           display: "grid",
           position: "relative",
-          height: "calc(10vh - 40px)",
+          height: "calc(30vh - 40px)",
         }}
       >
-        <ChartControls />
+        <RouteTableEditor />
       </Grid>
     </Grid>
   )
