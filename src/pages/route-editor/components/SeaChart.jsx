@@ -29,18 +29,15 @@ import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png
 import "mapbox-gl/dist/mapbox-gl.css"
 
 // Atoms
-export const vesselTargetsAtom = atom({
-  key: "vessel_targets",
-  default: {},
-})
+
 
 export const clickInfoAtom = atom({
-  key: "click_info_atom",
+  key: "click_info_atom_route_editor",
   default: {},
 })
 
 export const mapCursorPosAtom = atom({
-  key: "map_cursor_pos_atom",
+  key: "map_cursor_pos_atom_route_editor",
   default: {
     latitude: 0,
     longitude: 0,
@@ -49,7 +46,7 @@ export const mapCursorPosAtom = atom({
 })
 
 export const atomMapState = atom({
-  key: "atom_map_state",
+  key: "atom_map_state_route_editor",
   default: {
     zoom: 10,
     pitch: 6,
@@ -67,24 +64,24 @@ export const atomMapState = atom({
 })
 
 export const atomMapSetting = atom({
-  key: "atom_map_setting",
+  key: "atom_map_setting_route_editor",
   default: {
     chartFix: "OS",
   },
 })
 
 export const atomLayersTaggable = atom({
-  key: "atom_layers_taggable",
+  key: "atom_layers_taggable_route_editor",
   default: ["NO MAP", "ENIRO", "Street map", "Satellite", "Dark", "Sea Marks"],
 })
 
 export const atomLayersShowing = atom({
-  key: "atom_layers_showing",
+  key: "atom_layers_showing_route_editor",
   default: ["ENIRO"],
 })
 
 export const atomSensorLayersTaggable = atom({
-  key: "atom_sensor_layers_taggable",
+  key: "atom_sensor_layers_taggable_route_editor",
   default: [
     "AIS",
     "OS Radar-0 Point", // Done , no cut off
@@ -104,7 +101,7 @@ export const atomSensorLayersTaggable = atom({
 })
 
 export const atomSensorLayersShowing = atom({
-  key: "atom_sensor_layers_showing",
+  key: "atom_sensor_layers_showing_route_editor",
   default: ["AIS", "OS Radar-0 Heatmap", "OS Radar-1 Heatmap", "Shore Radar-0 Heatmap", "Shore Radar-1 Heatmap"],
 })
 
