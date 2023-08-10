@@ -1,34 +1,25 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { calcPosFromBearingDistance } from "../../../utils"
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import {
-  lidarObservationAtom,
-  targetsAIS,
-  OS_POSITIONS,
-  OS_POSITION_SETTING,
-  OS_HEADING,
-  OS_HEADING_SETTING,
-  AtomShoreRadarObservation,
-  AtomShoreRadar_1,
-  OS_RADAR_0,
-  OS_RADAR_1,
-  OS_RADAR_0_SWEEP,
-  OS_RADAR_1_SWEEP,
-  AtomShoreRadarSetting,
-  AtomOSRadarSetting,
-} from "../../../recoil/atoms"
-
-import { HeatmapLayer } from "@deck.gl/aggregation-layers"
+import { selectRoutePathList } from "../../../recoil/selectors"
+import IconWaypoint from "../../../resources/chart_symbols/Waypoint.png"
 import DeckGL from "@deck.gl/react"
 import VesselContourLayer from "../../../base-elements/custom-deckgl-layers/vessel-contour-layer"
-import { PointCloudLayer } from "@deck.gl/layers"
-import { COORDINATE_SYSTEM } from "@deck.gl/core"
-import { BitmapLayer, IconLayer, LineLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { PathLayer } from "@deck.gl/layers"
+import { BitmapLayer, IconLayer, LineLayer } from "@deck.gl/layers"
 import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
 import "mapbox-gl/dist/mapbox-gl.css"
 
 // Atoms
+import {
+  targetsAIS,
+  OS_POSITIONS,
+  OS_POSITION_SETTING,
+  OS_HEADING,
+  OS_HEADING_SETTING,
+  atomRouteWaypoints
+} from "../../../recoil/atoms"
 
 
 export const clickInfoAtom = atom({
@@ -101,61 +92,74 @@ export const atomSensorLayersTaggable = atom({
 })
 
 export const atomSensorLayersShowing = atom({
-  key: "atom_sensor_layers_showing_route_editor",
+  key: "atom_sensor_layers_showing_route_editor-sd",
   default: ["AIS", "OS Radar-0 Heatmap", "OS Radar-1 Heatmap", "Shore Radar-0 Heatmap", "Shore Radar-1 Heatmap"],
 })
 
-function getTooltip({ object }) {
-  // console.log(object)
+function getTooltip({ picked, object, coordinate, layer }) {
 
-  return (
-    object &&
-    `\
-    MMSI: ${object.mmsi}
-    Name: ${object.shipname}
-    HDG: ${object.heading}
-    COG: ${object.course}
-    SOG: ${object.speed}
-    ROT: ${object.turn}
-    Destination: ${object.destination}
-    Status: ${object.status}`
-  )
-}
+  // console.log(layer, picked, object)
+
+  switch (layer?.id) {
+    case "ais-targets":
+      return (
+        object &&
+        `\
+        MMSI: ${object.mmsi}
+        Name: ${object.shipname}
+        HDG: ${object.heading}
+        COG: ${object.course}
+        SOG: ${object.speed}
+        ROT: ${object.turn}
+        Destination: ${object.destination}
+        Status: ${object.status}`
+      )
+    case "route-waypoints-layer":
+      return (object && {
+        html: `<h3>${object.name}</h2><div>${object.message}</div>`,
+        style: {
+          backgroundColor: '#0f954b',
+          fontSize: '0.8em'
+        }
+      })
+
+  } // Switch END 
+} // getTooltip END
 
 export default function SeaChart() {
   const setClickInfo = useSetRecoilState(clickInfoAtom)
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
   const [mapState, setMapState] = useRecoilState(atomMapState)
   const [mapSetting, setMapSetting] = useRecoilState(atomMapSetting)
+  const [routeWaypoints, setRouteWaypoints] = useRecoilState(atomRouteWaypoints)
   const layersShowing = useRecoilValue(atomLayersShowing)
   const sensorLayerShowing = useRecoilValue(atomSensorLayersShowing)
-
   const os_pos = useRecoilValue(OS_POSITIONS)
   const os_pos_setting = useRecoilValue(OS_POSITION_SETTING)
   const os_heading = useRecoilValue(OS_HEADING)
   const os_heading_setting = useRecoilValue(OS_HEADING_SETTING)
-
   const AIStargets = useRecoilValue(targetsAIS)
-  const radarFrames_0 = useRecoilValue(OS_RADAR_0)
-  const radarFrames_1 = useRecoilValue(OS_RADAR_1)
-  const radarFrames_0_sweep = useRecoilValue(OS_RADAR_0_SWEEP)
-  const radarFrames_1_sweep = useRecoilValue(OS_RADAR_1_SWEEP)
-  const shoreRadarFrames = useRecoilValue(AtomShoreRadarObservation)
-  const shoreRadarFrames_1 = useRecoilValue(AtomShoreRadar_1)
-  const shoreRadarSetting = useRecoilValue(AtomShoreRadarSetting)
-  const OSRadarSetting = useRecoilValue(AtomOSRadarSetting)
+  const [mapController, setMapController] = useState({ dragPan: true, doubleClickZoom: false })
 
-  const lidarObservations = useRecoilValue(lidarObservationAtom)
+  const [mapWPs, setMapWPs] = useState([])
+  const [mapPath, setMapPath] = useState([])
+  const [mapCursor, setMapCursor] = useState("crosshair")
 
-  // Viewport settings
-  const INITIAL_VIEW_STATE = {
-    longitude: -122.41669,
-    latitude: 37.7853,
-    zoom: 13,
-    pitch: 0,
-    bearing: 0,
-  }
+  useEffect(() => {
 
+    setMapWPs(routeWaypoints)
+
+    // RoutePath
+    const transformedList = [];
+    for (let i = 0; i < routeWaypoints.length; i++) {
+      transformedList.push([routeWaypoints[i].longitude, routeWaypoints[i].latitude]);
+    }
+    console.log(transformedList);
+    setMapPath([transformedList])
+
+  }, [routeWaypoints])
+
+  // Center OS on chart if selected 
   useEffect(() => {
     if (mapSetting.chartFix === "OS") {
       setMapState({
@@ -319,258 +323,76 @@ export default function SeaChart() {
       },
     }),
 
-    // OS LIDAR layer
-    new PointCloudLayer({
-      id: "os-lidar-point-cloud-layer",
-      data: lidarObservations,
-      visible: sensorLayerShowing.includes("OS LIDAR 3D-point"),
-      pickable: false,
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      pointSize: 3,
-      getPosition: d => d,
-      getNormal: () => [0, 0, 1],
-      getColor: d => {
-        // console.log(d[2]*100);
-        return [d[2] * 100, 0, 0, 255]
+    // Route Waypoints 
+    new IconLayer({
+      id: 'route-waypoints-layer',
+      data: mapWPs,
+      getPosition: d => [d.longitude, d.latitude],
+      pickable: true,
+      billboard: false,
+      getIcon: () => {
+        return {
+          url: IconWaypoint,
+          width: 100,
+          height: 100,
+          anchorY: 50,
+          anchorX: 50,
+        }
       },
-      getAngle: 45,
-      opacity: 0.8,
+      sizeUnits: "common",
+      sizeMinPixels: 10,
+      sizeMaxPixels: 25,
+      getSize: d => 5,
+      onDragStart: () => {
+        setMapController({ ...mapController, dragPan: false })
+        setMapCursor("grabbing")
+      },
+
+      onDrag: ({ coordinate, object }) => {
+        let long = coordinate[0]
+        let lat = coordinate[1]
+        let newRouteWaypoints = [...routeWaypoints]
+        newRouteWaypoints[object.id] = { ...object, longitude: long, latitude: lat }
+        setMapWPs(newRouteWaypoints)
+
+        // RoutePath
+        const transformedList = [];
+        for (let i = 0; i < newRouteWaypoints.length; i++) {
+          transformedList.push([newRouteWaypoints[i].longitude, newRouteWaypoints[i].latitude]);
+        }
+        setMapPath([transformedList])
+
+      },
+      onDragEnd: ({ coordinate, object }) => {
+        let long = coordinate[0]
+        let lat = coordinate[1]
+        let newRouteWaypoints = [...routeWaypoints]
+        newRouteWaypoints[object.id] = { ...object, longitude: long, latitude: lat }
+        setRouteWaypoints(newRouteWaypoints)
+
+        setMapController({ ...mapController, dragPan: true })
+      },
+      onClick: (info, event) => console.log('Clicked:', info, event),
+      onHover: (info, event) => setMapCursor("grab")
+      
+      
     }),
 
-    // OS Radar 1 point cloud (Under)
-    new PointCloudLayer({
-      id: "radar-1-point-cloud-layer",
-      data: radarFrames_1,
-      visible: sensorLayerShowing.includes("OS Radar-1 Point"),
-      pickable: false,
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
-      sizeUnits: "meters",
-      pointSize: 2,
-      getPosition: d => {
-        return d.distance <= OSRadarSetting.range_change ? null : d.point
-      },
-    }),
-
-    // OS Radar 0 point cloud (Over)
-    new PointCloudLayer({
-      id: "radar-0-point-cloud-layer",
-      data: radarFrames_0,
-      visible: sensorLayerShowing.includes("OS Radar-0 Point"),
-      pickable: false,
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude], //Longitude, latitude
-      sizeUnits: "meters",
-      pointSize: 2,
-      getPosition: d => d.point,
-    }),
-
-    // OS Radar-1 heatmap
-    new HeatmapLayer({
-      id: "os-radar-1-heatmapLayer-mean",
-      data: radarFrames_1,
-      visible: sensorLayerShowing.includes("OS Radar-1 Heatmap"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      getPosition: d => {
-        return d.distance <= OSRadarSetting.range_change ? null : d.point
-      },
-      getWeight: d => {
-        return d.distance <= OSRadarSetting.range_change ? null : d.weight
-      },
-      aggregation: "MEAN", // SUM or MEAN
-      weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
-      threshold: 0.0001,
-      radiusPixels: mapState.zoom * 1.5,
-      intensity: 1, // (viewstate.zoom * 30) / 1,
-      opacity: 0.4,
-      colorRange: [
-        [25, 0, 0, 25],
-        [85, 0, 0, 85],
-        [127, 0, 0, 127],
-        [170, 0, 0, 170],
-        [190, 0, 0, 190],
-        [255, 0, 0, 255],
-      ],
-    }),
-
-    // OS Radar-1 heatmap
-    new HeatmapLayer({
-      id: "os-radar-1-heatmapLayer-sweep",
-      data: radarFrames_1_sweep,
-      visible: sensorLayerShowing.includes("OS Radar-1 Heatmap (HEAD-UP)"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      getPosition: d => {
-        return d.distance <= OSRadarSetting.range_change ? null : d.point
-      },
-      getWeight: d => {
-        return d.distance <= OSRadarSetting.range_change ? null : d.weight
-      },
-      aggregation: "MEAN", // SUM or MEAN
-      weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
-      threshold: 0.0001,
-      radiusPixels: mapState.zoom * 1.5,
-      intensity: 1, // (viewstate.zoom * 30) / 1,
-      opacity: 0.4,
-      colorRange: [
-        [25, 0, 0, 25],
-        [85, 0, 0, 85],
-        [127, 0, 0, 127],
-        [170, 0, 0, 170],
-        [190, 0, 0, 190],
-        [255, 0, 0, 255],
-      ],
-    }),
-
-    // OS Radar-0 heatmap
-    new HeatmapLayer({
-      id: "os-radar-0-heatmapLayer",
-      data: radarFrames_0,
-      visible: sensorLayerShowing.includes("OS Radar-0 Heatmap"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      getPosition: d => d.point, // SWEEP
-      getWeight: d => d.weight,
-      aggregation: "MEAN", // SUM or MEAN
-      weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
-      threshold: 0.0001,
-      radiusPixels: mapState.zoom * 1.5,
-      intensity: 1, // (viewstate.zoom * 30) / 1,
-      opacity: 0.3,
-      colorRange: [
-        [0, 25, 0, 25],
-        [0, 85, 0, 85],
-        [0, 127, 0, 127],
-        [0, 170, 0, 170],
-        [0, 190, 0, 190],
-        [0, 255, 0, 255],
-      ],
-    }),
-    // OS Radar-0 heatmap
-    new HeatmapLayer({
-      id: "os-radar-0-heatmapLayer-head-up",
-      data: radarFrames_0_sweep,
-      visible: sensorLayerShowing.includes("OS Radar-0 Heatmap (HEAD-UP)"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude],
-      getPosition: d => d.point, // SWEEP
-      getWeight: d => d.weight,
-      aggregation: "MEAN", // SUM or MEAN
-      weightsTextureSize: 2048, //  default 2048 Smaller texture sizes lead to visible pixelation.
-      threshold: 0.0001,
-      radiusPixels: mapState.zoom * 1.5,
-      intensity: 1, // (viewstate.zoom * 30) / 1,
-      opacity: 0.3,
-      colorRange: [
-        [212, 127, 209],
-        [209, 61, 204],
-        [209, 40, 203],
-        [199, 2, 192],
-      ],
-    }),
-    // Shore Radar-0 heatmap MEAN
-    new HeatmapLayer({
-      id: "shore-radar-0-heatmapLayer-mean",
-      data: shoreRadarFrames,
-      visible: sensorLayerShowing.includes("Shore Radar-0 Heatmap"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [11.8861, 57.6855],
-      getPosition: d => {
-        return d.point
-      },
-      getWeight: d => d.weight,
-      aggregation: "MEAN", // SUM or MEAN
-      weightsTextureSize: 512, //  default 2048 Smaller texture sizes lead to visible pixelation.
-      threshold: 0.1,
-      radiusPixels: mapState.zoom * 2.5,
-      intensity: 1, // (mapState.zoom * 30) / 1,
-      opacity: 0.3,
-      colorRange: [
-        [0, 25, 0, 25],
-        [0, 85, 0, 85],
-        [0, 127, 0, 127],
-        [0, 170, 0, 170],
-        [0, 190, 0, 190],
-        [0, 255, 0, 255],
-      ],
-    }),
-
-    // Shore Radar-1 heatmap MEAN
-    new HeatmapLayer({
-      id: "shore-radar-1-heatmapLayer-mean",
-      data: shoreRadarFrames_1,
-      // visible: true,
-      visible: sensorLayerShowing.includes("Shore Radar-1 Heatmap"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [11.8861, 57.6855],
-      // coordinateOrigin: [os_pos[os_pos_setting.source].longitude - 0.002, os_pos[os_pos_setting.source].latitude],
-      getPosition: d => {
-        return d.distance <= shoreRadarSetting.range_change ? null : d.point
-      },
-      getWeight: d => (d.distance <= shoreRadarSetting.range_change ? null : d.weight),
-      aggregation: "MEAN", // SUM or MEAN
-      weightsTextureSize: 512, //  default 2048 Smaller texture sizes lead to visible pixelation.
-      threshold: 0.1,
-      radiusPixels: mapState.zoom * 2.5,
-      intensity: 1, // (mapState.zoom * 30) / 1,
-      opacity: 0.4,
-      colorRange: [
-        [0, 25, 0, 25],
-        [0, 85, 0, 85],
-        [0, 127, 0, 127],
-        [0, 170, 0, 170],
-        [0, 190, 0, 190],
-        [0, 255, 0, 255],
-      ],
-    }),
-
-    // Shore Radar-0 scatter
-    new ScatterplotLayer({
-      id: "shore-radar-0-scatterplot-layer",
-      data: shoreRadarFrames,
-      visible: sensorLayerShowing.includes("Shore Radar-0 Scatter"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [11.88666, 57.68577],
-      opacity: 0.3,
-      // stroked: true,
-      filled: true,
-      radiusScale: 1,
-      radiusMinPixels: 1,
-      radiusMaxPixels: 100,
-      lineWidthMinPixels: 1,
-      getPosition: d => d.point,
-      getRadius: d => 5, //d.distance * 0.01,
-      getFillColor: d => [186, 12, 0, d.weight],
-      getLineColor: d => [0, 0, 0, 0],
-    }),
-
-    // Shore Radar-1 scatter
-    new ScatterplotLayer({
-      id: "shore-radar-1-scatterplot-layer",
-      data: shoreRadarFrames_1,
-      visible: sensorLayerShowing.includes("Shore Radar-1 Scatter"),
-      coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
-      coordinateOrigin: [11.88666, 57.68577],
-      opacity: 0.3,
-      // stroked: true,
-      filled: true,
-      radiusScale: 1,
-      radiusMinPixels: 1,
-      radiusMaxPixels: 100,
-      lineWidthMinPixels: 1,
-      getPosition: d => {
-        return d.distance <= shoreRadarSetting.range_change ? null : d.point
-      },
-      getRadius: d => 5, //d.distance * 0.01,
-      getFillColor: d => [186, 12, 0, d.weight],
-      getLineColor: d => [0, 0, 0, 0],
+    // Route Leg-lines
+    new PathLayer({
+      id: 'route-path-layer',
+      data: mapPath,
+      pickable: true,
+      widthScale: 20,
+      widthMinPixels: 2,
+      getPath: d => d,
+      getColor: d => [0, 0, 0],
+      getWidth: d => 5
     }),
 
     // OWN SHIP symbol
     new IconLayer({
-      id: "icon-layer",
+      id: "layer-own-ship",
       data: [{ pos: [os_pos[os_pos_setting.source].longitude, os_pos[os_pos_setting.source].latitude] }],
       pickable: false,
       billboard: false,
@@ -590,6 +412,7 @@ export default function SeaChart() {
       getSize: () => 5,
     }),
 
+    // OWN SHIP heading line
     new LineLayer({
       id: "heading-line-layer",
       visible: true,
@@ -627,12 +450,12 @@ export default function SeaChart() {
     <DeckGL
       layers={layers}
       viewState={mapState}
-      initialViewState={INITIAL_VIEW_STATE}
       onViewStateChange={e => changeViewState(e)}
       onHover={e => hoverMapCursor(e)}
-      controller={{ dragPan: true, doubleClickZoom: false }}
+      controller={mapController}
       getTooltip={getTooltip}
-      getCursor={() => "crosshair"}
+      getCursor={() => mapCursor}
+
     ></DeckGL>
   )
 }

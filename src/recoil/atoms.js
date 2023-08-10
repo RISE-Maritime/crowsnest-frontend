@@ -174,6 +174,74 @@ export const atomActivePlatform = atom({
   },
 })
 
+// Route areas 
+export const atomRouteDescription = atom({
+  key: "route_description",
+  default: {
+    name: "Route name",
+    description: "Route description",
+    settings: {
+      "polylineMinDistanceBetweenPoints": 10,
+      "polylineMinDistanceUnits": "m",
+      radiusUnits: "m",
+      bearingUnits: "deg",
+      speedUnits: "kn",
+      turnUnits: "deg",
+      turnRadiusUnits: "m",
+      turnRateUnits: "deg/min",
+      xteUnits: "m",
+      xtePolygonUnits: "m",
+      xteSafetyZonePolygonUnits: "m",
+      groundingLinePolygonUnits: "m",
+    }
+  }
+})
+
+// Route description
+export const atomRouteAreas = atom({
+  key: "route_areas",
+  default: [
+    {
+      xteLinePort: 0,
+      xteLineStarboard: 0,
+      xtePolygon: [],
+      xtSafetyZonePolygon: [],
+      groundingLinePolygon: [],
+    }
+  ]
+})
+
+
+// Route waypoints
+export const atomRouteWaypoints = atom({
+  key: "route_waypoints",
+  default:   [
+    {
+        id: 0,
+        name: "Name X",
+        note: "Waypoint description",
+        latitude: 0,
+        longitude: 0,
+        radius: 0.5,
+        course: 0,
+        speed: 0,
+
+    },
+    {
+        id: 1,
+        name: "Name Y",
+        note: "Waypoint description",
+        latitude: 1,
+        longitude: 1,
+        radius: 0.5,
+        course: 0,
+        speed: 0,
+
+    }
+]
+})
+
+
 // ######################################
 // ALL Realtime DATA 
 // 
@@ -393,12 +461,12 @@ export const OS_RADAR_1_SWEEP = atom({
 
 export const AtomShoreRadarSetting = atom({
   key: "atom_shore_radar_setting",
-  default: {range_change: 145},
+  default: { range_change: 145 },
 });
 
 export const AtomOSRadarSetting = atom({
   key: "atom_OS_radar_setting",
-  default: {range_change: 50  },
+  default: { range_change: 50 },
 });
 
 export const AtomShoreRadarObservation = atom({
@@ -440,8 +508,8 @@ export const OS_WIND = atom({
   key: "os_wind_state",
   default: {
     WIND_0: {
-      wind_angle: 0, 
-      wind_speed: 0.0, 
+      wind_angle: 0,
+      wind_speed: 0.0,
       reference_angel: "R",
       status: "normal", // [normal, warning, error] 
       statusText: "A", // A NMEA?
@@ -492,7 +560,7 @@ export const atomMQTTLocalState = atom({
 
 export const atomHWlog = atom({
   key: "atom_hw_log",
-  default: {  },
+  default: {},
   // default: { 
   //   "/CROWSNEST/EXAMPLE/HW/0/JSON": {
 
@@ -514,10 +582,10 @@ export const atomHWlog = atom({
   //         "free_size": "92.62GB",
   //         "percent_used": 15.7
   //       },
-  
+
   //     ]
   //   }
-   
+
 
 
   //  },

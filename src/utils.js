@@ -88,9 +88,11 @@ export function formatLongitude(longitudeInDegrees, pression = 2) {
  * @param  {[float]} lon1 longitude start
  * @param  {[float]} lat2 latitude end
  * @param  {[float]} lon2 longitude end
+ * @param  {[string]} unit unit of distance "nm" for nautical miles (No other unit implemented)
+ * @param  {[int]} pression number of decimal to output (3 decimals is precision to 1 meter)
  * @return {[float]} distance in nautical miles
  */
-export function calcDistanceBetween(lat1, lon1, lat2, lon2, unit = "nm") {
+export function calcDistanceBetween(lat1, lon1, lat2, lon2, unit = "nm", pression = 3) {
   var R = 6371; // km
   var dLat = toRadians(lat2 - lat1);
   var dLon = toRadians(lon2 - lon1);
@@ -103,12 +105,12 @@ export function calcDistanceBetween(lat1, lon1, lat2, lon2, unit = "nm") {
   var d = R * c;
   if (unit === "nm") {
     let nm = d / 1.852
-    return nm.toFixed(2)
+    return nm.toFixed(pression)
   } if (unit === "km") {
-    return d.toFixed(2)
+    return d.toFixed(pression)
   } else {
     let meters = d * 1000
-    return meters.toFixed(2)
+    return meters.toFixed(pression)
   }
 
 }
@@ -126,7 +128,7 @@ export function toDegrees(radians) {
 }
 
 /**
- * Calculate bearing between coordinates 
+ * Calculate bearing or course between coordinates 
  * @param  {[float]} lat1 latitude start
  * @param  {[float]} lon1 longitude start
  * @param  {[float]} lat2 latitude end
@@ -215,4 +217,29 @@ export function calc_wind_direction_true(sog, wind_speed_rel, wind_dir_rel) {
     sog_ms ** 2 + wind_speed_rel ** 2 - 2 * sog_ms * wind_speed_rel * Math.cos(toRadians(wind_dir_rel))
   )
   return true_wind_speed
+}
+
+/**
+ * Calculate Time To Go from distance and speed
+ * @param  {[float]} distance distance in nautical miles
+ * @param  {[float]} speed speed in knots
+ * @return {[float]} Time to go in hours
+ */
+export function calc_time_to_go(distance, speed) {
+  let time_to_go = speed / distance
+  return time_to_go
+}
+
+/**
+ * Convert hours to string hours and minutes
+ * @param  {[number]} distance distance in nautical miles
+ * @return {[string]} "HHH:MM:SS"
+ */
+export function intHoursToStrHoursAndMinutes(hours) {
+  const hoursAsInt =  parseInt(hours)
+  const hoursAsFloat =  parseFloat(hours)
+  const minutes = (hoursAsFloat - hoursAsInt) * 60
+  const seconds = (minutes - parseInt(minutes)) * 60
+  const minutesStr = minutes.toFixed(0).toString().padStart(2, "0");
+  return `${hoursAsInt}:${minutesStr}:${seconds.toFixed(0)}`;
 }
