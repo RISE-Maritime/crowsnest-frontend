@@ -606,7 +606,7 @@ export default function SeaChart() {
       pickable: true,
       getWidth: 2,
       getSourcePosition: d => d.pos,
-      getTargetPosition: d => calcPosFromBearingDistance(d.pos[1], d.pos[0], d.heading, 10),
+      getTargetPosition: d => calcPosFromBearingDistance(d.pos[1], d.pos[0], d.heading, 10, "km"),
       getColor: () => [0, 0, 0],
     }),
   ]

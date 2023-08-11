@@ -218,29 +218,60 @@ export const atomRouteWaypoints = atom({
   default:   [
     {
         id: 0,
-        name: "Name X",
-        note: "Waypoint description",
-        latitude: 0,
-        longitude: 0,
-        radius: 0.5,
-        course: 0,
-        speed: 0,
-
-    },
-    {
-        id: 1,
-        name: "Name Y",
+        name: "Start",
         note: "Waypoint description",
         latitude: 1,
         longitude: 1,
-        radius: 0.5,
+        radius: 0,
         course: 0,
-        speed: 0,
-
-    }
+        speed: 10,
+    },
+    {
+        id: 1,
+        name: "Turn",
+        note: "Waypoint description",
+        latitude: 1.5,
+        longitude: 1,
+        radius: 1,
+        course: 0,
+        speed: 10,
+    },
+    {
+      id: 2,
+      name: "End",
+      note: "Waypoint description",
+      latitude: 1.5,
+      longitude: 2,
+      radius: 1,
+      course: 90,
+      speed: 10,
+  }
 ]
 })
 
+// Route waypoint turning radius 
+export const atomRouteTurningRadius = atom({
+  key: "atom_route_turning_radius",
+  default: [],
+}) 
+
+// Route waypoint turning radius 
+export const atomRouteTurningRadiusCenter = atom({
+  key: "atom_route_turning_radius_center",
+  default: [],
+})
+
+// Route waypoint turning radius START 
+export const atomRouteTurningRadiusStart = atom({
+  key: "atom_route_turning_radius_start",
+  default: [],
+})
+
+// Route waypoint turning radius END 
+export const atomRouteTurningRadiusEnd = atom({
+  key: "atom_route_turning_radius_end",
+  default: [],
+})
 
 // ######################################
 // ALL Realtime DATA 

@@ -5,7 +5,7 @@ import { selectRoutePathList } from "../../../recoil/selectors"
 import IconWaypoint from "../../../resources/chart_symbols/Waypoint.png"
 import DeckGL from "@deck.gl/react"
 import VesselContourLayer from "../../../base-elements/custom-deckgl-layers/vessel-contour-layer"
-import { PathLayer } from "@deck.gl/layers"
+import { PathLayer, ScatterplotLayer } from "@deck.gl/layers"
 import { BitmapLayer, IconLayer, LineLayer } from "@deck.gl/layers"
 import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
@@ -18,9 +18,12 @@ import {
   OS_POSITION_SETTING,
   OS_HEADING,
   OS_HEADING_SETTING,
-  atomRouteWaypoints
+  atomRouteWaypoints,
+  atomRouteTurningRadius,
+  atomRouteTurningRadiusCenter,
+  atomRouteTurningRadiusStart,
+  atomRouteTurningRadiusEnd,
 } from "../../../recoil/atoms"
-
 
 export const clickInfoAtom = atom({
   key: "click_info_atom_route_editor",
@@ -96,36 +99,6 @@ export const atomSensorLayersShowing = atom({
   default: ["AIS", "OS Radar-0 Heatmap", "OS Radar-1 Heatmap", "Shore Radar-0 Heatmap", "Shore Radar-1 Heatmap"],
 })
 
-function getTooltip({ picked, object, coordinate, layer }) {
-
-  // console.log(layer, picked, object)
-
-  switch (layer?.id) {
-    case "ais-targets":
-      return (
-        object &&
-        `\
-        MMSI: ${object.mmsi}
-        Name: ${object.shipname}
-        HDG: ${object.heading}
-        COG: ${object.course}
-        SOG: ${object.speed}
-        ROT: ${object.turn}
-        Destination: ${object.destination}
-        Status: ${object.status}`
-      )
-    case "route-waypoints-layer":
-      return (object && {
-        html: `<h3>${object.name}</h2><div>${object.message}</div>`,
-        style: {
-          backgroundColor: '#0f954b',
-          fontSize: '0.8em'
-        }
-      })
-
-  } // Switch END 
-} // getTooltip END
-
 export default function SeaChart() {
   const setClickInfo = useSetRecoilState(clickInfoAtom)
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
@@ -140,26 +113,27 @@ export default function SeaChart() {
   const os_heading_setting = useRecoilValue(OS_HEADING_SETTING)
   const AIStargets = useRecoilValue(targetsAIS)
   const [mapController, setMapController] = useState({ dragPan: true, doubleClickZoom: false })
-
+  const [route_turning_radius, set_route_turning_radius] = useRecoilState(atomRouteTurningRadius)
+  const [route_turning_radius_center, set_route_turning_radius_center] = useRecoilState(atomRouteTurningRadiusCenter)
   const [mapWPs, setMapWPs] = useState([])
   const [mapPath, setMapPath] = useState([])
   const [mapCursor, setMapCursor] = useState("crosshair")
+  const [route_turning_radius_start, set_route_turning_radius_start] = useRecoilState(atomRouteTurningRadiusStart)
+  const [route_turning_radius_end, set_route_turning_radius_end] = useRecoilState(atomRouteTurningRadiusEnd)
 
   useEffect(() => {
-
     setMapWPs(routeWaypoints)
 
     // RoutePath
-    const transformedList = [];
+    const transformedList = []
     for (let i = 0; i < routeWaypoints.length; i++) {
-      transformedList.push([routeWaypoints[i].longitude, routeWaypoints[i].latitude]);
+      transformedList.push([routeWaypoints[i].longitude, routeWaypoints[i].latitude])
     }
-    console.log(transformedList);
+    console.log(transformedList)
     setMapPath([transformedList])
-
   }, [routeWaypoints])
 
-  // Center OS on chart if selected 
+  // Center OS on chart if selected
   useEffect(() => {
     if (mapSetting.chartFix === "OS") {
       setMapState({
@@ -179,6 +153,40 @@ export default function SeaChart() {
       chartFix: "MANUAL",
     })
   }
+
+  function getTooltip({ picked, object, coordinate, layer }) {
+    // console.log(layer, picked, object)
+
+    if (mapCursor != "crosshair") {
+      setMapCursor("crosshair")
+    }
+
+    switch (layer?.id) {
+      case "ais-targets":
+        return (
+          object &&
+          `\
+          MMSI: ${object.mmsi}
+          Name: ${object.shipname}
+          HDG: ${object.heading}
+          COG: ${object.course}
+          SOG: ${object.speed}
+          ROT: ${object.turn}
+          Destination: ${object.destination}
+          Status: ${object.status}`
+        )
+      case "route-waypoints-layer":
+        return (
+          object && {
+            html: `<h3>${object.name}</h2><div>${object.message}</div>`,
+            style: {
+              backgroundColor: "#0f954b",
+              fontSize: "0.8em",
+            },
+          }
+        )
+    } // Switch END
+  } // getTooltip END
 
   const layers = [
     // SEA CHART ENIRO
@@ -323,9 +331,9 @@ export default function SeaChart() {
       },
     }),
 
-    // Route Waypoints 
+    // Route Waypoints
     new IconLayer({
-      id: 'route-waypoints-layer',
+      id: "route-waypoints-layer",
       data: mapWPs,
       getPosition: d => [d.longitude, d.latitude],
       pickable: true,
@@ -356,12 +364,11 @@ export default function SeaChart() {
         setMapWPs(newRouteWaypoints)
 
         // RoutePath
-        const transformedList = [];
+        const transformedList = []
         for (let i = 0; i < newRouteWaypoints.length; i++) {
-          transformedList.push([newRouteWaypoints[i].longitude, newRouteWaypoints[i].latitude]);
+          transformedList.push([newRouteWaypoints[i].longitude, newRouteWaypoints[i].latitude])
         }
         setMapPath([transformedList])
-
       },
       onDragEnd: ({ coordinate, object }) => {
         let long = coordinate[0]
@@ -372,22 +379,100 @@ export default function SeaChart() {
 
         setMapController({ ...mapController, dragPan: true })
       },
-      onClick: (info, event) => console.log('Clicked:', info, event),
-      onHover: (info, event) => setMapCursor("grab")
-      
-      
+      onClick: (info, event) => console.log("Clicked:", info, event),
+      onHover: (info, event) => setMapCursor("grab"),
     }),
 
     // Route Leg-lines
     new PathLayer({
-      id: 'route-path-layer',
+      id: "route-path-layer",
       data: mapPath,
       pickable: true,
       widthScale: 20,
       widthMinPixels: 2,
+      widthMaxPixels: 4,
       getPath: d => d,
       getColor: d => [0, 0, 0],
-      getWidth: d => 5
+      getWidth: d => 5,
+    }),
+
+    // Turn Radius center position layer
+    new ScatterplotLayer({
+      id: "turn-radius-scatterplot-layer",
+      data: route_turning_radius_center,
+      pickable: true,
+      opacity: 0.8,
+      stroked: true,
+      filled: true,
+      radiusScale: 5,
+      radiusMinPixels: 5,
+      radiusMaxPixels: 10,
+      lineWidthMinPixels: 1,
+      getPosition: d => d,
+      getRadius: d => Math.sqrt(d.exits),
+      getFillColor: d => [188, 11, 11],
+      getLineColor: d => [0, 0, 0],
+    }),
+
+    // Radius leg wps layer
+    new ScatterplotLayer({
+      id: "turn-radius_leg_pos-scatterplot-layer",
+      data: route_turning_radius[0],
+      pickable: true,
+      opacity: 0.8,
+      stroked: true,
+      filled: true,
+      radiusScale: 5,
+      radiusMinPixels: 5,
+      radiusMaxPixels: 10,
+      lineWidthMinPixels: 1,
+      getPosition: d => {
+        return d
+      },
+      getRadius: d => Math.sqrt(d.exits),
+      getFillColor: d => [15, 149, 75],
+      getLineColor: d => [0, 0, 0],
+    }),
+
+    // Radius leg wps layer START
+    new ScatterplotLayer({
+      id: "turn-radius_leg_pos-scatterplot-layer-START",
+      data: route_turning_radius_start,
+      pickable: true,
+      opacity: 0.8,
+      stroked: true,
+      filled: true,
+      radiusScale: 5,
+      radiusMinPixels: 5,
+      radiusMaxPixels: 10,
+      lineWidthMinPixels: 1,
+      getPosition: d => {
+        return d
+      },
+      getRadius: d => Math.sqrt(d.exits),
+      getFillColor: d => [0 , 0, 0],
+      getLineColor: d => [0, 0, 0],
+    }),
+
+    
+    // Radius leg wps layer END
+    new ScatterplotLayer({
+      id: "turn-radius_leg_pos-scatterplot-layer-END",
+      data: route_turning_radius_end,
+      pickable: true,
+      opacity: 0.8,
+      stroked: true,
+      filled: true,
+      radiusScale: 5,
+      radiusMinPixels: 5,
+      radiusMaxPixels: 10,
+      lineWidthMinPixels: 1,
+      getPosition: d => {
+        return d
+      },
+      getRadius: d => Math.sqrt(d.exits),
+      getFillColor: d => [0 , 0, 0],
+      getLineColor: d => [0, 0, 0],
     }),
 
     // OWN SHIP symbol
@@ -425,7 +510,7 @@ export default function SeaChart() {
       pickable: true,
       getWidth: 2,
       getSourcePosition: d => d.pos,
-      getTargetPosition: d => calcPosFromBearingDistance(d.pos[1], d.pos[0], d.heading, 10),
+      getTargetPosition: d => calcPosFromBearingDistance(d.pos[1], d.pos[0], d.heading, 10, "km"),
       getColor: d => [0, 0, 0],
     }),
   ]
@@ -455,7 +540,6 @@ export default function SeaChart() {
       controller={mapController}
       getTooltip={getTooltip}
       getCursor={() => mapCursor}
-
     ></DeckGL>
   )
 }
