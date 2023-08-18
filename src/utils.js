@@ -258,27 +258,18 @@ export function intHoursToStrHoursAndMinutes(hours) {
  * @param  {[number]} wp_longitude in degrees
  */
 export function calc_turn_radius_circle(radius, course_in, course_out, wp_latitude, wp_longitude) {
-  console.log("🚀 ~ file: utils.js:261 ~ calc_turn_radius_circle ~ course_in, course_out:", course_in, course_out)
   // --- Get circle center coordinates ---
 
   let turn_dir = identifyTurn(course_in, course_out) // Identify the turn direction
-  console.log("🚀 ~ file: utils.js:265 ~ calc_turn_radius_circle ~ turn_dir:", turn_dir)
-
   // Calculate the bearing to the circle center
   let course_diff = calculateBearingDifference(course_in, course_out)
   let inner_angle_deg = 180 - course_diff
-  console.log("🚀 ~ file: utils.js:266 ~ calc_turn_radius_circle ~ inner_angle_deg:", inner_angle_deg)
-
   let bearing_to_circle_center = 0
   if (turn_dir == "starboard") {
     bearing_to_circle_center = (course_out + inner_angle_deg / 2) % 360
   } else if (turn_dir == "port") {
     bearing_to_circle_center = (course_out - inner_angle_deg / 2) % 360
   }
-
-  let course_change = 180 - Math.abs((course_in - course_out) % 360) // Calculate the course change inner angle
-
-  console.log("🚀 ~ file: utils.js:265 ~ calc_turn_radius_circle ~ bearing_to_circle_center:", bearing_to_circle_center)
 
   // Calculate the distance to the circle center
   let inner_angle_rad = toRadians(Math.abs(inner_angle_deg)) // Convert degrees to radians
@@ -308,17 +299,12 @@ export function calc_turn_radius_circle(radius, course_in, course_out, wp_latitu
 
   // Bering start
   let bearin_to_start_pos = calcBearingBetween(pos_circle_center[1], pos_circle_center[0], pos_turn_start[1], pos_turn_start[0])
-  console.log("🚀 ~ file: utils.js:295 ~ calc_turn_radius_circle ~ bearin_to_start_pos:", bearin_to_start_pos)
   // Bering end
   let bearin_to_end_pos = calcBearingBetween(pos_circle_center[1], pos_circle_center[0], pos_turn_end[1], pos_turn_end[0])
-  console.log("🚀 ~ file: utils.js:298 ~ calc_turn_radius_circle ~ bearin_to_end_pos:", bearin_to_end_pos)
   // Define number of line segments (higher number = smoother line)
   let turn_wps = []
 
   let bearing_total_diff = calculateBearingDifference(bearin_to_start_pos, bearin_to_end_pos)
-
-  console.log("🚀 ~ file: utils.js:303 ~ calc_turn_radius_circle ~ bearing_total_diff:", bearing_total_diff)
-
   let step_incremental = bearing_total_diff / 10
 
   if (turn_dir == "port") {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import { calcPosFromBearingDistance } from "../../../utils"
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { selectRoutePathList } from "../../../recoil/selectors"
@@ -23,6 +23,7 @@ import {
   atomRouteTurningRadiusCenter,
   atomRouteTurningRadiusStart,
   atomRouteTurningRadiusEnd,
+  atomRouteEditorRightClickMenu,
 } from "../../../recoil/atoms"
 
 export const clickInfoAtom = atom({
@@ -120,11 +121,11 @@ export default function SeaChart() {
   const [mapCursor, setMapCursor] = useState("crosshair")
   const [route_turning_radius_start, set_route_turning_radius_start] = useRecoilState(atomRouteTurningRadiusStart)
   const [route_turning_radius_end, set_route_turning_radius_end] = useRecoilState(atomRouteTurningRadiusEnd)
+  const [routeEditorRightClickMenu, setRouteEditorRightClickMenu] = useRecoilState(atomRouteEditorRightClickMenu)
 
+  // RoutePath
   useEffect(() => {
     setMapWPs(routeWaypoints)
-
-    // RoutePath
     const transformedList = []
     for (let i = 0; i < routeWaypoints.length; i++) {
       transformedList.push([routeWaypoints[i].longitude, routeWaypoints[i].latitude])
@@ -210,6 +211,7 @@ export default function SeaChart() {
         })
       },
     }),
+
 
     // Open street map
     new TileLayer({
@@ -450,11 +452,10 @@ export default function SeaChart() {
         return d
       },
       getRadius: d => Math.sqrt(d.exits),
-      getFillColor: d => [0 , 0, 0],
+      getFillColor: d => [0, 0, 0],
       getLineColor: d => [0, 0, 0],
     }),
 
-    
     // Radius leg wps layer END
     new ScatterplotLayer({
       id: "turn-radius_leg_pos-scatterplot-layer-END",
@@ -471,7 +472,7 @@ export default function SeaChart() {
         return d
       },
       getRadius: d => Math.sqrt(d.exits),
-      getFillColor: d => [0 , 0, 0],
+      getFillColor: d => [0, 0, 0],
       getLineColor: d => [0, 0, 0],
     }),
 
@@ -531,15 +532,66 @@ export default function SeaChart() {
     }
   }
 
+  // Right click menu
+
+  // const handleClick = (e) => {
+  //   if (e.type === 'click') {
+  //     console.log('Left click');
+  //   } else if (e.type === 'contextmenu') {
+  //     console.log('Right click THIS');
+  //   }
+  // };
+
+  const handleContextMenu = useCallback(e => {
+    e.preventDefault()
+
+    if (e.type === "click") {
+      console.log("Left click")
+      setRouteEditorRightClickMenu({
+        ...routeEditorRightClickMenu,
+        showMenu: false,
+      })
+    } else if (e.type === "contextmenu") {
+      console.log("Right click")
+      setRouteEditorRightClickMenu({
+        showMenu: true,
+        xPos: e.pageX,
+        yPos: e.pageY,
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener("click", handleContextMenu)
+    document.addEventListener("contextmenu", handleContextMenu)
+    return () => {
+      document.addEventListener("click", handleContextMenu)
+      document.removeEventListener("contextmenu", handleContextMenu)
+    }
+  })
+
   return (
-    <DeckGL
-      layers={layers}
-      viewState={mapState}
-      onViewStateChange={e => changeViewState(e)}
-      onHover={e => hoverMapCursor(e)}
-      controller={mapController}
-      getTooltip={getTooltip}
-      getCursor={() => mapCursor}
-    ></DeckGL>
+    <>
+      <DeckGL
+        layers={layers}
+        viewState={mapState}
+        onViewStateChange={e => changeViewState(e)}
+        onHover={e => hoverMapCursor(e)}
+        controller={mapController}
+        getTooltip={getTooltip}
+        getCursor={() => mapCursor}
+        style={{ zIndex: 0 }}
+        mapStyle={'https://crowsnest.mo.ri.se/charts/styles/chart_4000.json'}
+      />
+
+      {routeEditorRightClickMenu.showMenu ? (
+        <div
+          style={{ position: "absolute", top: routeEditorRightClickMenu.yPos, left: routeEditorRightClickMenu.xPos, zIndex: 100 }}
+        >
+          {/* <div style={{ top: routeEditorRightClickMenu.yPos, left: routeEditorRightClickMenu.xPos }}> */}
+          <h3>HELLO</h3>
+        </div>
+      ) : null}
+    </>
   )
 }
