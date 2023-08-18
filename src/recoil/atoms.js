@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom } from "recoil"
 
 import PicGermanica from "../resources/platforms/germanica.png"
 import PicSeahorse from "../resources/platforms/seahorse.png"
@@ -7,24 +7,23 @@ import PicVikingGrace from "../resources/platforms/viking_grace.png"
 import PicJutlandica from "../resources/platforms/jutlandica.png"
 
 const localStorageEffect =
-  (key) =>
-    ({ setSelf, onSet }) => {
-      const savedValue = localStorage.getItem(key);
-      if (savedValue !== null) {
-        setSelf(JSON.parse(savedValue));
-      }
+  key =>
+  ({ setSelf, onSet }) => {
+    const savedValue = localStorage.getItem(key)
+    if (savedValue !== null) {
+      setSelf(JSON.parse(savedValue))
+    }
 
-      onSet(({ remember, ...newValue }, _, isReset) => {
-        if (isReset) {
-          localStorage.removeItem(key);
-        } else {
-          if (remember) {
-            localStorage.setItem(key, JSON.stringify(newValue));
-          }
+    onSet(({ remember, ...newValue }, _, isReset) => {
+      if (isReset) {
+        localStorage.removeItem(key)
+      } else {
+        if (remember) {
+          localStorage.setItem(key, JSON.stringify(newValue))
         }
-      });
-    };
-
+      }
+    })
+  }
 
 // App Settings / State
 export const appState = atom({
@@ -35,8 +34,7 @@ export const appState = atom({
     activeVessel: "DEMO Vessel",
     appActiveColorTheme: "dark",
   },
-});
-
+})
 
 export const userState = atom({
   key: "user_state",
@@ -50,9 +48,7 @@ export const userState = atom({
     remember: false,
   },
   effects_UNSTABLE: [localStorageEffect("current_user")],
-});
-
-
+})
 
 // Mini apps show or hide mini apps (floating and resizable window)
 export const showMiniAppsObj = atom({
@@ -61,8 +57,7 @@ export const showMiniAppsObj = atom({
     windCurrent: false,
     playback: false,
   },
-});
-
+})
 
 export const playbackState = atom({
   key: "playback_state",
@@ -71,14 +66,11 @@ export const playbackState = atom({
     timeline_position: 0,
     is_playing: false,
   },
-});
+})
 
+// Local DB
 
-
-// Local DB 
-
-
-// Platforms saved 
+// Platforms saved
 export const atomPlatforms = atom({
   key: "platforms",
   default: {
@@ -89,7 +81,7 @@ export const atomPlatforms = atom({
       imo: 2,
       source_position: "DEVICE",
       MQTTpath: "LANDKRABBAN",
-      picture: PicLandkrabban
+      picture: PicLandkrabban,
     },
     germanica: {
       name: "Stena Germainca",
@@ -98,7 +90,7 @@ export const atomPlatforms = atom({
       MQTTpath: "GERMANICA",
       mmsi: 266331000,
       imo: 9145176,
-      picture: PicGermanica
+      picture: PicGermanica,
     },
     seahorse: {
       name: "Seahorse",
@@ -107,13 +99,12 @@ export const atomPlatforms = atom({
       MQTTpath: "SEAHORSE",
       mmsi: 3,
       imo: 3,
-      picture: PicSeahorse
-    }
+      picture: PicSeahorse,
+    },
   },
 })
 
-
-// AIS Platforms saved 
+// AIS Platforms saved
 export const atomPlatformsAIS = atom({
   key: "platforms_ais",
   default: [
@@ -128,30 +119,26 @@ export const atomPlatformsAIS = atom({
       to_port: 18,
       to_starboard: 18,
       to_stern: 198,
-
     },
     {
       id: "Viking_grace_kbralebr",
       platformName: "Viking Grace",
       mmsi: 230629000,
-      picture: PicVikingGrace
+      picture: PicVikingGrace,
     },
     {
       id: "tg_glory",
       platformName: "Stena Jutlandica",
       mmsi: 265410000,
-      picture: PicJutlandica
+      picture: PicJutlandica,
     },
-
-  ]
+  ],
 })
 
-
 // --------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------
 
-
-// Active platform STATIC data 
+// Active platform STATIC data
 export const atomActivePlatform = atom({
   key: "active_platform",
   default: {
@@ -170,185 +157,277 @@ export const atomActivePlatform = atom({
     destination: "",
     draught: 0.5,
     operation_state: "",
-    operation_state_s: ""
+    operation_state_s: "",
   },
 })
 
+// Route areas
+export const atomRouteDescription = atom({
+  key: "route_description",
+  default: {
+    name: "Route name",
+    description: "Route description",
+    settings: {
+      polylineMinDistanceBetweenPoints: 10,
+      polylineMinDistanceUnits: "m",
+      radiusUnits: "m",
+      bearingUnits: "deg",
+      speedUnits: "kn",
+      turnUnits: "deg",
+      turnRadiusUnits: "m",
+      turnRateUnits: "deg/min",
+      xteUnits: "m",
+      xtePolygonUnits: "m",
+      xteSafetyZonePolygonUnits: "m",
+      groundingLinePolygonUnits: "m",
+    },
+  },
+})
+
+// Route description
+export const atomRouteAreas = atom({
+  key: "route_areas",
+  default: [
+    {
+      xteLinePort: 0,
+      xteLineStarboard: 0,
+      xtePolygon: [],
+      xtSafetyZonePolygon: [],
+      groundingLinePolygon: [],
+    },
+  ],
+})
+
+// Route waypoints
+export const atomRouteWaypoints = atom({
+  key: "route_waypoints",
+  default: [
+    {
+      id: 0,
+      name: "Start",
+      note: "Waypoint description",
+      latitude: 1,
+      longitude: 1,
+      radius: 0,
+      course: 0,
+      speed: 10,
+    },
+    {
+      id: 1,
+      name: "Turn",
+      note: "Waypoint description",
+      latitude: 1.5,
+      longitude: 1,
+      radius: 1,
+      course: 0,
+      speed: 10,
+    },
+    {
+      id: 2,
+      name: "End",
+      note: "Waypoint description",
+      latitude: 1.5,
+      longitude: 2,
+      radius: 1,
+      course: 90,
+      speed: 10,
+    },
+  ],
+})
+
+// Route waypoint turning radius
+export const atomRouteTurningRadius = atom({
+  key: "atom_route_turning_radius",
+  default: [],
+})
+
+// Route waypoint turning radius
+export const atomRouteTurningRadiusCenter = atom({
+  key: "atom_route_turning_radius_center",
+  default: [],
+})
+
+// Route waypoint turning radius START
+export const atomRouteTurningRadiusStart = atom({
+  key: "atom_route_turning_radius_start",
+  default: [],
+})
+
+// Route waypoint turning radius END
+export const atomRouteTurningRadiusEnd = atom({
+  key: "atom_route_turning_radius_end",
+  default: [],
+})
+
 // ######################################
-// ALL Realtime DATA 
-// 
-// OS Sensor or data source in use of components globally 
-// 
-//  os_X_setting ->> Selected active source in use  
-//  os_X ->> Object include all sources of same value type   
+// ALL Realtime DATA
+//
+// OS Sensor or data source in use of components globally
+//
+//  os_X_setting ->> Selected active source in use
+//  os_X ->> Object include all sources of same value type
 
-
-// POSITION 
+// POSITION
 
 export const OS_POSITION_SETTING = atom({
   key: "os_position_stetting",
   default: {
     source: "GNSS_0",
-    status: "normal", // [normal, warning, error] 
+    status: "normal", // [normal, warning, error]
     statusText: "Normal",
-    timeCreated: ""
+    timeCreated: "",
   },
-});
-
+})
 
 export const OS_POSITIONS = atom({
   key: "os_positions_state",
   default: {
     AIS: {
-      latitude: 0.0, // degrees 
-      longitude: 0.0,  // degrees
+      latitude: 0.0, // degrees
+      longitude: 0.0, // degrees
       altitude: 0.0, // meters
       std_dev_altitude: 0.0,
       std_dev_longitude: 0.0,
       std_dev_latitude: 0.0,
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeCreated: null,
-      delay: null // Delay in system 
+      delay: null, // Delay in system
     },
     GNSS_0: {
-      latitude: 0.0, // degrees 
-      longitude: 0.0,  // degrees
+      latitude: 0.0, // degrees
+      longitude: 0.0, // degrees
       altitude: 0.0, // meters
       std_dev_altitude: 0.0,
       std_dev_longitude: 0.0,
       std_dev_latitude: 0.0,
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeCreated: null,
-      delay: null // Delay in system 
+      delay: null, // Delay in system
     },
     DEVICE: {
-      latitude: 0.0, // degrees 
-      longitude: 0.0,  // degrees
+      latitude: 0.0, // degrees
+      longitude: 0.0, // degrees
       altitude: 0.0, // meters
       std_dev_altitude: 0.0,
       std_dev_longitude: 0.0,
       std_dev_latitude: 0.0,
-      accuracy: null, // meters 
-      status: "normal", // [normal, warning, error] 
+      accuracy: null, // meters
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeCreated: null,
-      delay: null
+      delay: null,
     },
     MANUAL: {
-      latitude: 0.0, // degrees 
-      longitude: 0.0,  // degrees
+      latitude: 0.0, // degrees
+      longitude: 0.0, // degrees
       altitude: 0.0, // meters
       std_dev_altitude: 0.0,
       std_dev_longitude: 0.0,
       std_dev_latitude: 0.0,
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeCreated: null,
-      delay: null
-    }
+      delay: null,
+    },
   },
-});
+})
 
-
-// VELOCITY Ground stabilized  
+// VELOCITY Ground stabilized
 
 export const OS_VELOCITY_SETTING = atom({
   key: "os_velocity_stetting",
   default: {
     source: "GNSS_0",
-    status: "normal", // [normal, warning, error] 
+    status: "normal", // [normal, warning, error]
     statusText: "Normal",
-    timeCreated: "" // Delay in system 
+    timeCreated: "", // Delay in system
   },
-});
+})
 
 export const OS_VELOCITY = atom({
   key: "os_velocity_state",
   default: {
     AIS: {
-      sog: 0.0, // knots 
+      sog: 0.0, // knots
       cog: 0.0, // degrees
-      rot: 0.0, // degrees per minute 
-      status: "normal", // [normal, warning, error] 
+      rot: 0.0, // degrees per minute
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
+      timeCreated: "", // Delay in system
     },
     DEVICE: {
-      sog: 0.0, // units? 
+      sog: 0.0, // units?
       cog: 0.0, // units?
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
+      timeCreated: "", // Delay in system
     },
     GNSS_0: {
-      sog: 0.0, // units? 
+      sog: 0.0, // units?
       cog: 0.0, // units?
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
+      timeCreated: "", // Delay in system
     },
     MANUAL: {
-      sog: 0.0, // knots 
+      sog: 0.0, // knots
       cog: 0.0, // units?
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
-    }
+      timeCreated: "", // Delay in system
+    },
   },
-});
+})
 
-
-// HEADING  
+// HEADING
 
 export const OS_HEADING_SETTING = atom({
   key: "os_heading_stetting",
   default: {
     source: "GNSS_0",
-    status: "normal", // [normal, warning, error] 
+    status: "normal", // [normal, warning, error]
     statusText: "Normal",
-    timeCreated: "" // Delay in system 
+    timeCreated: "", // Delay in system
   },
-});
+})
 
 export const OS_HEADING = atom({
   key: "os_heading_state",
   default: {
     AIS: {
-      heading: 0.0, // degrees 
+      heading: 0.0, // degrees
       heading_accuracy: 0.0,
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
+      timeCreated: "", // Delay in system
     },
     GNSS_0: {
-      heading: 0.0, // degrees 
+      heading: 0.0, // degrees
       heading_accuracy: 0.0,
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
+      timeCreated: "", // Delay in system
     },
     DEVICE: {
       heading: 0.0, // degrees
       heading_accuracy: 0.0,
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
+      timeCreated: "", // Delay in system
     },
     MANUAL: {
       heading: 0.0, // degrees
       heading_accuracy: 0.0,
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "Normal",
-      timeCreated: "" // Delay in system 
-    }
+      timeCreated: "", // Delay in system
+    },
   },
-});
+})
 
-
-
-// LIDAR 
+// LIDAR
 
 export const lidarStateAtom = atom({
   key: "lidar_state",
@@ -357,59 +436,56 @@ export const lidarStateAtom = atom({
     mqttMessageCount: 0,
     timeDataLogged: "",
     delaySec: 0,
-    connected: false
+    connected: false,
   },
-});
+})
 
 export const lidarObservationAtom = atom({
   key: "lidar_observation_state",
   default: [],
-});
-
-
+})
 
 // RADAR
 
 export const OS_RADAR_0 = atom({
   key: "radar_observation_state_0",
   default: [],
-});
+})
 
 export const OS_RADAR_0_SWEEP = atom({
   key: "radar_observation_state_0_sweep",
   default: [],
-});
-
+})
 
 export const OS_RADAR_1 = atom({
   key: "radar_observation_state_1",
   default: [],
-});
+})
 
 export const OS_RADAR_1_SWEEP = atom({
   key: "radar_observation_state_1_sweep",
   default: [],
-});
+})
 
 export const AtomShoreRadarSetting = atom({
   key: "atom_shore_radar_setting",
-  default: {range_change: 145},
-});
+  default: { range_change: 145 },
+})
 
 export const AtomOSRadarSetting = atom({
   key: "atom_OS_radar_setting",
-  default: {range_change: 50  },
-});
+  default: { range_change: 50 },
+})
 
 export const AtomShoreRadarObservation = atom({
   key: "atom_shore_radar_observation",
   default: [],
-});
+})
 
 export const AtomShoreRadar_1 = atom({
   key: "atom_shore_radar_1",
   default: [],
-});
+})
 
 /* message example
 { 
@@ -424,37 +500,36 @@ export const AtomShoreRadar_1 = atom({
     }}
 */
 
-// WIND 
+// WIND
 export const OS_WIND_SETTING = atom({
   key: "os_wind_stetting",
   default: {
     source: "WIND_0",
     reference_angel: "R",
-    status: "normal", // [normal, warning, error] 
+    status: "normal", // [normal, warning, error]
     statusText: "Normal",
-    timeCreated: "" // Delay in system 
+    timeCreated: "", // Delay in system
   },
-});
+})
 
 export const OS_WIND = atom({
   key: "os_wind_state",
   default: {
     WIND_0: {
-      wind_angle: 0, 
-      wind_speed: 0.0, 
+      wind_angle: 0,
+      wind_speed: 0.0,
       reference_angel: "R",
-      status: "normal", // [normal, warning, error] 
+      status: "normal", // [normal, warning, error]
       statusText: "A", // A NMEA?
-      timeCreated: "" // Delay in system 
-    }
-  }
+      timeCreated: "", // Delay in system
+    },
+  },
 })
 
-
 // -----------------------------------------------------------
-// Data Flow 
+// Data Flow
 
-// Remote MQTT 
+// Remote MQTT
 
 export const atomMqttRemoteAccount = atom({
   key: "atom_mqtt_remote_account",
@@ -463,7 +538,7 @@ export const atomMqttRemoteAccount = atom({
     password: "",
     isLoading: false,
   },
-});
+})
 
 export const atomMqttRemoteState = atom({
   key: "atom_mqtt_remote_state",
@@ -475,25 +550,24 @@ export const atomMqttRemoteState = atom({
 export const atomMqttTopics = atom({
   key: "atom_mqtt_topics",
   default: {},
-});
+})
 
 export const atomMqttTopicsUnhandled = atom({
   key: "atom_mqtt_topics_unhandled",
   default: {},
-});
+})
 
 export const atomMQTTLocalState = atom({
   key: "atom_mqtt_local_state",
   default: { connected: false },
 })
 
-
-// HW monitoring 
+// HW monitoring
 
 export const atomHWlog = atom({
   key: "atom_hw_log",
-  default: {  },
-  // default: { 
+  default: {},
+  // default: {
   //   "/CROWSNEST/EXAMPLE/HW/0/JSON": {
 
   //     "gpus": [],
@@ -514,21 +588,15 @@ export const atomHWlog = atom({
   //         "free_size": "92.62GB",
   //         "percent_used": 15.7
   //       },
-  
+
   //     ]
   //   }
-   
-
 
   //  },
 })
 
-
-
-
 // -----------------------------------------------------------
-// Bellow to be removed 
-
+// Bellow to be removed
 
 export const observationsStateAtom = atom({
   key: "observation_state",
@@ -542,7 +610,7 @@ export const observationsStateAtom = atom({
     sogBow: 0,
     sogStern: 0,
   },
-});
+})
 
 export const actionStateAtom = atom({
   key: "action_state",
@@ -550,13 +618,12 @@ export const actionStateAtom = atom({
     ruderSETps: 0,
     ruderSETsb: 0,
   },
-});
-
+})
 
 export const targetsAIS = atom({
   key: "targets_ais",
   default: [],
-});
+})
 
 export const ownShipDataAtom = atom({
   key: "own_ship_data",
@@ -564,4 +631,10 @@ export const ownShipDataAtom = atom({
     loa: 200, // length over all
     woa: 30, // width over all
   },
-});
+})
+
+// Route Editor Right Click Menu
+export const atomRouteEditorRightClickMenu = atom({
+  key: "route_editor_right_click_menu",
+  default: { xPos: 0, yPos: 0, showMenu: false },
+})

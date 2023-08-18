@@ -7,6 +7,8 @@ import {
   atomActivePlatform,
   lidarObservationAtom,
 
+  atomRouteWaypoints,
+
   OS_POSITIONS,
   OS_VELOCITY,
   OS_HEADING,
@@ -21,6 +23,8 @@ import {
   OS_RADAR_1,
   OS_RADAR_1_SWEEP,
 } from "./atoms";
+import { log } from "deck.gl";
+
 
 export const selectUser = selector({
   key: "selectUser",
@@ -634,3 +638,18 @@ export const setDeviceSensorData = selector({
   }
 })
 
+
+
+export const selectRoutePathList = selector({
+  key: 'route_path_list',
+  get: ({ get }) => {
+    const wps = get(atomRouteWaypoints);
+
+    const transformedList = [];
+    for (let i = 0; i < wps.length; i++) {
+      transformedList.push([wps[i].longitude, wps[i].latitude]);
+    }
+
+    return [transformedList]
+  },
+});

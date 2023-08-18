@@ -1,8 +1,8 @@
 import React from "react"
 // Components
-import { Typography, Grid, Paper, Stack } from "@mui/material"
+import { Typography, Grid,  Stack } from "@mui/material"
 // Atoms
-import { atomHWlog, atomMqttTopics } from "../../../recoil/atoms"
+import { atomHWlog } from "../../../recoil/atoms"
 import { useRecoilValue } from "recoil"
 import CardSystemInfo from "./CardSystemInfo"
 import ChartTimeLineLoad from "./ChartTimeLineLoad"

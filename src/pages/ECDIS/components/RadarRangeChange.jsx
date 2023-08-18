@@ -1,7 +1,7 @@
 import React from "react"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { Grid, TextField, Stack, Button } from "@mui/material"
+import {  TextField,  Button } from "@mui/material"
 import { useRecoilState } from "recoil"
 import { AtomShoreRadarSetting } from "../../../recoil/atoms"
 
@@ -9,9 +9,6 @@ const validationSchema = yup.object({
   range_change: yup.number().required("Required"),
 })
 
-const initFormValuesManual = {
-  range_change: 500,
-}
 
 export default function RadarRangeChange() {
   const [shoreRadarRangeChange, setShoreRadarRangeChange] = useRecoilState(AtomShoreRadarSetting)

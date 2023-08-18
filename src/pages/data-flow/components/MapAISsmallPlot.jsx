@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import DeckGL from "@deck.gl/react"
 import { TileLayer } from "@deck.gl/geo-layers"
 import { BitmapLayer, ScatterplotLayer } from "@deck.gl/layers"
@@ -68,7 +68,7 @@ export default function MapAISsmallPlot({ AISlist }) {
       radiusMinPixels: 3,
       radiusMaxPixels: 100,
       lineWidthMinPixels: 1,
-      getFillColor: d => [186, 12, 0],
+      getFillColor: () => [186, 12, 0],
     }),
   ] // Layers end
 

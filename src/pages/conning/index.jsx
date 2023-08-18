@@ -26,8 +26,8 @@ export default function Conning() {
   const actions = useRecoilValue(actionStateAtom);
   const [appObj, setAppObj] = useRecoilState(appState);
 
-  const [osHeading, setOsHeading] = useRecoilState(OS_HEADING)
-  const [osHeadingSetting, setOsHeadingSetting] = useRecoilState(OS_HEADING_SETTING)
+  const osHeading = useRecoilValue(OS_HEADING)
+  const osHeadingSetting = useRecoilValue(OS_HEADING_SETTING)
 
   useEffect(() => {
     // Start MQTT subscription

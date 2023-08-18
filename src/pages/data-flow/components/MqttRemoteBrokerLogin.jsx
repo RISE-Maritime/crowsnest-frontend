@@ -65,15 +65,15 @@ export default function MqttBrokerLogin() {
     }
   }, [client])
 
-  // Make to global function
-  function mqttPublishRemote(topic, qos, payload) {
-    payload = JSON.stringify(payload)
-    client.publish(topic, payload, { qos }, error => {
-      if (error) {
-        console.log("Publish error: ", error)
-      }
-    })
-  }
+  // TODO: Make to global function
+  // function mqttPublishRemote(topic, qos, payload) {
+  //   payload = JSON.stringify(payload)
+  //   client.publish(topic, payload, { qos }, error => {
+  //     if (error) {
+  //       console.log("Publish error: ", error)
+  //     }
+  //   })
+  // }
 
   const mqttDisconnect = () => {
     if (client) {
