@@ -295,8 +295,8 @@ export const OS_POSITIONS = atom({
       delay: null, // Delay in system
     },
     GNSS_0: {
-      latitude: 0.0, // degrees
-      longitude: 0.0, // degrees
+      latitude: 57.6866, // degrees
+      longitude: 11.8523, // degrees
       altitude: 0.0, // meters
       std_dev_altitude: 0.0,
       std_dev_longitude: 0.0,
