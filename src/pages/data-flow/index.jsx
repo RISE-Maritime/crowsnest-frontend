@@ -4,13 +4,15 @@ import { useTheme, styled } from "@mui/material/styles"
 // Components
 import DataConnectionState from "./components/ConnectionStatus"
 import DataConnectionMQTT from "./components/ConnectionMQTT"
+import ConnectorsSummaryCards from "./components/ConnectorsSummaryCards"
 // Recoil
 import { useRecoilValue } from "recoil"
 import { lidarStateAtom } from "../../recoil/atoms"
-import { atomMQTTLocalState, atomMqttRemoteState } from "../../recoil/atoms"
+import { atomMQTTconnectionState,atomKeelsonConnectionState } from "../../recoil/atoms"
 import MqttFlowIN from "./components/MqttFlowIN"
 import StatsAIS from "./components/StatsAIS"
 import StatsHW from "./components/StatsHW"
+import ConnectionKeelson from "./components/ConnectionKeelson"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -24,8 +26,8 @@ const GridCenter = styled(Grid)(({ theme }) => ({
 
 export default function DataFlow() {
   const theme = useTheme()
-  const mqttRemoteState = useRecoilValue(atomMqttRemoteState)
-  const mqttLocalState = useRecoilValue(atomMQTTLocalState)
+  const mqttConnectionState = useRecoilValue(atomMQTTconnectionState)
+  const keelsonConnectionState = useRecoilValue(atomKeelsonConnectionState)
   const lidarSate = useRecoilValue(lidarStateAtom)
 
   return (
@@ -39,14 +41,24 @@ export default function DataFlow() {
           color: theme.palette.primary.contrastText,
         }}
       >
-        <h1>Data flow & Sources</h1>
+        <h1>Data connectors & flow</h1>
       </Grid>
+
       <GridCenter item xs={12}>
-        <DataConnectionMQTT conn={"REMOTE"} connectionName={"MQTT RISE Cloud Broker"} isConnected={mqttRemoteState.connected} />
+        <h2>CONNECTORS</h2>
+        <ConnectorsSummaryCards />
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <DataConnectionMQTT conn={"LOCAL"} connectionName={"MQTT Local Broker"} isConnected={mqttLocalState.connected} />
+        <ConnectionKeelson connectionName={"Keelson Router"} isConnected={keelsonConnectionState} />
+      </GridCenter>
+
+      <GridCenter item xs={12}>
+        <DataConnectionMQTT connectionName={"MQTT Broker"} isConnected={mqttConnectionState} />
+      </GridCenter>
+
+      <GridCenter item xs={12}>
+        <MqttFlowIN />
       </GridCenter>
 
       <GridCenter item xs={12}>
@@ -59,10 +71,6 @@ export default function DataFlow() {
 
       <GridCenter item xs={12}>
         <StatsHW />
-      </GridCenter>
-
-      <GridCenter item xs={12}>
-        <MqttFlowIN />
       </GridCenter>
     </Grid>
   )

@@ -5,10 +5,10 @@ import ChartTimeLineValues from "./ChartTimeLineValues"
 import MapAISsmallPlot from "./MapAISsmallPlot"
 // Atoms
 import { useRecoilValue } from "recoil"
-import { atomMqttTopics, targetsAIS } from "../../../recoil/atoms"
+import { atomMQTTtopics, targetsAIS } from "../../../recoil/atoms"
 
 export default function StatsAIS() {
-  let mqttTopics = useRecoilValue(atomMqttTopics)
+  let mqttTopics = useRecoilValue(atomMQTTtopics)
   let AISlist = useRecoilValue(targetsAIS)
 
   return (

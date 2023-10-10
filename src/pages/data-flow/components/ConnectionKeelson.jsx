@@ -4,9 +4,9 @@ import { Grid, Typography, Stack } from "@mui/material"
 // Icons
 import CheckIcon from "@mui/icons-material/CheckCircle"
 import CloseIcon from "@mui/icons-material/Cancel"
-import MqttRemoteBrokerLogin from "./ConnMqttBroker"
+import ConnKeelson from "./ConnKeelson"
 
-export default function ConnectionMQTT({  connectionName, isConnected }) {
+export default function ConnectionKeelson({  connectionName, isConnected }) {
   return (
     <Grid container>
       {/* Connection state indicator and Broker Login */}
@@ -24,7 +24,7 @@ export default function ConnectionMQTT({  connectionName, isConnected }) {
             )}
           </Stack>
 
-          <MqttRemoteBrokerLogin />
+          <ConnKeelson />
         </Stack>
       </Grid>
       
@@ -32,7 +32,7 @@ export default function ConnectionMQTT({  connectionName, isConnected }) {
   )
 }
 
-ConnectionMQTT.propTypes = {
+ConnectionKeelson.propTypes = {
   connectionName: PropTypes.string.isRequired,
   isConnected: PropTypes.bool,
 }

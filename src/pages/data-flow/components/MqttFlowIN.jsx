@@ -1,11 +1,11 @@
 import React from "react"
 import { Grid } from "@mui/material"
 import { useRecoilValue } from "recoil"
-import { atomMqttTopics, atomMqttTopicsUnhandled } from "../../../recoil/atoms"
+import { atomMQTTtopics, atomMQTTtopicsUnhandled } from "../../../recoil/atoms"
 
 export default function MqttFlowIN() {
-  let mqtt_topics = useRecoilValue(atomMqttTopics)
-  let mqtt_topics_unhandled = useRecoilValue(atomMqttTopicsUnhandled)
+  let mqtt_topics = useRecoilValue(atomMQTTtopics)
+  let mqtt_topics_unhandled = useRecoilValue(atomMQTTtopicsUnhandled)
 
   return (
     <Grid container>
@@ -17,8 +17,6 @@ export default function MqttFlowIN() {
               <b> {topic}</b>
               <br />
               Received: {mqtt_topics[topic]?.time_received.toLocaleString("sv-SV")}
-              {/* <br />
-              Rec Timestamp: {mqtt_topics[topic]?.timestamp?.toLocaleString("sv-SV")} */}
               <br />
               Network delay: {mqtt_topics[topic]?.delay_calc ? "-" + mqtt_topics[topic]?.delay_calc + " sec" : ""}
               <br />
