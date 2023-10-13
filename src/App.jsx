@@ -1,8 +1,8 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 // Recoil
 import { useRecoilValue } from "recoil"
-import { appState, atomMQTTConONOFF } from "./recoil/atoms"
+import { appState } from "./recoil/atoms"
 // Styling
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
@@ -21,11 +21,9 @@ import DeviceSensors from "./pages/device-sensors"
 import PageSettings from "./pages/settings"
 import PageConfiguration from "./pages/configuration"
 import RouteEditor from "./pages/route-editor"
-// MQTT
-import ConnectorMQTT from "./base-elements/ConnectorMQTT"
-import { mqttSubscribeLOCAL } from "./base-elements/ConnectorMQTT"
+
 import DeviceConnection from "./base-elements/DeviceConnection"
-import ConnectorKeelson from "./base-elements/ConnectorKeelson"
+
 
 export default function App() {
   const app_state = useRecoilValue(appState)
@@ -100,8 +98,6 @@ export default function App() {
   })
 
   theme = responsiveFontSizes(theme)
-
-  const mqttONOFF = useRecoilValue(atomMQTTConONOFF)
 
   return (
     <>
