@@ -67,8 +67,8 @@ export const setPlatformAIS = selector({
 
 
 
-export const wsMessageParser = selector({
-  key: "websocket_latest_message",
+export const messageParser = selector({
+  key: "message_parser",
   get: () => {
     return null;
   },

@@ -3,7 +3,7 @@ import mqtt from "precompiled-mqtt"
 import { useFormik } from "formik"
 import * as yup from "yup"
 import { Grid, TextField, Button } from "@mui/material"
-import { wsMessageParser } from "../../../recoil/selectors"
+import { messageParser } from "../../../recoil/selectors"
 import { atomMQTTconnectionState } from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
 
@@ -31,7 +31,7 @@ export default function MqttBrokerLogin() {
   const [mqttConState, setMqttConState] = useRecoilState(atomMQTTconnectionState)
 
   const [client, setClient] = useState(null)
-  const parseWsMessage = useSetRecoilState(wsMessageParser)
+  const parseWsMessage = useSetRecoilState(messageParser)
 
   useEffect(() => {
     if (client) {

@@ -6,12 +6,13 @@ import CheckIcon from "@mui/icons-material/CheckCircle"
 import CloseIcon from "@mui/icons-material/Cancel"
 import ConnKeelson from "./ConnKeelson"
 
-export default function ConnectionKeelson({  connectionName, isConnected }) {
+export default function KeelsonSubscribe({ connectionName, isConnected }) {
   return (
     <Grid container>
       {/* Connection state indicator and Broker Login */}
+   
       <Grid item xs={12}>
-        <Stack direction={"row"} alignItems="center" justifyContent="space-between" >
+        <Stack direction={"column"} alignItems="center" justifyContent="space-between">
           <Stack direction={"row"} alignItems="center">
             <Typography variant="h4" sx={{ marginRight: "1rem" }}>
               {connectionName}
@@ -27,12 +28,11 @@ export default function ConnectionKeelson({  connectionName, isConnected }) {
           <ConnKeelson />
         </Stack>
       </Grid>
-      
     </Grid>
   )
 }
 
-ConnectionKeelson.propTypes = {
+KeelsonSubscribe.propTypes = {
   connectionName: PropTypes.string.isRequired,
   isConnected: PropTypes.bool,
 }

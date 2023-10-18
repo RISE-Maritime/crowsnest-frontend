@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid } from "@mui/material"
+import { Grid, Stack } from "@mui/material"
 import { useTheme, styled } from "@mui/material/styles"
 // Components
 import DataConnectionState from "./components/ConnectionStatus"
@@ -8,11 +8,13 @@ import ConnectorsSummaryCards from "./components/ConnectorsSummaryCards"
 // Recoil
 import { useRecoilValue } from "recoil"
 import { lidarStateAtom } from "../../recoil/atoms"
-import { atomMQTTconnectionState,atomKeelsonConnectionState } from "../../recoil/atoms"
+import { atomMQTTconnectionState, atomKeelsonConnectionState } from "../../recoil/atoms"
 import MqttFlowIN from "./components/MqttFlowIN"
 import StatsAIS from "./components/StatsAIS"
 import StatsHW from "./components/StatsHW"
-import ConnectionKeelson from "./components/ConnectionKeelson"
+import KeelsonSubscribe from "./components/KeelsonSubscribe"
+import KeelsonPush from "./components/KeelsonPush"
+import KeelsonQueryable from "./components/KeelsonQueryable"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -50,7 +52,11 @@ export default function DataFlow() {
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <ConnectionKeelson connectionName={"Keelson Router"} isConnected={keelsonConnectionState} />
+        <Stack direction={"row"} alignItems="center" justifyContent="space-between" spacing={2}>
+          <KeelsonSubscribe connectionName={"Keelson Subscriber"} isConnected={keelsonConnectionState} />
+          <KeelsonPush />
+          <KeelsonQueryable />
+        </Stack>
       </GridCenter>
 
       <GridCenter item xs={12}>

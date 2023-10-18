@@ -38,6 +38,16 @@ docker run --rm -p 8888:80 crowsnest-frontend
 
 The application will then be available at the URL `http://localhost:9999`. Note that the production container exposes its webserver on port 80, so the `-p` flag must be used to bind this port to the host. Furthermore, the `-e` flag can be used to pass the environmental variable `MQTT_BROKER_URL`. This variable points to the URL where the web application can reach an MQTT broker. If `MQTT_BROKER_URL` is not given, the default value of `XXXX` is used.
 
+## Protobuffer
+
+Install comandline tool on locally: 
+
+```
+npm install -g protobufjs
+npm install -g pbjs
+npm install protobufjs-cli
+```
+
 ## Issues
 
 Plotting maps does not work in _Firefox_ because it is not compatible with `OffscreenCanvas`.
