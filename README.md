@@ -48,6 +48,17 @@ npm install -g pbjs
 npm install protobufjs-cli
 ```
 
+## Transforming SVG to components (Tips and Trix)
+
+1) Transform svg file to react component, this can be done with [svg2jsx](https://svg2jsx.com). Make sure component ID are incudes in the export as svg2jsx has default setting to remove ID.
+2) Manual edit svg:
+   1) Each props should be defined in function declaration 
+   2) Text elements should have --> `fontFamily="Roboto"  textAnchor="middle"`
+   3) 
+
+
+
+
 ## Issues
 
 Plotting maps does not work in _Firefox_ because it is not compatible with `OffscreenCanvas`.

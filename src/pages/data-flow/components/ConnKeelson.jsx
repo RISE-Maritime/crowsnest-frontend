@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useFormik } from "formik"
 import * as yup from "yup"
 import { Grid, TextField, Button } from "@mui/material"
@@ -100,7 +100,7 @@ export default function ConnKeelson() {
   //   // parseKeyMsg({ topic: msg.key, payload: msg.value })
   // }, 1000)
 
-  function parseMessage (e) {
+  function parseMessage(e) {
     // key & value
     let msg = JSON.parse(e.data)
 
@@ -117,7 +117,7 @@ export default function ConnKeelson() {
 
       // Decode the buffer back into a message
       const decodedMessage = Envelope.decode(bytes)
- 
+
       protobuf.load(primitives, function (err, root) {
         // Get a reference to your message type
         const PrimitivesTimeFloat = root.lookupType("brefv.primitives.TimestampedFloat")
