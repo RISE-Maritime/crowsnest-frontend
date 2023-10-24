@@ -10,7 +10,7 @@ export default function MqttFlowIN() {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <h1>MQTT flow in:</h1>
+        <h1> flow in:</h1>
         {Object.keys(mqtt_topics).map(topic => {
           return (
             <p key={"regeqrg" + topic}>

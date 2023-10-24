@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useFormik } from "formik"
 import * as yup from "yup"
 import { Grid, TextField, Button } from "@mui/material"
-import { messageParser } from "../../../recoil/selectors"
+import { messageParser, protoParser } from "../../../recoil/selectors"
 import { atomKeelsonConnectionState } from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import protobuf from "protobufjs"
@@ -19,8 +19,8 @@ const validationSchema = yup.object({
 
 /* eslint-disable */
 const initFormValuesManual = {
-  hostSub: "http://10.10.7.2:8000",
-  // hostSub: "http://localhost:8000",
+  // hostSub: "http://10.10.7.2:8000",
+  hostSub: "http://localhost:8000",
   subscriptionKey: "**",
 }
 /* eslint-enable */
@@ -48,8 +48,11 @@ function throttle(callback, delay) {
 
 export default function ConnKeelson() {
   const [keelsonConState, setKeelsonConState] = useRecoilState(atomKeelsonConnectionState)
-  const [router, setRouter] = useState(null)
-  const parseKeyMsg = useSetRecoilState(messageParser)
+  // const [router, setRouter] = useState(null)
+  let router = useRef(null)
+  // const parseKeyMsg = useSetRecoilState(messageParser)
+
+  const parseKeelsonMsg = useSetRecoilState(protoParser)
 
   // const parseMessage = throttle(function (e) {
   //   // key & value
@@ -101,14 +104,12 @@ export default function ConnKeelson() {
   // }, 1000)
 
   function parseMessage(e) {
-    // key & value
+    // Parsing Zenoh (key & value)
     let msg = JSON.parse(e.data)
-
-    console.log("Received data: " + msg.key)
-    // console.log("Received data: " + atob(msg.value)) // atob() decodes base64
-
     let bytes = new Uint8Array(ByteBuffer.fromBase64(msg.value).toArrayBuffer())
+    let keyExpression = msg.key
 
+   
     protobuf.load(envelope, function (err, root) {
       if (err) throw err
 
@@ -118,41 +119,45 @@ export default function ConnKeelson() {
       // Decode the buffer back into a message
       const decodedMessage = Envelope.decode(bytes)
 
+      
+
       protobuf.load(primitives, function (err, root) {
         // Get a reference to your message type
         const PrimitivesTimeFloat = root.lookupType("brefv.primitives.TimestampedFloat")
 
         const readable = PrimitivesTimeFloat.decode(decodedMessage.payload)
-        console.log("readable", readable)
-      })
-    })
-
-    protobuf.load(awesome, function (err, root) {
-      if (err) throw err
-
-      // Get a reference to your message type
-      const AwesomeMessage = root.lookupType("awesomepackage.AwesomeMessage")
-      // Create a new message instance
-      const message = AwesomeMessage.create({
-        awesomeField: "value1",
+        parseKeelsonMsg({keyExpression: keyExpression, payload: readable})
+        // console.log("readable", readable)
       })
 
-      // Encode the message as a buffer
-      const buffer = AwesomeMessage.encode(message).finish()
-
-      // Decode the buffer back into a message
-      const decodedMessage = AwesomeMessage.decode(buffer)
-      // console.log(decodedMessage)
     })
+
+    // protobuf.load(awesome, function (err, root) {
+    //   if (err) throw err
+
+    //   // Get a reference to your message type
+    //   const AwesomeMessage = root.lookupType("awesomepackage.AwesomeMessage")
+    //   // Create a new message instance
+    //   const message = AwesomeMessage.create({
+    //     awesomeField: "value1",
+    //   })
+
+    //   // Encode the message as a buffer
+    //   const buffer = AwesomeMessage.encode(message).finish()
+
+    //   // Decode the buffer back into a message
+    //   const decodedMessage = AwesomeMessage.decode(buffer)
+    //   // console.log(decodedMessage)
+    // })
   }
 
   const disconnectKeelson = () => {
     console.log("Disconnecting from Keelson")
     if (router) {
       // TODO: Why is it connecting back again?
-      console.log("Router found")
-      router.removeEventListener("PUT", parseMessage, false)
-      setRouter(null)
+      console.log("Trying to disconnect...")
+      router.current.removeEventListener("PUT", parseMessage, false)
+      console.log("DISCONNECTED")
       setKeelsonConState(false)
     }
   }
@@ -161,6 +166,7 @@ export default function ConnKeelson() {
     validationSchema: validationSchema,
     initialValues: initFormValuesManual,
     onSubmit: values => {
+      console.log("PRESSED SUBMIT")
       submitAndConnect(values)
     },
   })
@@ -172,10 +178,9 @@ export default function ConnKeelson() {
     let URL = values.hostSub + "/" + values.subscriptionKey
     console.log("🚀 ~ file: ConnKeelson.jsx:54 ~ submitAndConnect ~ URL:", URL)
 
-    const routerCon = new EventSource(URL)
+    router.current = new EventSource(URL)
 
-    routerCon.addEventListener("PUT", parseMessage, false)
-    setRouter(routerCon)
+    router.current.addEventListener("PUT", parseMessage, false)
 
     // Connected
     setKeelsonConState(true)

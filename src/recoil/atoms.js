@@ -537,6 +537,27 @@ export const atomKeelsonConnectionState = atom({
   default: false,
 })
 
+export const atomKeelsonKeyExpressionHandled = atom({
+  key: "atom_keelson_key_expression_handled",
+  default: {},
+})
+
+export const atomKeelsonKeyExpressionUnmanaged = atom({
+  key: "atom_keelson_key_expression_unmanaged",
+  default: {
+ 
+  },
+})
+
+export const atom_OS_AZIMUTH_LEFT = atom({
+  key: "atomOS_AZIMUTH",
+  default: {
+    vertical: 0,
+    horizontal: 0
+  },
+})
+
+
 /* eslint-disable */
 export const atomKeelsonService = atom({
   key: "atom_keelson_services",

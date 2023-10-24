@@ -15,6 +15,7 @@ import StatsHW from "./components/StatsHW"
 import KeelsonSubscribe from "./components/KeelsonSubscribe"
 import KeelsonPush from "./components/KeelsonPush"
 import KeelsonQueryable from "./components/KeelsonQueryable"
+import KeelsonFlow from "./components/KeelsonFlow"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -57,6 +58,9 @@ export default function DataFlow() {
           <KeelsonPush />
           <KeelsonQueryable />
         </Stack>
+      </GridCenter>
+      <GridCenter item xs={12}>
+        <KeelsonFlow />
       </GridCenter>
 
       <GridCenter item xs={12}>
