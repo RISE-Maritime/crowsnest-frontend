@@ -16,6 +16,7 @@ import KeelsonSubscribe from "./components/KeelsonSubscribe"
 import KeelsonPush from "./components/KeelsonPush"
 import KeelsonQueryable from "./components/KeelsonQueryable"
 import KeelsonFlow from "./components/KeelsonFlow"
+import KeelsonGetLoop from "./components/KeelsonGetLoop"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -57,6 +58,8 @@ export default function DataFlow() {
           <KeelsonSubscribe connectionName={"Keelson Subscriber"} isConnected={keelsonConnectionState} />
           <KeelsonPush />
           <KeelsonQueryable />
+          <KeelsonGetLoop />
+      
         </Stack>
       </GridCenter>
       <GridCenter item xs={12}>

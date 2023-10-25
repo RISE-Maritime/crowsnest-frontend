@@ -34,7 +34,7 @@ export default function KeelsonQueryable() {
   const submitMsg = values => {
     console.log("Submitted KEELSON MSG: ", values)
 
-    axios.get(values.host + "/" + values.keyExpr, values.msg).then(res => {
+    axios.get(values.host + "/" + values.keyExprVar, values.msg).then(res => {
       console.log("Response: ", res)
     })
 
@@ -44,7 +44,7 @@ export default function KeelsonQueryable() {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Stack spacing={1} sx={{ minWidth: "25vw" }}>
-        <Typography variant="h5"> Keelson Queryable </Typography>
+        <Typography variant="h5"> Keelson Queryable / GET </Typography>
         <TextField
           id="host"
           label="Host URL"
