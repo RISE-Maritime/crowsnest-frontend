@@ -54,11 +54,11 @@ export default function DataFlow() {
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <Stack direction={"row"} alignItems="center" justifyContent="space-between" spacing={2}>
+        <Stack direction={"row"} alignItems="flex-start" justifyContent="space-between" spacing={2}>
+          <KeelsonGetLoop />
           <KeelsonSubscribe connectionName={"Keelson Subscriber"} isConnected={keelsonConnectionState} />
           <KeelsonPush />
           <KeelsonQueryable />
-          <KeelsonGetLoop />
       
         </Stack>
       </GridCenter>

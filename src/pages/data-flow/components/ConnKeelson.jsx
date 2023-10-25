@@ -6,8 +6,6 @@ import { messageParser, protoParser } from "../../../recoil/selectors"
 import { atomKeelsonConnectionState } from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import protobuf from "protobufjs"
-// import jsonDescriptor from "../../../proto/bundle.json"
-import awesome from "../../../proto/awesome.proto"
 import envelope from "../../../proto/envelope.proto"
 import primitives from "../../../proto/primitives.proto"
 import ByteBuffer from "bytebuffer"
@@ -25,83 +23,14 @@ const initFormValuesManual = {
 }
 /* eslint-enable */
 
-function throttle(callback, delay) {
-  let timeoutId = null
-  let lastExecTime = 0
 
-  return function (...args) {
-    const elapsedTime = Date.now() - lastExecTime
-
-    const execute = () => {
-      lastExecTime = Date.now()
-      callback.apply(this, args)
-    }
-
-    if (elapsedTime >= delay) {
-      execute()
-    } else {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(execute, delay - elapsedTime)
-    }
-  }
-}
 
 export default function ConnKeelson() {
   const [keelsonConState, setKeelsonConState] = useRecoilState(atomKeelsonConnectionState)
-  // const [router, setRouter] = useState(null)
   let router = useRef(null)
   // const parseKeyMsg = useSetRecoilState(messageParser)
-
   const parseKeelsonMsg = useSetRecoilState(protoParser)
 
-  // const parseMessage = throttle(function (e) {
-  //   // key & value
-  //   let msg = JSON.parse(e.data)
-
-  //   // console.log("Received data: " + msg.key)
-  //   // console.log("Received data: " + atob(msg.value)) // atob() decodes base64
-
-  //   let bytes = new Uint8Array(ByteBuffer.fromBase64(msg.value).toArrayBuffer())
-
-  //   protobuf.load(envelope, function (err, root) {
-  //     if (err) throw err
-
-  //     // Get a reference to your message type
-  //     const Envelope = root.lookupType("core.Envelope")
-
-  //     // Decode the buffer back into a message
-  //     const decodedMessage = Envelope.decode(bytes)
-  //     console.log(decodedMessage)
-
-  //     protobuf.load(primitives, function (err, root) {
-  //       // Get a reference to your message type
-  //       const PrimitivesTimeFloat = root.lookupType("brefv.primitives.TimestampedFloat")
-
-  //       const readable = PrimitivesTimeFloat.decode(decodedMessage.payload)
-  //       console.log("readable", readable)
-  //     })
-  //   })
-
-  //   protobuf.load(awesome, function (err, root) {
-  //     if (err) throw err
-
-  //     // Get a reference to your message type
-  //     const AwesomeMessage = root.lookupType("awesomepackage.AwesomeMessage")
-  //     // Create a new message instance
-  //     const message = AwesomeMessage.create({
-  //       awesomeField: "value1",
-  //     })
-
-  //     // Encode the message as a buffer
-  //     const buffer = AwesomeMessage.encode(message).finish()
-
-  //     // Decode the buffer back into a message
-  //     const decodedMessage = AwesomeMessage.decode(buffer)
-  //     console.log(decodedMessage)
-  //   })
-
-  //   // parseKeyMsg({ topic: msg.key, payload: msg.value })
-  // }, 1000)
 
   function parseMessage(e) {
     // Parsing Zenoh (key & value)

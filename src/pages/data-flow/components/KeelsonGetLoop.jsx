@@ -4,7 +4,9 @@ import * as yup from "yup"
 import { useFormik } from "formik"
 import { Stack, TextField, Button, Typography } from "@mui/material"
 import { atomKeelsonConnectionState } from "../../../recoil/atoms"
-import { useRecoilValue } from "recoil"
+import { useRecoiStopIconlValue } from "recoil"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import StopIcon from "@mui/icons-material/Stop"
 
 export default function KeelsonGetLoop() {
   const [intervalVar, setIntervalVar] = useState(null)
@@ -41,14 +43,17 @@ export default function KeelsonGetLoop() {
   })
 
   const submitMsg = values => {
-    console.log("Submitted KEELSON LOOOP: ", values)
-
+    console.log("Submit", values)
     const URL = values.hostLoop + "/" + values.keyExprLoop
 
     const interval = setInterval(() => {
       axios.get(URL).then(res => {
         let time = new Date()
         console.log("Loop Response: ", time, res)
+
+        // res.data.forEach(element => {
+        //   console.log("Loop Response: ", element)
+        // })
       })
     }, 1000)
 
@@ -57,56 +62,55 @@ export default function KeelsonGetLoop() {
     // return values
   }
 
-  function getLoop(URL) {
-    console.log("Loop URL: ", URL)
-
-    axios.get(URL).then(res => {
-      console.log("Loop Response: ", res)
-    })
-  }
-
   function stopLoop() {
     console.log("Stopping loop")
     clearInterval(intervalVar)
+    setIsStarted(false)
   }
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <Stack spacing={1} sx={{ minWidth: "25vw" }}>
-        <Typography variant="h5"> Keelson GET Looper </Typography>
-        <TextField
-          id="hostLoop"
-          label="Host URL"
-          fullWidth
-          variant="filled"
-          size="small"
-          defaultValue={formik.values.hostLoop}
-          onChange={formik.handleChange}
-          error={formik.touched.hostLoop && Boolean(formik.errors.hostLoop)}
-          helperText={formik.touched.hostLoop && formik.errors.hostLoop}
-        />
-        <TextField
-          id="keyExprLoop"
-          label="Key Expression & Variables"
-          fullWidth
-          variant="filled"
-          size="small"
-          defaultValue={formik.values.keyExprLoop}
-          onChange={formik.handleChange}
-          error={formik.touched.keyExprLoop && Boolean(formik.errors.keyExprLoop)}
-          helperText={formik.touched.keyExprLoop && formik.errors.keyExprLoop}
-        />
+    <div>
+      <form onSubmit={formik.handleSubmit}>
+        <Stack spacing={1} sx={{ minWidth: "25vw" }}>
+          <Typography variant="h5"> Keelson GET Looper </Typography>
+          <TextField
+            id="hostLoop"
+            label="Host URL"
+            fullWidth
+            variant="filled"
+            size="small"
+            defaultValue={formik.values.hostLoop}
+            onChange={formik.handleChange}
+            error={formik.touched.hostLoop && Boolean(formik.errors.hostLoop)}
+            helperText={formik.touched.hostLoop && formik.errors.hostLoop}
+          />
+          <TextField
+            id="keyExprLoop"
+            label="Key Expression & Variables"
+            fullWidth
+            variant="filled"
+            size="small"
+            defaultValue={formik.values.keyExprLoop}
+            onChange={formik.handleChange}
+            error={formik.touched.keyExprLoop && Boolean(formik.errors.keyExprLoop)}
+            helperText={formik.touched.keyExprLoop && formik.errors.keyExprLoop}
+          />
 
-        {isStarted ? (
-          <Button onClick={stopLoop} variant="contained" color="info" fullWidth sx={{ marginTop: "0.4rem" }}>
-            Stop
-          </Button>
-        ) : (
-          <Button type="submit" variant="contained" color="info" fullWidth sx={{ marginTop: "0.4rem" }}>
-            Start
-          </Button>
-        )}
-      </Stack>
-    </form>
+          {isStarted ? null : (
+            <Button type="submit" variant="contained" color="info" fullWidth sx={{ marginTop: "0.4rem" }}>
+              <PlayArrowIcon sx={{ marginRight: "0.2rem" }} />
+              Start
+            </Button>
+          )}
+        </Stack>
+      </form>
+
+      {isStarted ? (
+        <Button onClick={stopLoop} variant="contained" color="info" fullWidth sx={{ marginTop: "0.4rem" }}>
+          <StopIcon sx={{ marginRight: "0.2rem" }} />
+          Stop
+        </Button>
+      ) : null}
+    </div>
   )
 }

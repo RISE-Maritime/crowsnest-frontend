@@ -14,7 +14,7 @@ export default function KeelsonSubscribe({ connectionName, isConnected }) {
       <Grid item xs={12}>
         <Stack direction={"column"} alignItems="center" justifyContent="space-between">
           <Stack direction={"row"} alignItems="center">
-            <Typography variant="h4" sx={{ marginRight: "1rem" }}>
+            <Typography variant="h5" sx={{ marginRight: "1rem" }}>
               {connectionName}
             </Typography>
 
