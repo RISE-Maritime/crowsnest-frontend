@@ -1,8 +1,10 @@
 import { selector } from "recoil"
-import protobuf from "protobufjs"
+import protobuf from "protobufjs/minimal.js"
+import { Envelope, PrimitivesTimeFloat } from "../proto/compiled.js"
+import bundle from '../proto/bundle.json';
 import ByteBuffer from "bytebuffer"
-import envelope from "../proto/envelope.proto"
-import primitives from "../proto/primitives.proto"
+// import envelope from "../proto/envelope.proto"
+// import primitives from "../proto/primitives.proto"
 import {
   userState,
   observationsStateAtom,
@@ -67,59 +69,61 @@ export const protoParser = selector({
     return null
   },
   set: ({ get, set }, latestMsg) => {
-    switch (latestMsg.keyExpression) {
-      case latestMsg.keyExpression.match(
+
+    // Load the bundle.json file using protobufjs
+const root = protobuf.Root.fromJSON(bundle);
+
+    let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
+
+    console.log("BYTES",bytes);
+
+    switch (latestMsg.key) {
+      case latestMsg.key.match(
         /^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/vertical/
       )?.input: {
-        set(atomKeelsonKeyExpressionHandled, currentObj => ({
-          ...currentObj,
-          [latestMsg.keyExpression]: {
-            time_received: new Date(),
-            count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
-          },
-        }))
 
-        let lastValue = get(atom_OS_AZIMUTH_LEFT)
-        if (lastValue.vertical !== latestMsg.payload) {
+          // Assume that `bytes` is a Uint8Array containing the serialized protobuf message
+
+          const Envelope = root.lookupType("Envelope");
+          const PrimitivesTimeFloat = root.lookupType("TimestampedFloat");
+          const decodedMessage = Envelope.decode(bytes);
+          const readable = PrimitivesTimeFloat.decode(decodedMessage.payload);
           
-          set(atom_OS_AZIMUTH_LEFT, currentObj => ({
-            ...currentObj,
-            vertical: latestMsg.payload,
-          }))
+          console.log("HERE readabel:", readable);
+
+
+          // set(atomKeelsonKeyExpressionHandled, currentObj => ({
+          //   ...currentObj,
+          //   [latestMsg.keyExpression]: {
+          //     time_received: new Date(),
+          //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
+          //   },
+          // }))
+
+          // let lastValue = get(atom_OS_AZIMUTH_LEFT)
+          // if (lastValue.vertical !== latestMsg.payload) {
+
+          //   set(atom_OS_AZIMUTH_LEFT, currentObj => ({
+          //     ...currentObj,
+          //     vertical: latestMsg.payload,
+          //   }))
+          // }
+
+          break
         }
 
-        break
-      }
 
-      case latestMsg.keyExpression.match(
-        /^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/horizontal/
-      )?.input: {
-        set(atomKeelsonKeyExpressionHandled, currentObj => ({
-          ...currentObj,
-          [latestMsg.keyExpression]: {
-            time_received: new Date(),
-            count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
-          },
-        }))
 
-        set(atom_OS_AZIMUTH_LEFT, currentObj => ({
-          ...currentObj,
-          horizontal: latestMsg.payload,
-        }))
 
-        break
-      }
-
-      
 
       default: {
-        set(atomKeelsonKeyExpressionUnmanaged, currentObj => ({
-          ...currentObj,
-          [latestMsg.keyExpression]: {
-            time_received: new Date(),
-            count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
-          },
-        }))
+        // set(atomKeelsonKeyExpressionUnmanaged, currentObj => ({
+        //   ...currentObj,
+        //   [latestMsg.keyExpression]: {
+        //     time_received: new Date(),
+        //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
+        //   },
+        // }))
         break
       }
     }
@@ -157,9 +161,9 @@ export const messageParser = selector({
               count: currentObj["CROWSNEST/EXTERNAL/AIS"]?.count ? currentObj["CROWSNEST/EXTERNAL/AIS"].count + 1000 : 1000,
               list_ship_unique: currentObj["CROWSNEST/EXTERNAL/AIS"]?.list_ship_unique
                 ? [
-                    ...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique,
-                    { time: new Date(), ships_count: Object.keys(AISlist).length },
-                  ]
+                  ...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique,
+                  { time: new Date(), ships_count: Object.keys(AISlist).length },
+                ]
                 : [{ time: new Date(), ships_count: Object.keys(AISlist).length }],
             },
           }))

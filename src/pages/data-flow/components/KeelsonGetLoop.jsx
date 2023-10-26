@@ -3,14 +3,15 @@ import axios from "axios"
 import * as yup from "yup"
 import { useFormik } from "formik"
 import { Stack, TextField, Button, Typography } from "@mui/material"
-import { atomKeelsonConnectionState } from "../../../recoil/atoms"
-import { useRecoiStopIconlValue } from "recoil"
+import { useSetRecoilState } from "recoil"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import StopIcon from "@mui/icons-material/Stop"
+import { protoParser } from "../../../recoil/selectors"
 
 export default function KeelsonGetLoop() {
   const [intervalVar, setIntervalVar] = useState(null)
   const [isStarted, setIsStarted] = useState(false)
+  const protoDecoder = useSetRecoilState(protoParser)
 
   useEffect(() => {
     console.log("KeelsonGetLoop mounted")
@@ -51,9 +52,10 @@ export default function KeelsonGetLoop() {
         let time = new Date()
         console.log("Loop Response: ", time, res)
 
-        // res.data.forEach(element => {
-        //   console.log("Loop Response: ", element)
-        // })
+        res.data.forEach(element => {
+          console.log("For Each : ", element)
+          protoDecoder(element)
+        })
       })
     }, 1000)
 

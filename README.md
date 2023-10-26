@@ -44,9 +44,16 @@ Install comandline tool on locally:
 
 ```
 npm install -g protobufjs
-npm install -g pbjs
-npm install protobufjs-cli
+npm install -g protobufjs-cli
 ```
+
+Bundel all `.proto`
+
+```
+pbjs -t json file1.proto file2.proto > bundle.json
+```
+
+
 
 ## Transforming SVG to components (Tips and Trix)
 
