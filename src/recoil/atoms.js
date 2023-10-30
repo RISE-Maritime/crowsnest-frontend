@@ -528,40 +528,94 @@ export const OS_WIND = atom({
 
 // -----------------------------------------------------------
 // Data Flow
+// -----------------------------------------------------------
 
-// Remote MQTT
+// KEELSON
 
-export const atomMqttRemoteAccount = atom({
-  key: "atom_mqtt_remote_account",
+export const atomKeelsonConnectionState = atom({
+  key: "atom_keelson_connection_state",
+  default: false,
+})
+
+export const atomKeelsonKeyExpressionHandled = atom({
+  key: "atom_keelson_key_expression_handled",
+  default: {},
+})
+
+export const atomKeelsonKeyExpressionUnmanaged = atom({
+  key: "atom_keelson_key_expression_unmanaged",
   default: {
-    username: "",
-    password: "",
-    isLoading: false,
+ 
   },
 })
 
-export const atomMqttRemoteState = atom({
-  key: "atom_mqtt_remote_state",
-  default: { connected: false },
+export const atom_OS_AZIMUTH_LEFT = atom({
+  key: "atomOS_AZIMUTH",
+  default: {
+    vertical: 0,
+    horizontal: 0
+  },
 })
 
-// Local MQTT
 
-export const atomMqttTopics = atom({
+/* eslint-disable */
+export const atomKeelsonService = atom({
+  key: "atom_keelson_services",
+  default: {
+    host: "http://localhost:8000",
+    subscriptionKey: "/PONTOS/**",
+    defaultHosts: ["http://localhost:8000"],
+  },
+})
+/* eslint-enable */
+
+export const atomKeelsonConONOFF = atom({
+  key: "atom_keelson_onoff",
+  default: false,
+})
+
+// MQTT
+
+export const atomMQTTConONOFF = atom({
+  key: "atom_mqtt_onoff",
+  default: false,
+})
+
+/* eslint-disable */
+export const atomMQTTservice = atom({
+  key: "atom_mqtt_services",
+  default: {
+    host: "wss://crowsnest.mo.ri.se:443/mqtt",
+    username: process.env.REACT_APP_MQTT_USERNAME ? process.env.REACT_APP_MQTT_USERNAME : "",
+    password: process.env.REACT_APP_MQTT_PASSWORD ? process.env.REACT_APP_MQTT_PASSWORD : "",
+    defaultHosts: ["wss://crowsnest.mo.ri.se:443/mqtt", "ws://localhost:80/mqtt"],
+  },
+})
+/* eslint-enable */
+
+export const atomMQTTconnectionState = atom({
+  key: "atom_mqtt_connection_state",
+  default: false,
+})
+
+export const atomMQTTtopics = atom({
   key: "atom_mqtt_topics",
   default: {},
 })
 
-export const atomMqttTopicsUnhandled = atom({
+export const atomMQTTtopicsUnhandled = atom({
   key: "atom_mqtt_topics_unhandled",
   default: {},
 })
 
-export const atomMQTTLocalState = atom({
-  key: "atom_mqtt_local_state",
-  default: { connected: false },
+// Device
+export const atomDeviceConnectionState = atom({
+  key: "atom_device_connection_state",
+  default: false,
 })
 
+//
+//
 // HW monitoring
 
 export const atomHWlog = atom({

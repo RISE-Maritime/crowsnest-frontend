@@ -880,7 +880,7 @@ export default function AppShipSteering(props) {
           <text
             id="engACT_P"
             fill="#fff"
-            fontFamily="Roboto-Regular, Roboto"
+            fontFamily="Roboto"
             fontSize="53"
             transform="translate(103.173 668.607)"
           >
@@ -891,7 +891,7 @@ export default function AppShipSteering(props) {
           <text
             id="engACT_S"
             fill="#fff"
-            fontFamily="Roboto-Regular, Roboto"
+            fontFamily="Roboto"
             fontSize="53"
             transform="translate(334 668.607)"
           >
@@ -902,7 +902,7 @@ export default function AppShipSteering(props) {
           <g
             id="eng_power_level_text"
             fill="#3bf"
-            fontFamily="Roboto-Regular, Roboto"
+            fontFamily="Roboto"
             fontSize="18"
           >
             <text

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 // Recoil
 import { useRecoilValue } from "recoil"
@@ -21,10 +21,9 @@ import DeviceSensors from "./pages/device-sensors"
 import PageSettings from "./pages/settings"
 import PageConfiguration from "./pages/configuration"
 import RouteEditor from "./pages/route-editor"
-// MQTT
-import MqttConnectionLOCAL from "./base-elements/MqttConnectionLOCAL"
-import { mqttSubscribeLOCAL } from "./base-elements/MqttConnectionLOCAL"
+
 import DeviceConnection from "./base-elements/DeviceConnection"
+
 
 export default function App() {
   const app_state = useRecoilValue(appState)
@@ -36,78 +35,72 @@ export default function App() {
 
       ...(app_state.appActiveColorTheme === "light"
         ? // Light pallette
-        {
-          primary: {
-            main: "#1f2e47",
-            light: "#66bb77",
-            contrastText: "#ffffff",
-          },
-          secondary: {
-            main: "#ed6432",
-            contrast: "#33BBFF",
-          },
-          background: {
-            default: "#e3e3e3",
-          },
-          error: {
-            main: "#cb2e24",
-          },
-          warning: {
-            main: "#eec937",
-          },
-          success: {
-            main: "#14cc17",
-          },
-          info: {
-            main: "#031e49",
-          },
-        }
+          {
+            primary: {
+              main: "#1f2e47",
+              light: "#66bb77",
+              contrastText: "#ffffff",
+            },
+            secondary: {
+              main: "#ed6432",
+              contrast: "#33BBFF",
+            },
+            background: {
+              default: "#e3e3e3",
+            },
+            error: {
+              main: "#cb2e24",
+            },
+            warning: {
+              main: "#eec937",
+            },
+            success: {
+              main: "#14cc17",
+            },
+            info: {
+              main: "#031e49",
+            },
+          }
         : // Dark pallette
-        {
-          primary: {
-            main: "#2196f3",
-            light: "#66bb77",
-            contrastText: "#ffffff",
-            port: "#E93629",
-            starboard: "#1FB948",
-          },
-          secondary: {
-            main: "#ed6432",
-            dark: "#b84d27",
-          },
-          background: {
-            default: "#333333",
-          },
-          error: {
-            main: "#cb2e24",
-          },
-          warning: {
-            main: "#eec937",
-          },
-          success: {
-            main: "#11b014",
-            contrastText: "#ffffff",
-          },
-          info: {
-            main: "#2196f3",
-          },
-          text: {
-            primary: "#fff",
-          },
-        }),
+          {
+            primary: {
+              main: "#2196f3",
+              light: "#66bb77",
+              contrastText: "#ffffff",
+              port: "#E93629",
+              starboard: "#1FB948",
+            },
+            secondary: {
+              main: "#ed6432",
+              dark: "#b84d27",
+            },
+            background: {
+              default: "#333333",
+            },
+            error: {
+              main: "#cb2e24",
+            },
+            warning: {
+              main: "#eec937",
+            },
+            success: {
+              main: "#11b014",
+              contrastText: "#ffffff",
+            },
+            info: {
+              main: "#2196f3",
+            },
+            text: {
+              primary: "#fff",
+            },
+          }),
     },
   })
 
   theme = responsiveFontSizes(theme)
-  /* eslint-disable */
-  useEffect(() => {
-    mqttSubscribeLOCAL("CROWSNEST/#")
-  }, [])
-  /* eslint-enable */
 
   return (
     <>
-      <MqttConnectionLOCAL />
       <DeviceConnection />
 
       <ThemeProvider theme={theme}>

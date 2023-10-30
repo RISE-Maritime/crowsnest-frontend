@@ -38,10 +38,92 @@ docker run --rm -p 8888:80 crowsnest-frontend
 
 The application will then be available at the URL `http://localhost:9999`. Note that the production container exposes its webserver on port 80, so the `-p` flag must be used to bind this port to the host. Furthermore, the `-e` flag can be used to pass the environmental variable `MQTT_BROKER_URL`. This variable points to the URL where the web application can reach an MQTT broker. If `MQTT_BROKER_URL` is not given, the default value of `XXXX` is used.
 
+## Protobuffer
+
+Install comandline tool on locally: 
+
+```
+npm install -g protobufjs
+npm install -g protobufjs-cli
+```
+
+Bundel all `.proto`
+
+```
+pbjs -t json file1.proto file2.proto > bundle.json
+```
+
+
+
+## Transforming SVG to components (Tips and Trix)
+
+1) Transform svg file to react component, this can be done with [svg2jsx](https://svg2jsx.com). Make sure component ID are incudes in the export as svg2jsx has default setting to remove ID.
+2) Manual edit svg:
+   1) Each props should be defined in function declaration 
+   2) Text elements should have --> `fontFamily="Roboto"  textAnchor="middle"`
+   3) 
+
+
+
+
 ## Issues
 
 Plotting maps does not work in _Firefox_ because it is not compatible with `OffscreenCanvas`.
 
 
 
+## Connectors frontend
 
+- Keelson (Zenoh) -->  
+  - Input (json): data (str) --> JSON (obj)
+  - Input (proto): data (str) --> JSON (obj) - [key, value] -> Vale -> Base64ToBytes --> Envelope --> payload_type 
+- MQTT -->
+  - Input (json): data (str) -->  JSON (obj)
+  - Input (proto): data (str) -->  JSON (obj) --> Base64ToBytes --> Envelope --> payload_type 
+
+OUT: KEY & VALUE --> parsed to recoil state
+
+
+rise/crowsnest/gui/<user_name>/<tag>/<react_component>
+
+rise/crowsnest/<internal_app_name>/<user_name>/<tag>/<react_component>
+
+
+
+[
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/azimuth/horizontal",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/raw_bytes/arduino/left",
+        "value": "CgwIgKHuqQYQjIv5kgESGAoMCICh7qkGEPa85ZIBEggCAwAAZAAAAA==",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/knob/right",
+        "value": "CgwIgKHuqQYQqP/mkwESDgoMCICh7qkGEPa85ZIB",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/raw_bytes/arduino/right",
+        "value": "CgwIgKHuqQYQhrbSlwESHAoMCICh7qkGEKK9vpcBEgwDBQIAGABhAGMAIwA=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/horizontal",
+        "value": "CgwIgKHuqQYQhIX9iAESEwoMCICh7qkGEIKovIgBFQAAAEA=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/vertical",
+        "value": "CgwIgKHuqQYQltWaiQESEwoMCICh7qkGEIKovIgBFQAAwEE=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/left",
+        "value": "CgwIgKHuqQYQ+snTiQESEwoMCICh7qkGEIKovIgBFQAAxkI=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/azimuth/vertical",
+        "value": "CgwIgKHuqQYQ5uPMkwESEwoMCICh7qkGEPa85ZIBFQAAyEI=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/right",
+        "value": "CgwIgKHuqQYQ5+C4iQESEwoMCICh7qkGEIKovIgBFQAAwkI=",
+    }
+]

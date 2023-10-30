@@ -72,7 +72,7 @@ export default function AppRollPitch(props) {
           <text
             fill="rgba(255,255,255,0.35)"
             data-name="Min (30min)"
-            fontFamily="Roboto-Regular, Roboto"
+            fontFamily="Roboto"
             fontSize="6"
             transform="translate(1501 1059)"
           >
@@ -83,7 +83,7 @@ export default function AppRollPitch(props) {
           <text
             fill="rgba(255,255,255,0.35)"
             data-name="Max (30min)"
-            fontFamily="Roboto-Regular, Roboto"
+            fontFamily="Roboto"
             fontSize="6"
             transform="translate(1642 1059)"
           >
