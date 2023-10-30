@@ -72,4 +72,58 @@ Plotting maps does not work in _Firefox_ because it is not compatible with `Offs
 
 
 
+## Connectors frontend
 
+- Keelson (Zenoh) -->  
+  - Input (json): data (str) --> JSON (obj)
+  - Input (proto): data (str) --> JSON (obj) - [key, value] -> Vale -> Base64ToBytes --> Envelope --> payload_type 
+- MQTT -->
+  - Input (json): data (str) -->  JSON (obj)
+  - Input (proto): data (str) -->  JSON (obj) --> Base64ToBytes --> Envelope --> payload_type 
+
+OUT: KEY & VALUE --> parsed to recoil state
+
+
+rise/crowsnest/gui/<user_name>/<tag>/<react_component>
+
+rise/crowsnest/<internal_app_name>/<user_name>/<tag>/<react_component>
+
+
+
+[
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/azimuth/horizontal",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/raw_bytes/arduino/left",
+        "value": "CgwIgKHuqQYQjIv5kgESGAoMCICh7qkGEPa85ZIBEggCAwAAZAAAAA==",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/knob/right",
+        "value": "CgwIgKHuqQYQqP/mkwESDgoMCICh7qkGEPa85ZIB",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/raw_bytes/arduino/right",
+        "value": "CgwIgKHuqQYQhrbSlwESHAoMCICh7qkGEKK9vpcBEgwDBQIAGABhAGMAIwA=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/horizontal",
+        "value": "CgwIgKHuqQYQhIX9iAESEwoMCICh7qkGEIKovIgBFQAAAEA=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/vertical",
+        "value": "CgwIgKHuqQYQltWaiQESEwoMCICh7qkGEIKovIgBFQAAwEE=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/left",
+        "value": "CgwIgKHuqQYQ+snTiQESEwoMCICh7qkGEIKovIgBFQAAxkI=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/azimuth/vertical",
+        "value": "CgwIgKHuqQYQ5uPMkwESEwoMCICh7qkGEPa85ZIBFQAAyEI=",
+    },
+    {
+        "key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/right",
+        "value": "CgwIgKHuqQYQ5+C4iQESEwoMCICh7qkGEIKovIgBFQAAwkI=",
+    }
+]
