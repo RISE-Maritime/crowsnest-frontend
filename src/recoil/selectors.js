@@ -1,10 +1,8 @@
 import { selector } from "recoil"
 import protobuf from "protobufjs/minimal.js"
-import { Envelope, PrimitivesTimeFloat } from "../proto/compiled.js"
-import bundle from '../proto/bundle.json';
+import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
-// import envelope from "../proto/envelope.proto"
-// import primitives from "../proto/primitives.proto"
+
 import {
   userState,
   observationsStateAtom,
@@ -26,9 +24,6 @@ import {
   OS_RADAR_0_SWEEP,
   OS_RADAR_1,
   OS_RADAR_1_SWEEP,
-  atomKeelsonKeyExpressionUnmanaged,
-  atomKeelsonKeyExpressionHandled,
-  atom_OS_AZIMUTH_LEFT,
 } from "./atoms"
 
 export const selectUser = selector({
@@ -69,52 +64,44 @@ export const protoParser = selector({
     return null
   },
   set: ({ get, set }, latestMsg) => {
-
     // Load the bundle.json file using protobufjs
-const root = protobuf.Root.fromJSON(bundle);
+    const root = protobuf.Root.fromJSON(bundle)
 
     let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
 
-    console.log("BYTES",bytes);
+    console.log("BYTES", bytes)
 
     switch (latestMsg.key) {
-      case latestMsg.key.match(
-        /^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/vertical/
-      )?.input: {
+      case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/vertical/)
+        ?.input: {
+        // Assume that `bytes` is a Uint8Array containing the serialized protobuf message
 
-          // Assume that `bytes` is a Uint8Array containing the serialized protobuf message
+        const Envelope = root.lookupType("Envelope")
+        const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+        const decodedMessage = Envelope.decode(bytes)
+        const readable = PrimitivesTimeFloat.decode(decodedMessage.payload)
 
-          const Envelope = root.lookupType("Envelope");
-          const PrimitivesTimeFloat = root.lookupType("TimestampedFloat");
-          const decodedMessage = Envelope.decode(bytes);
-          const readable = PrimitivesTimeFloat.decode(decodedMessage.payload);
-          
-          console.log("HERE readabel:", readable);
+        console.log("HERE readabel:", readable)
 
+        // set(atomKeelsonKeyExpressionHandled, currentObj => ({
+        //   ...currentObj,
+        //   [latestMsg.keyExpression]: {
+        //     time_received: new Date(),
+        //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
+        //   },
+        // }))
 
-          // set(atomKeelsonKeyExpressionHandled, currentObj => ({
-          //   ...currentObj,
-          //   [latestMsg.keyExpression]: {
-          //     time_received: new Date(),
-          //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
-          //   },
-          // }))
+        // let lastValue = get(atom_OS_AZIMUTH_LEFT)
+        // if (lastValue.vertical !== latestMsg.payload) {
 
-          // let lastValue = get(atom_OS_AZIMUTH_LEFT)
-          // if (lastValue.vertical !== latestMsg.payload) {
+        //   set(atom_OS_AZIMUTH_LEFT, currentObj => ({
+        //     ...currentObj,
+        //     vertical: latestMsg.payload,
+        //   }))
+        // }
 
-          //   set(atom_OS_AZIMUTH_LEFT, currentObj => ({
-          //     ...currentObj,
-          //     vertical: latestMsg.payload,
-          //   }))
-          // }
-
-          break
-        }
-
-
-
-
+        break
+      }
 
       default: {
         // set(atomKeelsonKeyExpressionUnmanaged, currentObj => ({
@@ -161,9 +148,9 @@ export const messageParser = selector({
               count: currentObj["CROWSNEST/EXTERNAL/AIS"]?.count ? currentObj["CROWSNEST/EXTERNAL/AIS"].count + 1000 : 1000,
               list_ship_unique: currentObj["CROWSNEST/EXTERNAL/AIS"]?.list_ship_unique
                 ? [
-                  ...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique,
-                  { time: new Date(), ships_count: Object.keys(AISlist).length },
-                ]
+                    ...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique,
+                    { time: new Date(), ships_count: Object.keys(AISlist).length },
+                  ]
                 : [{ time: new Date(), ships_count: Object.keys(AISlist).length }],
             },
           }))

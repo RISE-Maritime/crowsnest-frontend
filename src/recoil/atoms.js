@@ -526,6 +526,68 @@ export const OS_WIND = atom({
   },
 })
 
+export const ATOM_OS_THRUSTERS = atom({
+  key: "atom_os_thrusters",
+  default: {
+    THRUSTER_0: {
+      setPower: 0,
+      actPower: 0,
+      thrust: 0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+    THRUSTER_1: {
+      thrust: 0.0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+  },
+})
+
+export const ATOM_OS_ENGINES = atom({
+  key: "atom_os_engines",
+  default: {
+    ENGINE_0: {
+      setPower: 55,
+      actPower: 50,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+    ENGINE_1: {
+      setPower: 0,
+      actPower: 0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+  },
+})
+
+export const ATOM_OS_RUDDERS = atom({
+  key: "atom_os_rudders",
+  default: {
+    RUDDER_0: {
+      setAngle: 30,
+      actAngle: -5,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+      maxAngle: 60,
+    },
+    RUDDER_1: {
+      setAngle: 55,
+      actAngle: 50,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+      maxAngle: 60,
+    },
+  },
+})
+
 // -----------------------------------------------------------
 // Data Flow
 // -----------------------------------------------------------
@@ -544,19 +606,16 @@ export const atomKeelsonKeyExpressionHandled = atom({
 
 export const atomKeelsonKeyExpressionUnmanaged = atom({
   key: "atom_keelson_key_expression_unmanaged",
-  default: {
- 
-  },
+  default: {},
 })
 
 export const atom_OS_AZIMUTH_LEFT = atom({
   key: "atomOS_AZIMUTH",
   default: {
     vertical: 0,
-    horizontal: 0
+    horizontal: 0,
   },
 })
-
 
 /* eslint-disable */
 export const atomKeelsonService = atom({

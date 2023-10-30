@@ -1,18 +1,37 @@
-import React, { useEffect } from "react"
-import { Grid, Stack } from "@mui/material"
-import ControlThruster from "./components/ControlBowThruster"
-import ControlEngPS from "./components/ControlEngPS"
-import ControlRudder from "./components/ControlRudder"
-import SvgAzimuth from "./components/SvgAzimuth"
-import ControlAzimuth from "./components/ControlAzimuth"
+import React, { useEffect, useState } from "react"
+import { Grid, Box, Tab, Tabs, Typography } from "@mui/material"
+import TabViewExperiments from "./components/TabViewExperiments"
+import TabViewExperimentSliders from "./components/TabViewExperimentSliders"
+import TabViewShaft from "./components/TabViewShaft"
+import TabViewAzimuth from "./components/TabViewAzimuth"
 
-// function useKeyPress(targetKey) {
-//   // State for keeping track of whether key is pressed
-//   const [keyPressed, setKeyPressed] = useState<boolean>(false);
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props
 
-//   };
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  )
+}
 
 export default function index() {
+  const [tabValue, seTabValue] = useState("shaft")
+
+  const handleTabChange = (event, newValue) => {
+    seTabValue(newValue)
+  }
+
   // If pressed key is our target key then set to true
   const downHandler = ({ key }) => {
     if (key === "g") {
@@ -44,21 +63,28 @@ export default function index() {
   return (
     <Grid container>
       <Grid item xs={12} sx={{ display: "grid", placeItems: "center" }}>
-        <Stack direction="column" justifyContent="center" alignItems="center" spacing={4}>
-          <ControlEngPS />
-          {/* <ControlENG /> */}
-
-          <ControlThruster />
-
-          <ControlRudder />
-
-          {/* <p align="center"><iframe src="https://sensor-insight.web.app/sea_air" width="100%" height="200" scrolling="no"></iframe></p>
-          <p align="center"><iframe src="https://turunavantouimarit.web.app/outside" width="100%" height="200" scrolling="no"></iframe></p> */}
-        </Stack>
-      </Grid>
-
-      <Grid item xs={12} sx={{ display: "grid", placeItems: "center" }}>
-        <ControlAzimuth />
+        <Box sx={{ width: "100%" }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs value={tabValue} onChange={handleTabChange} aria-label="basic tabs example">
+              <Tab label="Shaft" value={"shaft"} />
+              <Tab label="Azimuth" value={"azimuth"} />
+              <Tab label="Experiment (New)" value={"new"} />
+              <Tab label="Experiment (Sliders)" value={"sliders"} />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={tabValue} index={"shaft"}>
+            <TabViewShaft />
+          </CustomTabPanel>
+          <CustomTabPanel value={tabValue} index={"azimuth"}>
+            <TabViewAzimuth />
+          </CustomTabPanel>
+          <CustomTabPanel value={tabValue} index={"new"}>
+            <TabViewExperiments />
+          </CustomTabPanel>
+          <CustomTabPanel value={tabValue} index={"sliders"}>
+            <TabViewExperimentSliders />
+          </CustomTabPanel>
+        </Box>
       </Grid>
     </Grid>
   )
