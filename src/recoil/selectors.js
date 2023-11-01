@@ -2,6 +2,7 @@ import { selector } from "recoil"
 import protobuf from "protobufjs/minimal.js"
 import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
+import axios from "axios"
 
 import {
   userState,
@@ -24,6 +25,8 @@ import {
   OS_RADAR_0_SWEEP,
   OS_RADAR_1,
   OS_RADAR_1_SWEEP,
+  ATOM_OS_RUDDERS,
+  ATOM_OS_ENGINES
 } from "./atoms"
 
 export const selectUser = selector({
@@ -66,10 +69,8 @@ export const protoParser = selector({
   set: ({ get, set }, latestMsg) => {
     // Load the bundle.json file using protobufjs
     const root = protobuf.Root.fromJSON(bundle)
-
     let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
 
-    console.log("BYTES", bytes)
 
     switch (latestMsg.key) {
       case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/vertical/)
@@ -681,5 +682,99 @@ export const selectRoutePathList = selector({
     }
 
     return [transformedList]
+  },
+})
+
+export const selSetRudder = selector({
+  key: "sel_set_rudder",
+  get: () => {
+    return null
+  },
+  set: ({ set }, newRudderVal) => {
+    const root = protobuf.Root.fromJSON(bundle)
+    const Envelope = root.lookupType("Envelope")
+    const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+
+    const dataToSend = {
+      timestamp: new Date(),
+      value: newRudderVal.setAngle + 0.0,
+    }
+
+    var errMsg = PrimitivesTimeFloat.verify(dataToSend)
+    if (errMsg) throw Error(errMsg)
+    const payloadOne = PrimitivesTimeFloat.create(dataToSend)
+    const payload = PrimitivesTimeFloat.encode(payloadOne).finish()
+
+    var errMsgEnvelope = Envelope.verify({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    if (errMsgEnvelope) throw Error(errMsgEnvelope)
+
+    const messStart = Envelope.create({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    const message = Envelope.encode(messStart).finish()
+
+    var Http = new XMLHttpRequest()
+    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/rudder_order_deg/rudder_0", true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(message)
+
+    set(ATOM_OS_RUDDERS, currentObj => ({
+      ...currentObj,
+      [newRudderVal.id]: {
+        ...currentObj[newRudderVal.id],
+        setAngle: newRudderVal.setAngle,
+      },
+    }))
+  },
+})
+
+export const selSetEngine = selector({
+  key: "sel_set_engine",
+  get: () => {
+    return null
+  },
+  set: ({ set }, newEngVal) => {
+    const root = protobuf.Root.fromJSON(bundle)
+    const Envelope = root.lookupType("Envelope")
+    const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+
+    const dataToSend = {
+      timestamp: new Date(),
+      value: newEngVal.setPower,
+    }
+
+    var errMsg = PrimitivesTimeFloat.verify(dataToSend)
+    if (errMsg) throw Error(errMsg)
+    const payloadOne = PrimitivesTimeFloat.create(dataToSend)
+    const payload = PrimitivesTimeFloat.encode(payloadOne).finish()
+
+    var errMsgEnvelope = Envelope.verify({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    if (errMsgEnvelope) throw Error(errMsgEnvelope)
+
+    const messStart = Envelope.create({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    const message = Envelope.encode(messStart).finish()
+
+    var Http = new XMLHttpRequest()
+    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(message)
+
+    set(ATOM_OS_ENGINES, currentObj => ({
+      ...currentObj,
+      [newEngVal.id]: {
+        ...currentObj[newEngVal.id],
+        setAngle: newEngVal.setPower,
+      },
+    }))
   },
 })

@@ -570,8 +570,8 @@ export const ATOM_OS_RUDDERS = atom({
   key: "atom_os_rudders",
   default: {
     RUDDER_0: {
-      setAngle: 30,
-      actAngle: -5,
+      setAngle: 0,
+      actAngle: -35,
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeUpdated: "", // Delay in system
