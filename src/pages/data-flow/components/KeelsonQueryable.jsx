@@ -7,11 +7,9 @@ import { atomKeelsonConnectionState } from "../../../recoil/atoms"
 import { useRecoilValue } from "recoil"
 
 export default function KeelsonQueryable() {
-
   const validationSchema = yup.object({
     host: yup.string().required("Required"),
     keyExprVar: yup.string().required("Required"),
-  
   })
 
   /* eslint-disable */
@@ -32,10 +30,10 @@ export default function KeelsonQueryable() {
   })
 
   const submitMsg = values => {
-    console.log("Submitted KEELSON MSG: ", values)
+    console.log("Submitted Queryable to KEELSON: ", values)
 
-    axios.get(values.host + "/" + values.keyExprVar, values.msg).then(res => {
-      console.log("Response: ", res)
+    axios.get(values.host + "/" + values.keyExprVar, { test: "body_msg" }).then(res => {
+      console.log("Queryable Response: ", res)
     })
 
     return values

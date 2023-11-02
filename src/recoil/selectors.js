@@ -1,10 +1,9 @@
 import { selector } from "recoil"
 import protobuf from "protobufjs/minimal.js"
-import { Envelope, PrimitivesTimeFloat } from "../proto/compiled.js"
-import bundle from '../proto/bundle.json';
+import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
-// import envelope from "../proto/envelope.proto"
-// import primitives from "../proto/primitives.proto"
+
+
 import {
   userState,
   observationsStateAtom,
@@ -26,9 +25,9 @@ import {
   OS_RADAR_0_SWEEP,
   OS_RADAR_1,
   OS_RADAR_1_SWEEP,
-  atomKeelsonKeyExpressionUnmanaged,
-  atomKeelsonKeyExpressionHandled,
-  atom_OS_AZIMUTH_LEFT,
+  ATOM_OS_RUDDERS,
+  ATOM_OS_ENGINES,
+  ATOM_OS_THRUSTERS
 } from "./atoms"
 
 export const selectUser = selector({
@@ -69,52 +68,42 @@ export const protoParser = selector({
     return null
   },
   set: ({ get, set }, latestMsg) => {
-
     // Load the bundle.json file using protobufjs
-const root = protobuf.Root.fromJSON(bundle);
-
+    const root = protobuf.Root.fromJSON(bundle)
     let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
 
-    console.log("BYTES",bytes);
 
     switch (latestMsg.key) {
-      case latestMsg.key.match(
-        /^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/vertical/
-      )?.input: {
+      case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/vertical/)
+        ?.input: {
+        // Assume that `bytes` is a Uint8Array containing the serialized protobuf message
 
-          // Assume that `bytes` is a Uint8Array containing the serialized protobuf message
+        const Envelope = root.lookupType("Envelope")
+        const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+        const decodedMessage = Envelope.decode(bytes)
+        const readable = PrimitivesTimeFloat.decode(decodedMessage.payload)
 
-          const Envelope = root.lookupType("Envelope");
-          const PrimitivesTimeFloat = root.lookupType("TimestampedFloat");
-          const decodedMessage = Envelope.decode(bytes);
-          const readable = PrimitivesTimeFloat.decode(decodedMessage.payload);
-          
-          console.log("HERE readabel:", readable);
+        console.log("HERE readabel:", readable)
 
+        // set(atomKeelsonKeyExpressionHandled, currentObj => ({
+        //   ...currentObj,
+        //   [latestMsg.keyExpression]: {
+        //     time_received: new Date(),
+        //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
+        //   },
+        // }))
 
-          // set(atomKeelsonKeyExpressionHandled, currentObj => ({
-          //   ...currentObj,
-          //   [latestMsg.keyExpression]: {
-          //     time_received: new Date(),
-          //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
-          //   },
-          // }))
+        // let lastValue = get(atom_OS_AZIMUTH_LEFT)
+        // if (lastValue.vertical !== latestMsg.payload) {
 
-          // let lastValue = get(atom_OS_AZIMUTH_LEFT)
-          // if (lastValue.vertical !== latestMsg.payload) {
+        //   set(atom_OS_AZIMUTH_LEFT, currentObj => ({
+        //     ...currentObj,
+        //     vertical: latestMsg.payload,
+        //   }))
+        // }
 
-          //   set(atom_OS_AZIMUTH_LEFT, currentObj => ({
-          //     ...currentObj,
-          //     vertical: latestMsg.payload,
-          //   }))
-          // }
-
-          break
-        }
-
-
-
-
+        break
+      }
 
       default: {
         // set(atomKeelsonKeyExpressionUnmanaged, currentObj => ({
@@ -161,9 +150,9 @@ export const messageParser = selector({
               count: currentObj["CROWSNEST/EXTERNAL/AIS"]?.count ? currentObj["CROWSNEST/EXTERNAL/AIS"].count + 1000 : 1000,
               list_ship_unique: currentObj["CROWSNEST/EXTERNAL/AIS"]?.list_ship_unique
                 ? [
-                  ...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique,
-                  { time: new Date(), ships_count: Object.keys(AISlist).length },
-                ]
+                    ...currentObj["CROWSNEST/EXTERNAL/AIS"].list_ship_unique,
+                    { time: new Date(), ships_count: Object.keys(AISlist).length },
+                  ]
                 : [{ time: new Date(), ships_count: Object.keys(AISlist).length }],
             },
           }))
@@ -694,5 +683,149 @@ export const selectRoutePathList = selector({
     }
 
     return [transformedList]
+  },
+})
+
+
+
+export const selSetRudder = selector({
+  key: "sel_set_rudder",
+  get: () => {
+    return null
+  },
+  set: ({ set }, newRudderVal) => {
+    const root = protobuf.Root.fromJSON(bundle)
+    const Envelope = root.lookupType("Envelope")
+    const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+
+    const dataToSend = {
+      timestamp: new Date(),
+      value: newRudderVal.setAngle + 0.0,
+    }
+
+    var errMsg = PrimitivesTimeFloat.verify(dataToSend)
+    if (errMsg) throw Error(errMsg)
+    const payloadOne = PrimitivesTimeFloat.create(dataToSend)
+    const payload = PrimitivesTimeFloat.encode(payloadOne).finish()
+
+    var errMsgEnvelope = Envelope.verify({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    if (errMsgEnvelope) throw Error(errMsgEnvelope)
+
+    const messStart = Envelope.create({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    const message = Envelope.encode(messStart).finish()
+
+    var Http = new XMLHttpRequest()
+    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/rudder_order_deg/rudder_0", true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(message)
+
+    set(ATOM_OS_RUDDERS, currentObj => ({
+      ...currentObj,
+      [newRudderVal.id]: {
+        ...currentObj[newRudderVal.id],
+        setAngle: newRudderVal.setAngle,
+      },
+    }))
+  },
+})
+
+export const selSetEngine = selector({
+  key: "sel_set_engine",
+  get: () => {
+    return null
+  },
+  set: ({ set }, newEngVal) => {
+    const root = protobuf.Root.fromJSON(bundle)
+    const Envelope = root.lookupType("Envelope")
+    const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+
+    const dataToSend = {
+      timestamp: new Date(),
+      value: newEngVal.setPower,
+    }
+
+    var errMsg = PrimitivesTimeFloat.verify(dataToSend)
+    if (errMsg) throw Error(errMsg)
+    const payloadOne = PrimitivesTimeFloat.create(dataToSend)
+    const payload = PrimitivesTimeFloat.encode(payloadOne).finish()
+
+    var errMsgEnvelope = Envelope.verify({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    if (errMsgEnvelope) throw Error(errMsgEnvelope)
+
+    const messStart = Envelope.create({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    const message = Envelope.encode(messStart).finish()
+
+    var Http = new XMLHttpRequest()
+    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(message)
+
+    set(ATOM_OS_ENGINES, currentObj => ({
+      ...currentObj,
+      [newEngVal.id]: {
+        ...currentObj[newEngVal.id],
+        setPower: newEngVal.setPower,
+      },
+    }))
+  },
+})
+
+
+export const selSetThruster = selector({
+  key: "sel_set_thruster",
+  get: () => {
+    return null
+  },
+  set: ({ set }, newThrusterVal) => {
+    const root = protobuf.Root.fromJSON(bundle)
+    const Envelope = root.lookupType("Envelope")
+    const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+
+    const dataToSend = {
+      timestamp: new Date(),
+      value: newThrusterVal.setPower,
+    }
+
+    var errMsg = PrimitivesTimeFloat.verify(dataToSend)
+    if (errMsg) throw Error(errMsg)
+    const payloadOne = PrimitivesTimeFloat.create(dataToSend)
+    const payload = PrimitivesTimeFloat.encode(payloadOne).finish()
+
+    var errMsgEnvelope = Envelope.verify({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    if (errMsgEnvelope) throw Error(errMsgEnvelope)
+
+    const messStart = Envelope.create({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    const message = Envelope.encode(messStart).finish()
+
+    var Http = new XMLHttpRequest()
+    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(message)
+
+    set(ATOM_OS_THRUSTERS, currentObj => ({
+      ...currentObj,
+      [newThrusterVal.id]: {
+        ...currentObj[newThrusterVal.id],
+        setPower: newThrusterVal.setPower,
+      },
+    }))
   },
 })

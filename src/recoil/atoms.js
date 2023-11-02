@@ -526,6 +526,78 @@ export const OS_WIND = atom({
   },
 })
 
+export const ATOM_OS_THRUSTERS = atom({
+  key: "atom_os_thrusters",
+  default: {
+    THRUSTER_0: {
+      setPower: 0,
+      actPower: 0,
+      thrust: 0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+    THRUSTER_1: {
+      setPower: 0,
+      actPower: 0,
+      thrust: 0.0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+  },
+})
+
+export const ATOM_OS_ENGINES = atom({
+  key: "atom_os_engines",
+  default: {
+    ENGINE_0: {
+      setPower: 0,
+      actPower: 0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+    ENGINE_1: {
+      setPower: 0,
+      actPower: 0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+    },
+  },
+})
+
+export const ATOM_OS_RUDDERS = atom({
+  key: "atom_os_rudders",
+  default: {
+    RUDDER_0: {
+      setAngle: 0,
+      actAngle: 0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+      maxAngle: 60,
+    },
+    RUDDER_1: {
+      setAngle: 0,
+      actAngle: 0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeUpdated: "", // Delay in system
+      maxAngle: 60,
+    },
+  },
+})
+
+export const ATOM_OS_COMMAND = atom({
+  key: "atom_os_command",
+  default: {
+    guiInCommand: false,
+  unitInCommand: "Nobody knows"
+  },
+})
+
 // -----------------------------------------------------------
 // Data Flow
 // -----------------------------------------------------------
@@ -544,19 +616,16 @@ export const atomKeelsonKeyExpressionHandled = atom({
 
 export const atomKeelsonKeyExpressionUnmanaged = atom({
   key: "atom_keelson_key_expression_unmanaged",
-  default: {
- 
-  },
+  default: {},
 })
 
 export const atom_OS_AZIMUTH_LEFT = atom({
   key: "atomOS_AZIMUTH",
   default: {
     vertical: 0,
-    horizontal: 0
+    horizontal: 0,
   },
 })
-
 
 /* eslint-disable */
 export const atomKeelsonService = atom({

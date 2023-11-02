@@ -57,6 +57,9 @@ pbjs -t json file1.proto file2.proto > bundle.json
 
 ## Transforming SVG to components (Tips and Trix)
 
+Example of export options in figma
+![Image of export setting](./src/resources/doc_pics/figma-svg-export.png)
+
 1) Transform svg file to react component, this can be done with [svg2jsx](https://svg2jsx.com). Make sure component ID are incudes in the export as svg2jsx has default setting to remove ID.
 2) Manual edit svg:
    1) Each props should be defined in function declaration 
@@ -127,3 +130,7 @@ rise/crowsnest/<internal_app_name>/<user_name>/<tag>/<react_component>
         "value": "CgwIgKHuqQYQ5+C4iQESEwoMCICh7qkGEIKovIgBFQAAwkI=",
     }
 ]
+
+
+
+https://github.com/react-grid-layout/react-draggable 

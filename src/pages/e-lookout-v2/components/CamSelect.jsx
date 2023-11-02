@@ -5,6 +5,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import "@tensorflow/tfjs"
 // eslint-disable-next-line
 import * as cocoSsd from "@tensorflow-models/coco-ssd"
+import axios from "axios"
 
 function text2Binary(string) {
   return string
@@ -56,7 +57,7 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
     }
 
     // MQTT
-    let client = mqtt.connect("wss://crowsnest.mo.ri.se:443/mqtt", options)
+    // let client = mqtt.connect("wss://crowsnest.mo.ri.se:443/mqtt", options)
     pc = new RTCPeerConnection(config)
 
     // connect audio / video
@@ -82,9 +83,7 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
       .then(function () {
         // wait for ICE gathering to complete
         return new Promise(function (resolve) {
-         
           if (pc.iceGatheringState === "complete") {
-        
             resolve()
           } else {
             // eslint-disable-next-line no-inner-declarations
@@ -100,34 +99,58 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
         })
       })
       .then(function () {
-      
         var offer = pc.localDescription
+
         var payload = JSON.stringify({
           sdp: offer.sdp,
           type: offer.type,
         })
 
-        var responseTopic = "muppetR" + Math.random()
-        console.log("responseTopic", responseTopic)
+        var responseTopic = "crow_muppet" + Math.random()
+        // console.log("responseTopic", responseTopic)
 
-        client.on("message", function (topic, message) {
-          console.log("Humm..message ", topic, message)
+        // client.on("message", function (topic, message) {
+        //   console.log("Humm..message ", topic, message)
 
-          client.unsubscribe(responseTopic)
-          pc.setRemoteDescription(JSON.parse(message.toString()))
-        })
-        client.subscribe(responseTopic)
+        //   client.unsubscribe(responseTopic)
+        //   pc.setRemoteDescription(JSON.parse(message.toString()))
+        // })
+        // client.subscribe(responseTopic)
 
-        client.publish(requestTopic, payload, {
-          properties: {
+        // client.publish(requestTopic, payload, {
+        //   properties: {
+        //     responseTopic: responseTopic,
+        //     correlationData: text2Binary("hej"),
+        //   },
+        // })
+
+        console.log("SENDING TO: ", { sdp: offer.sdp, mediamtx_path: "example" })
+
+        axios
+          .put("http://localhost:8000/rise/masslab/mediamtx/masslab-2/rpc/signal_for_webrtc", {
             responseTopic: responseTopic,
-            correlationData: text2Binary("hej"),
-          },
-        })
+            sdp: offer.sdp,
+            mediamtx_path: "example",
+          })
+          .then(res => {
+      
+            console.log("Response: ", res)
+
+            axios
+              .get("http://localhost:8000/rise/masslab/mediamtx/masslab-2/rpc/signal_for_webrtc", {
+                params: { sdp: offer.sdp, mediamtx_path: "example" },
+              })
+              .then(res => {
+                console.log("Queryable Response: ", res)
+              })
+              .catch(err => {
+                console.log("Error: ", err)
+              })
+          })
       })
+
       .catch(function (e) {
-        // alert(e)
-        console.log(e)
+        console.log("Error Cam Select", e)
       })
 
     // client.on("error". )
@@ -137,6 +160,7 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
     <div>
       <Button onClick={() => startCamera(ID)}>
         <ArrowUpwardIcon sx={{ transform: "rotate(-90deg)" }} />
+        Axis
       </Button>
     </div>
   )

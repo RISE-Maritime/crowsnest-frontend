@@ -7,3 +7,10 @@ body {
 code {
   font-family: 'Roboto'
 }
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./resources/fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
