@@ -2,7 +2,7 @@ import { selector } from "recoil"
 import protobuf from "protobufjs/minimal.js"
 import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
-import axios from "axios"
+
 
 import {
   userState,
@@ -26,7 +26,8 @@ import {
   OS_RADAR_1,
   OS_RADAR_1_SWEEP,
   ATOM_OS_RUDDERS,
-  ATOM_OS_ENGINES
+  ATOM_OS_ENGINES,
+  ATOM_OS_THRUSTERS
 } from "./atoms"
 
 export const selectUser = selector({
@@ -685,6 +686,8 @@ export const selectRoutePathList = selector({
   },
 })
 
+
+
 export const selSetRudder = selector({
   key: "sel_set_rudder",
   get: () => {
@@ -773,7 +776,55 @@ export const selSetEngine = selector({
       ...currentObj,
       [newEngVal.id]: {
         ...currentObj[newEngVal.id],
-        setAngle: newEngVal.setPower,
+        setPower: newEngVal.setPower,
+      },
+    }))
+  },
+})
+
+
+export const selSetThruster = selector({
+  key: "sel_set_thruster",
+  get: () => {
+    return null
+  },
+  set: ({ set }, newThrusterVal) => {
+    const root = protobuf.Root.fromJSON(bundle)
+    const Envelope = root.lookupType("Envelope")
+    const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+
+    const dataToSend = {
+      timestamp: new Date(),
+      value: newThrusterVal.setPower,
+    }
+
+    var errMsg = PrimitivesTimeFloat.verify(dataToSend)
+    if (errMsg) throw Error(errMsg)
+    const payloadOne = PrimitivesTimeFloat.create(dataToSend)
+    const payload = PrimitivesTimeFloat.encode(payloadOne).finish()
+
+    var errMsgEnvelope = Envelope.verify({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    if (errMsgEnvelope) throw Error(errMsgEnvelope)
+
+    const messStart = Envelope.create({
+      enclosed_at: new Date(),
+      payload: payload,
+    })
+    const message = Envelope.encode(messStart).finish()
+
+    var Http = new XMLHttpRequest()
+    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(message)
+
+    set(ATOM_OS_THRUSTERS, currentObj => ({
+      ...currentObj,
+      [newThrusterVal.id]: {
+        ...currentObj[newThrusterVal.id],
+        setPower: newThrusterVal.setPower,
       },
     }))
   },

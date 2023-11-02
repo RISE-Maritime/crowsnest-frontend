@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Box, Tab, Tabs, Typography } from "@mui/material"
+import { Grid, Box, Tab, Tabs } from "@mui/material"
 import TabViewExperiments from "./components/TabViewExperiments"
 import TabViewExperimentSliders from "./components/TabViewExperimentSliders"
 import TabViewShaft from "./components/TabViewShaft"
 import TabViewAzimuth from "./components/TabViewAzimuth"
+import CommandBar from "./components/CommandBar"
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props
@@ -16,11 +17,7 @@ function CustomTabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   )
 }
@@ -85,6 +82,9 @@ export default function index() {
             <TabViewExperimentSliders />
           </CustomTabPanel>
         </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <CommandBar />
       </Grid>
     </Grid>
   )

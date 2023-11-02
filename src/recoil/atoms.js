@@ -538,6 +538,8 @@ export const ATOM_OS_THRUSTERS = atom({
       timeUpdated: "", // Delay in system
     },
     THRUSTER_1: {
+      setPower: 0,
+      actPower: 0,
       thrust: 0.0,
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
@@ -550,8 +552,8 @@ export const ATOM_OS_ENGINES = atom({
   key: "atom_os_engines",
   default: {
     ENGINE_0: {
-      setPower: 55,
-      actPower: 50,
+      setPower: 0,
+      actPower: 0,
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeUpdated: "", // Delay in system
@@ -571,20 +573,28 @@ export const ATOM_OS_RUDDERS = atom({
   default: {
     RUDDER_0: {
       setAngle: 0,
-      actAngle: -35,
+      actAngle: 0,
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeUpdated: "", // Delay in system
       maxAngle: 60,
     },
     RUDDER_1: {
-      setAngle: 55,
-      actAngle: 50,
+      setAngle: 0,
+      actAngle: 0,
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeUpdated: "", // Delay in system
       maxAngle: 60,
     },
+  },
+})
+
+export const ATOM_OS_COMMAND = atom({
+  key: "atom_os_command",
+  default: {
+    guiInCommand: false,
+  unitInCommand: "Nobody knows"
   },
 })
 
