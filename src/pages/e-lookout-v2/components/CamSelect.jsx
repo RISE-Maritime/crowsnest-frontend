@@ -107,45 +107,20 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
         })
 
         var responseTopic = "crow_muppet" + Math.random()
-        // console.log("responseTopic", responseTopic)
-
-        // client.on("message", function (topic, message) {
-        //   console.log("Humm..message ", topic, message)
-
-        //   client.unsubscribe(responseTopic)
-        //   pc.setRemoteDescription(JSON.parse(message.toString()))
-        // })
-        // client.subscribe(responseTopic)
-
-        // client.publish(requestTopic, payload, {
-        //   properties: {
-        //     responseTopic: responseTopic,
-        //     correlationData: text2Binary("hej"),
-        //   },
-        // })
+ 
 
         console.log("SENDING TO: ", { sdp: offer.sdp, mediamtx_path: "example" })
 
         axios
-          .put("http://localhost:8000/rise/masslab/mediamtx/masslab-2/rpc/signal_for_webrtc", {
-            responseTopic: responseTopic,
-            sdp: offer.sdp,
-            mediamtx_path: "example",
-          })
+          .post("http://localhost:8001/test/test/mediamtx/test/rpc/whep", {
+            path: "example",
+            sdp: offer.sdp
+        })
           .then(res => {
       
             console.log("Response: ", res)
 
-            axios
-              .get("http://localhost:8000/rise/masslab/mediamtx/masslab-2/rpc/signal_for_webrtc", {
-                params: { sdp: offer.sdp, mediamtx_path: "example" },
-              })
-              .then(res => {
-                console.log("Queryable Response: ", res)
-              })
-              .catch(err => {
-                console.log("Error: ", err)
-              })
+         
           })
       })
 
