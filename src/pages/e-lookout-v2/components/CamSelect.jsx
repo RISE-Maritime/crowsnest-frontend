@@ -101,27 +101,31 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
       .then(function () {
         var offer = pc.localDescription
 
-        var payload = JSON.stringify({
-          sdp: offer.sdp,
-          type: offer.type,
-        })
-
-        var responseTopic = "crow_muppet" + Math.random()
- 
-
         console.log("SENDING TO: ", { sdp: offer.sdp, mediamtx_path: "example" })
 
+        console.log("send sdp:", offer.sdp);
         axios
-          .post("http://localhost:8001/test/test/mediamtx/test/rpc/whep", {
-            path: "example",
-            sdp: offer.sdp
-        })
-          .then(res => {
-      
-            console.log("Response: ", res)
-
-         
+          .post("http://localhost:8001/rise/marie/mediamtx/sealog-4/rpc/whep", {
+            path: "axis",
+            sdp: offer.sdp,
           })
+          .then((response) => {
+          console.log("response", response.data)
+
+          let sdpNew = response.data[0][1]
+
+          console.log("res:",sdpNew);
+          
+          pc.setRemoteDescription(
+            new RTCSessionDescription({
+                type: 'answer',
+                sdp: sdpNew,
+            })
+        )
+
+          
+        })
+         
       })
 
       .catch(function (e) {
