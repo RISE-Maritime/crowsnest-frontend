@@ -79,8 +79,8 @@ export default function viewList() {
       />
 
       <ViewListItem
-        routeLink={ROUTES.E_LOOKOUT_V2}
-        viewName={"E-Lookout-v2"}
+        routeLink={ROUTES.CAMERA_STREAMS}
+        viewName={"Camera Streams"}
         icon={
           <VrpanoIcon
             sx={{

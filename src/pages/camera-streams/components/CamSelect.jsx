@@ -1,39 +1,13 @@
 import React from "react"
 import { Button } from "@mui/material"
-import mqtt from "precompiled-mqtt"
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import "@tensorflow/tfjs"
-// eslint-disable-next-line
-// import * as cocoSsd from "@tensorflow-models/coco-ssd"
 import axios from "axios"
 
-function text2Binary(string) {
-  return string
-    .split("")
-    .map(function (char) {
-      return char.charCodeAt(0).toString(2)
-    })
-    .join(" ")
-}
-
-export default function CamSelect({ refV, refA, detectFrame, ID }) {
+export default function CamSelect({ refV, refA,  ID }) {
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
     }
-
-    refV.current.addEventListener("play", event => {
-      event
-      // const modelPromise = cocoSsd.load()
-      // // modelPromise.detect()
-      // Promise.all([modelPromise, refV])
-      //   .then(values => {
-      //     detectFrame(refV.current, values[0])
-      //   })
-      //   .catch(error => {
-      //     console.error(error)
-      //   })
-    })
 
     console.log("(1) start camera: " + camID)
 
@@ -50,7 +24,7 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
     /* eslint-enable */
 
     let pc = null
-    const requestTopic = "CROWSNEST/LANDKRABBA/WEBRTC/" + camID
+
     var config = {
       sdpSemantics: "unified-plan",
       iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }], // Always use a STUN server for ICE
@@ -103,44 +77,36 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
 
         console.log("SENDING TO: ", { sdp: offer.sdp, mediamtx_path: "example" })
 
-        console.log("send sdp:", offer.sdp);
+        console.log("send sdp:", offer.sdp)
         axios
           .post("http://localhost:8001/rise/marie/mediamtx/sealog-4/rpc/whep", {
             path: "axis",
             sdp: offer.sdp,
           })
-          .then((response) => {
-          console.log("response", response.data)
+          .then(response => {
+            console.log("response", response.data)
 
-          let sdpNew = response.data[0][1]
+            let sdpNew = response.data[0][1]
 
-          console.log("res:",sdpNew);
-          
-          pc.setRemoteDescription(
-            new RTCSessionDescription({
-                type: 'answer',
+            console.log("res:", sdpNew)
+
+            pc.setRemoteDescription(
+              new RTCSessionDescription({
+                type: "answer",
                 sdp: sdpNew,
-            })
-        )
-
-          
-        })
-         
+              })
+            )
+          })
       })
 
       .catch(function (e) {
         console.log("Error Cam Select", e)
       })
-
-    // client.on("error". )
   }
 
   return (
     <div>
-      <Button onClick={() => startCamera(ID)}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(-90deg)" }} />
-        Axis
-      </Button>
+      <Button onClick={() => startCamera(ID)}>Start</Button>
     </div>
   )
 }
