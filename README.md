@@ -51,6 +51,9 @@ Bundel all `.proto`
 
 ```
 pbjs -t json file1.proto file2.proto > bundle.json
+
+
+pbjs -t json .\awesome.proto .\CompressedVideo.proto .\envelope.proto .\primitives.proto .\CompressedImage.proto .\RawImage.proto > bundle.json
 ```
 
 

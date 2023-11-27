@@ -4,7 +4,7 @@ import mqtt from "precompiled-mqtt"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import "@tensorflow/tfjs"
 // eslint-disable-next-line
-import * as cocoSsd from "@tensorflow-models/coco-ssd"
+// import * as cocoSsd from "@tensorflow-models/coco-ssd"
 import axios from "axios"
 
 function text2Binary(string) {
@@ -24,15 +24,15 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
 
     refV.current.addEventListener("play", event => {
       event
-      const modelPromise = cocoSsd.load()
-      // modelPromise.detect()
-      Promise.all([modelPromise, refV])
-        .then(values => {
-          detectFrame(refV.current, values[0])
-        })
-        .catch(error => {
-          console.error(error)
-        })
+      // const modelPromise = cocoSsd.load()
+      // // modelPromise.detect()
+      // Promise.all([modelPromise, refV])
+      //   .then(values => {
+      //     detectFrame(refV.current, values[0])
+      //   })
+      //   .catch(error => {
+      //     console.error(error)
+      //   })
     })
 
     console.log("(1) start camera: " + camID)
