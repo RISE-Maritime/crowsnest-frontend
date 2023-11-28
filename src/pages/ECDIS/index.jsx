@@ -7,6 +7,7 @@ import ChartControls from "./components/ChartControls"
 export default function Ecdis() {
   return (
     <Grid container>
+      
       <Grid
         item
         xs={10}

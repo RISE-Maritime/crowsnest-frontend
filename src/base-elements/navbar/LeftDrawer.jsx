@@ -1,28 +1,20 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import ROUTES from "../../ROUTES.json";
+import React from "react"
+import { Link } from "react-router-dom"
+import ROUTES from "../../ROUTES.json"
 // Components
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  ListItemButton
-} from "@mui/material";
+import { Box, List, ListItemIcon, ListItemText, Divider, ListItemButton } from "@mui/material"
 // Icons
-import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded";
-import MapRoundedIcon from "@mui/icons-material/MapRounded";
-import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
-import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import TrackChangesIcon from "@mui/icons-material/TrackChanges";
-import VrpanoIcon from '@mui/icons-material/Vrpano';
-import EdgesensorHighIcon from '@mui/icons-material/EdgesensorHigh';
-import SettingsIcon from '@mui/icons-material/Settings';
-import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
-import RouteIcon from '@mui/icons-material/Route';
+import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded"
+import MapRoundedIcon from "@mui/icons-material/MapRounded"
+import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded"
+import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded"
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded"
+import TrackChangesIcon from "@mui/icons-material/TrackChanges"
+import VrpanoIcon from "@mui/icons-material/Vrpano"
+import EdgesensorHighIcon from "@mui/icons-material/EdgesensorHigh"
+import SettingsIcon from "@mui/icons-material/Settings"
+import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat"
+import RouteIcon from "@mui/icons-material/Route"
 
 export default function LeftDrawer(props) {
   return (
@@ -49,11 +41,7 @@ export default function LeftDrawer(props) {
           <ListItemText primary={"ECDIS"} />
         </ListItemButton>
 
-        <ListItemButton
-          key={"BEARING_RATE"}
-          component={Link}
-          to={ROUTES.BEARING_RATE}
-        >
+        <ListItemButton key={"BEARING_RATE"} component={Link} to={ROUTES.BEARING_RATE}>
           <ListItemIcon>
             <TrackChangesIcon />
           </ListItemIcon>
@@ -74,47 +62,33 @@ export default function LeftDrawer(props) {
           <ListItemText primary={"E-Lookout  (Seahorse)"} />
         </ListItemButton>
 
-        <ListItemButton key={"E-lookout-V2"} component={Link} to={ROUTES.E_LOOKOUT_V2}>
+        <ListItemButton key={"Camera Streams"} component={Link} to={ROUTES.CAMERA_STREAMS}>
           <ListItemIcon>
             <VrpanoIcon />
           </ListItemIcon>
-          <ListItemText primary={"E-Lookout (Landkrabban)"} />
+          <ListItemText primary={"Camera Streams"} />
         </ListItemButton>
 
-        <ListItemButton
-          key={"remoteControl"}
-          component={Link}
-          to={ROUTES.REMOTE_CONTROL}
-        >
+        <ListItemButton key={"remoteControl"} component={Link} to={ROUTES.REMOTE_CONTROL}>
           <ListItemIcon>
             <SportsEsportsRoundedIcon />
           </ListItemIcon>
           <ListItemText primary={"Remote Control"} />
         </ListItemButton>
 
-        <ListItemButton
-          key={"route_editor"}
-          component={Link}
-          to={ROUTES.ROUTE_EDITOR}
-        >
+        <ListItemButton key={"route_editor"} component={Link} to={ROUTES.ROUTE_EDITOR}>
           <ListItemIcon>
             <RouteIcon />
           </ListItemIcon>
           <ListItemText primary={"Route Editor"} />
         </ListItemButton>
 
-        <ListItemButton
-          key={"DEVICE_SENSOR"}
-          component={Link}
-          to={ROUTES.DEVICE_SENSORS}
-        >
+        <ListItemButton key={"DEVICE_SENSOR"} component={Link} to={ROUTES.DEVICE_SENSORS}>
           <ListItemIcon>
             <EdgesensorHighIcon />
           </ListItemIcon>
           <ListItemText primary={"Device Sensors"} />
         </ListItemButton>
-
-
       </List>
       <Divider />
       <List>
@@ -138,5 +112,5 @@ export default function LeftDrawer(props) {
         </ListItemButton>
       </List>
     </Box>
-  );
+  )
 }
