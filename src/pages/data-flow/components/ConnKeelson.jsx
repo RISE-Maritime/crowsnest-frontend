@@ -1,8 +1,8 @@
-import React, { useState, useRef } from "react"
+import React, {  useRef } from "react"
 import { useFormik } from "formik"
 import * as yup from "yup"
 import { Grid, TextField, Button } from "@mui/material"
-import { messageParser, protoParser } from "../../../recoil/selectors"
+import {  protoParser } from "../../../recoil/selectors"
 import { atomKeelsonConnectionState } from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
 import protobuf from "protobufjs"
@@ -28,7 +28,6 @@ const initFormValuesManual = {
 export default function ConnKeelson() {
   const [keelsonConState, setKeelsonConState] = useRecoilState(atomKeelsonConnectionState)
   let router = useRef(null)
-  // const parseKeyMsg = useSetRecoilState(messageParser)
   const parseKeelsonMsg = useSetRecoilState(protoParser)
 
 
@@ -61,23 +60,7 @@ export default function ConnKeelson() {
 
     })
 
-    // protobuf.load(awesome, function (err, root) {
-    //   if (err) throw err
 
-    //   // Get a reference to your message type
-    //   const AwesomeMessage = root.lookupType("awesomepackage.AwesomeMessage")
-    //   // Create a new message instance
-    //   const message = AwesomeMessage.create({
-    //     awesomeField: "value1",
-    //   })
-
-    //   // Encode the message as a buffer
-    //   const buffer = AwesomeMessage.encode(message).finish()
-
-    //   // Decode the buffer back into a message
-    //   const decodedMessage = AwesomeMessage.decode(buffer)
-    //   // console.log(decodedMessage)
-    // })
   }
 
   const disconnectKeelson = () => {

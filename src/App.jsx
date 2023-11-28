@@ -16,7 +16,7 @@ import PageDataFlow from "./pages/data-flow"
 import PageRemoteControl from "./pages/remote-control"
 import PageBearingRate from "./pages/bearing-rate"
 import ELookout from "./pages/e-lookout"
-import ELookoutV2 from "./pages/e-lookout-v2"
+import CameraStreams from "./pages/camera-streams"
 import DeviceSensors from "./pages/device-sensors"
 import PageSettings from "./pages/settings"
 import PageConfiguration from "./pages/configuration"
@@ -117,7 +117,7 @@ export default function App() {
               <Route exact path={ROUTES.CONFIGURATION} element={<PageConfiguration />} />
               <Route exact path={ROUTES.SETTINGS} element={<PageSettings />} />
               <Route exact path={ROUTES.E_LOOKOUT} element={<ELookout />} />
-              <Route exact path={ROUTES.E_LOOKOUT_V2} element={<ELookoutV2 />} />
+              <Route exact path={ROUTES.CAMERA_STREAMS} element={<CameraStreams />} />
               <Route exact path={ROUTES.DEVICE_SENSORS} element={<DeviceSensors />} />
               <Route exact path={ROUTES.REMOTE_CONTROL} element={<PageRemoteControl />} />
               <Route exact path={ROUTES.ROUTE_EDITOR} element={<RouteEditor />} />

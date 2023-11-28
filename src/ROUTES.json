@@ -9,7 +9,7 @@
   "SETTINGS": "/settings",
   "BEARING_RATE": "/bearing_rate",
   "E_LOOKOUT": "/e_lookout",
-  "E_LOOKOUT_V2": "/e_lookout_v2",
+  "CAMERA_STREAMS": "/camera_streams",
   "DEVICE_SENSORS": "/device_sensors",
   "ROUTE_EDITOR": "/route_editor"
 }

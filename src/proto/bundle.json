@@ -1,16 +1,88 @@
 {
   "nested": {
-    "core": {
+    "awesomepackage": {
       "nested": {
-        "Envelope": {
+        "AwesomeMessage": {
           "fields": {
-            "enclosedAt": {
+            "awesomeField": {
+              "type": "string",
+              "id": 1
+            }
+          }
+        }
+      }
+    },
+    "foxglove": {
+      "nested": {
+        "CompressedVideo": {
+          "fields": {
+            "timestamp": {
               "type": "google.protobuf.Timestamp",
               "id": 1
             },
-            "payload": {
+            "frameId": {
+              "type": "string",
+              "id": 2
+            },
+            "data": {
+              "type": "bytes",
+              "id": 3
+            },
+            "format": {
+              "type": "string",
+              "id": 4
+            }
+          }
+        },
+        "CompressedImage": {
+          "fields": {
+            "timestamp": {
+              "type": "google.protobuf.Timestamp",
+              "id": 1
+            },
+            "frameId": {
+              "type": "string",
+              "id": 4
+            },
+            "data": {
               "type": "bytes",
               "id": 2
+            },
+            "format": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        },
+        "RawImage": {
+          "fields": {
+            "timestamp": {
+              "type": "google.protobuf.Timestamp",
+              "id": 1
+            },
+            "frameId": {
+              "type": "string",
+              "id": 7
+            },
+            "width": {
+              "type": "fixed32",
+              "id": 2
+            },
+            "height": {
+              "type": "fixed32",
+              "id": 3
+            },
+            "encoding": {
+              "type": "string",
+              "id": 4
+            },
+            "step": {
+              "type": "fixed32",
+              "id": 5
+            },
+            "data": {
+              "type": "bytes",
+              "id": 6
             }
           }
         }
@@ -31,6 +103,22 @@
                   "id": 2
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "core": {
+      "nested": {
+        "Envelope": {
+          "fields": {
+            "enclosedAt": {
+              "type": "google.protobuf.Timestamp",
+              "id": 1
+            },
+            "payload": {
+              "type": "bytes",
+              "id": 2
             }
           }
         }

@@ -1,39 +1,13 @@
 import React from "react"
 import { Button } from "@mui/material"
-import mqtt from "precompiled-mqtt"
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import "@tensorflow/tfjs"
-// eslint-disable-next-line
-import * as cocoSsd from "@tensorflow-models/coco-ssd"
 import axios from "axios"
 
-function text2Binary(string) {
-  return string
-    .split("")
-    .map(function (char) {
-      return char.charCodeAt(0).toString(2)
-    })
-    .join(" ")
-}
-
-export default function CamSelect({ refV, refA, detectFrame, ID }) {
+export default function CamSelect({ refV, refA,  ID }) {
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
     }
-
-    refV.current.addEventListener("play", event => {
-      event
-      const modelPromise = cocoSsd.load()
-      // modelPromise.detect()
-      Promise.all([modelPromise, refV])
-        .then(values => {
-          detectFrame(refV.current, values[0])
-        })
-        .catch(error => {
-          console.error(error)
-        })
-    })
 
     console.log("(1) start camera: " + camID)
 
@@ -50,7 +24,7 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
     /* eslint-enable */
 
     let pc = null
-    const requestTopic = "CROWSNEST/LANDKRABBA/WEBRTC/" + camID
+
     var config = {
       sdpSemantics: "unified-plan",
       iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }], // Always use a STUN server for ICE
@@ -101,67 +75,38 @@ export default function CamSelect({ refV, refA, detectFrame, ID }) {
       .then(function () {
         var offer = pc.localDescription
 
-        var payload = JSON.stringify({
-          sdp: offer.sdp,
-          type: offer.type,
-        })
-
-        var responseTopic = "crow_muppet" + Math.random()
-        // console.log("responseTopic", responseTopic)
-
-        // client.on("message", function (topic, message) {
-        //   console.log("Humm..message ", topic, message)
-
-        //   client.unsubscribe(responseTopic)
-        //   pc.setRemoteDescription(JSON.parse(message.toString()))
-        // })
-        // client.subscribe(responseTopic)
-
-        // client.publish(requestTopic, payload, {
-        //   properties: {
-        //     responseTopic: responseTopic,
-        //     correlationData: text2Binary("hej"),
-        //   },
-        // })
-
         console.log("SENDING TO: ", { sdp: offer.sdp, mediamtx_path: "example" })
 
+        console.log("send sdp:", offer.sdp)
         axios
-          .put("http://localhost:8000/rise/masslab/mediamtx/masslab-2/rpc/signal_for_webrtc", {
-            responseTopic: responseTopic,
+          .post("http://localhost:8001/rise/marie/mediamtx/sealog-4/rpc/whep", {
+            path: "axis",
             sdp: offer.sdp,
-            mediamtx_path: "example",
           })
-          .then(res => {
-      
-            console.log("Response: ", res)
+          .then(response => {
+            console.log("response", response.data)
 
-            axios
-              .get("http://localhost:8000/rise/masslab/mediamtx/masslab-2/rpc/signal_for_webrtc", {
-                params: { sdp: offer.sdp, mediamtx_path: "example" },
+            let sdpNew = response.data[0][1]
+
+            console.log("res:", sdpNew)
+
+            pc.setRemoteDescription(
+              new RTCSessionDescription({
+                type: "answer",
+                sdp: sdpNew,
               })
-              .then(res => {
-                console.log("Queryable Response: ", res)
-              })
-              .catch(err => {
-                console.log("Error: ", err)
-              })
+            )
           })
       })
 
       .catch(function (e) {
         console.log("Error Cam Select", e)
       })
-
-    // client.on("error". )
   }
 
   return (
     <div>
-      <Button onClick={() => startCamera(ID)}>
-        <ArrowUpwardIcon sx={{ transform: "rotate(-90deg)" }} />
-        Axis
-      </Button>
+      <Button onClick={() => startCamera(ID)}>Start</Button>
     </div>
   )
 }
