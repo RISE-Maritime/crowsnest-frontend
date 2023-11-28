@@ -1,0 +1,267 @@
+{
+  "eniroSeaChart": {
+    "version": 8,
+    "name": "Eniro Sea Chart",
+    "sources": {
+      "eniroNautical": {
+        "type": "raster",
+        "scheme": "tms",
+        "tiles": ["http://map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{y}.png"],
+        "tileSize": 256
+      }
+    },
+    "layers": [
+      {
+        "id": "eniroNautical-layer",
+        "type": "raster",
+        "source": "eniroNautical",
+        "minzoom": 0,
+        "maxzoom": 22
+      }
+    ]
+  },
+  "darkMap": {
+    "version": 8,
+    "name": "Dark Map",
+    "sources": {
+      "rasterSource": {
+        "type": "raster",
+        "tiles": ["https://abcde.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"],
+        "tileSize": 256
+      }
+    },
+    "layers": [
+      {
+        "id": "rasterLayer",
+        "type": "raster",
+        "source": "rasterSource",
+        "paint": {
+          "raster-opacity": 1,
+          "raster-fade-duration": 0
+        }
+      }
+    ]
+  },
+  "openStreetMap": {
+    "version": 8,
+    "name": "Open Street Map",
+    "sources": {
+      "rasterSource": {
+        "type": "raster",
+        "tiles": ["https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+        "tileSize": 256
+      }
+    },
+    "layers": [
+      {
+        "id": "rasterLayer",
+        "type": "raster",
+        "source": "rasterSource",
+        "paint": {
+          "raster-opacity": 1,
+          "raster-fade-duration": 0
+        }
+      }
+    ]
+  },
+  "satelliteImages": {
+    "version": 8,
+    "name": "Satellite Imagery",
+    "sources": {
+      "rasterSource": {
+        "type": "raster",
+        "tiles": ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+        "tileSize": 256
+      }
+    },
+    "layers": [
+      {
+        "id": "rasterLayer",
+        "type": "raster",
+        "source": "rasterSource",
+        "paint": {
+          "raster-opacity": 1,
+          "raster-fade-duration": 0
+        }
+      }
+    ]
+  },
+  "riseSeaChart": {
+    "version": 8,
+    "name": "RISE Sea Chart",
+    "center": [11.83239, 57.67853],
+    "zoom": 11,
+    "sources": {
+      "chart_4000": {
+        "type": "vector",
+        "url": "http://localhost/tiles/data/chart_4000.json"
+      }
+    },
+    "sprite": "http://localhost/tiles/styles/chart_4000/sprite",
+    "glyphs": "http://localhost/tiles/fonts/{fontstack}/{range}.pbf",
+    "layers": [
+      {
+        "id": "background",
+        "type": "fill",
+        "source": "chart_4000",
+        "source-layer": "m_covr",
+        "paint": {
+          "fill-color": [
+            "case",
+            ["==", ["get", "catcov"], 1],
+            "rgba(255, 255, 255, 1)",
+            "rgba(50,50,50, 1)"
+          ]
+        }
+      },
+      {
+        "id": "depth_area_mid_shallow",
+        "type": "fill",
+        "source": "chart_4000",
+        "source-layer": "depare",
+        "filter": ["all", ["<=", "drval2", 6]],
+        "layout": {"visibility": "visible"},
+        "paint": {"fill-color": "rgba(207, 255, 253, 1)", "fill-opacity": 1}
+      },
+      {
+        "id": "depth_area_shallow",
+        "type": "fill",
+        "source": "chart_4000",
+        "source-layer": "depare",
+        "filter": ["all", ["<", "drval1", 3]],
+        "layout": {"visibility": "visible"},
+        "paint": {"fill-color": "rgba(103, 202, 224, 1)"}
+      },
+      {
+        "id": "depth_contour",
+        "type": "line",
+        "source": "chart_4000",
+        "source-layer": "depcnt",
+        "layout": {"visibility": "visible"},
+        "paint": {"line-color": "rgba(29, 103, 180, 0.63)"}
+      },
+      {
+        "id": "depth_contour_label",
+        "type": "symbol",
+        "source": "chart_4000",
+        "source-layer": "depcnt",
+        "layout": {
+          "text-font": ["Open Sans Regular"],
+          "text-field": "{valdco}",
+          "symbol-placement": "line",
+          "text-padding": 2,
+          "text-size": 12
+        },
+        "paint": {
+          "text-halo-color": "rgba(255, 255, 255, 1)",
+          "text-halo-width": 3,
+          "text-halo-blur": 4,
+          "text-color": "rgba(29, 103, 180, 1)"
+        }
+      },
+      {
+        "id": "dredged area halo",
+        "type": "line",
+        "source": "chart_4000",
+        "source-layer": "drgare",
+        "layout": {
+          "visibility": "none",
+          "line-join": "round",
+          "line-cap": "round"
+        },
+        "paint": {"line-color": "rgba(255, 255, 255, 1)", "line-width": 2}
+      },
+      {
+        "id": "dredged area",
+        "type": "line",
+        "source": "chart_4000",
+        "source-layer": "drgare",
+        "layout": {
+          "visibility": "visible",
+          "line-join": "round",
+          "line-cap": "round"
+        },
+        "paint": {
+          "line-color": "rgba(128, 128, 128, 1)",
+          "line-width": 2,
+          "line-dasharray": [2, 4]
+        }
+      },
+      {
+        "id": "land_area",
+        "type": "fill",
+        "source": "chart_4000",
+        "source-layer": "lndare",
+        "layout": {"visibility": "visible"},
+        "paint": {"fill-color": "rgba(236, 236, 205, 1)"}
+      },
+      {
+        "id": "shoreline_construction",
+        "type": "line",
+        "source": "chart_4000",
+        "source-layer": "slcons",
+        "paint": {"line-color": "rgba(0, 0, 0, 1)", "line-width": 1.75}
+      },
+      {
+        "id": "coastline",
+        "type": "line",
+        "source": "chart_4000",
+        "source-layer": "coalne",
+        "paint": {"line-color": "rgba(51, 51, 32, 1)", "line-width": 1}
+      },
+      {
+        "id": "sounding",
+        "type": "symbol",
+        "source": "chart_4000",
+        "source-layer": "soundg",
+        "minzoom": 14,
+        "layout": {
+          "text-field": "{depth}",
+          "text-font": ["Open Sans Regular"],
+          "text-size": 10
+        }
+      },
+      {
+        "id": "lights",
+        "type": "symbol",
+        "source": "chart_4000",
+        "source-layer": "lights",
+        "minzoom": 11,
+        "maxzoom": 0,
+        "layout": {
+          "icon-image": [
+            "case",
+            ["==", ["get", "colour"], "[\"3\"]"],
+            "LIGHTS11",
+            ["==", ["get", "colour"], "[\"4\"]"],
+            "LIGHTS12",
+            ["==", ["get", "colour"], "[\"1\"]"],
+            "LIGHTS13",
+            ["==", ["get", "colour"], "[\"1\"]"],
+            "LIGHTS16",
+            ""
+          ],
+          "icon-allow-overlap": true,
+          "icon-anchor": "top-left",
+          "visibility": "visible"
+        }
+      },
+      {
+        "id": "chart_boarders",
+        "type": "line",
+        "source": "chart_4000",
+        "source-layer": "m_covr",
+        "paint": {
+          "line-color": [
+            "case",
+            ["==", ["get", "catcov"], 1],
+            "rgba(0, 0, 0, 1)",
+            "rgba(1, 1, 0, 0)"
+          ]
+        }
+      }
+    ],
+    "id": "5rlhsva54",
+    "owner": "Maritime Operations - RISE"
+  }
+}

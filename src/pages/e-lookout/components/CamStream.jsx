@@ -2,7 +2,6 @@ import React, { useRef } from "react"
 import { Grid } from "@mui/material"
 import CamSelect from "./CamSelect"
 
-
 export default function CamStream({ ID }) {
   const refVideo = useRef()
   const refAudio = useRef()

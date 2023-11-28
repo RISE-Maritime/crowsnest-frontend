@@ -1,4 +1,5 @@
-{/**
+{
+  /**
   Route Editor Page
   -----------------
 
@@ -61,7 +62,8 @@
         
   }
 
-*/}
+*/
+}
 
 import React from "react"
 import { Grid } from "@mui/material"
@@ -70,7 +72,6 @@ import SeaChart from "./components/SeaChart"
 import RouteTableEditor from "./components/RouteTableEditor"
 
 export default function RouteEditor() {
-
   return (
     <Grid container>
       <Grid
@@ -98,7 +99,7 @@ export default function RouteEditor() {
       >
         <SideBarTools />
       </Grid>
-      
+
       <Grid
         item
         xs={12}

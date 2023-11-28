@@ -1,45 +1,47 @@
 import React from "react"
 import { Grid } from "@mui/material"
 import StatusSideBar from "./components/StatusSideBarNEW"
-import SeaChart from "./components/SeaChart"
+import Chart from "./components/Chart"
 import ChartControls from "./components/ChartControls"
 
 export default function Ecdis() {
   return (
-    <Grid container>
-      <Grid
-        item
-        xs={10}
-        sx={{
-          position: "relative",
-          // height: "calc(100vh - 95px)",
-          padding: "0px",
-          height: "90vh",
-          cursor: "crosshair",
-        }}
-      >
-        <SeaChart />
+    <Grid container spacing={0}>
+      <Grid container spacing={0}>
+        <Grid
+          item
+          xs={10}
+          sx={{
+            position: "relative",
+            //height: "calc(100vh - 95px)",
+            padding: "0px",
+            height: "calc(80vh)",
+            cursor: "crosshair",
+            overflow: "hidden",
+          }}
+        >
+          <Chart />
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          sx={{
+            display: "grid",
+            placeItems: "center",
+            position: "relative",
+            height: "calc(80vh)",
+          }}
+        >
+          <StatusSideBar />
+        </Grid>
       </Grid>
-
       <Grid
         item
-        xs={2}
+        md={12}
         sx={{
           display: "grid",
-          placeItems: "center",
           position: "relative",
-          height: "100%",
-        }}
-      >
-        <StatusSideBar />
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sx={{
-          display: "grid",
-          position: "relative",
-          height: "calc(10vh - 40px)",
+          height: "calc(15vh)",
         }}
       >
         <ChartControls />

@@ -12,11 +12,20 @@ import {
   Select,
   MenuItem,
 } from "@mui/material"
+
+import basemaps from "./baseMaps.json"
 import React from "react"
 import { useTheme } from "@mui/material/styles"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
 import ZoomInIcon from "@mui/icons-material/ZoomIn"
-import { atomMapState, atomMapSetting, atomLayersTaggable, atomLayersShowing, atomSensorLayersShowing, atomSensorLayersTaggable } from "./SeaChart"
+import {
+  atomMapState,
+  atomChartSettings,
+  atomLayersTaggable,
+  atomLayersShowing,
+  atomSensorLayersShowing,
+  atomSensorLayersTaggable,
+} from "./Chart"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { OS_POSITIONS, OS_POSITION_SETTING } from "../../../recoil/atoms"
 import RadarRangeChange from "./RadarRangeChange"
@@ -39,15 +48,41 @@ function getStyles(layersTaggable, name, theme) {
   }
 }
 
+const BasemapSelector = () => {
+  const [chartSettings, setChartSettings] = useRecoilState(atomChartSettings)
+  return (
+    <FormControl sx={{ width: 300 }} size="small">
+      <InputLabel id="basemap-select-label">Basemap</InputLabel>
+      <Select
+        labelId="basemap-select-label"
+        id="basemap-select"
+        value={chartSettings.basemap}
+        onChange={event => {
+          console.log(event.target.value)
+          setChartSettings({ ...chartSettings, basemap: event.target.value })
+        }}
+      >
+        {Object.entries(basemaps).map(([key, value]) => (
+          <MenuItem key={key} value={key}>
+            {value.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  )
+}
+
 export default function ChartControls() {
   const [mapState, setMapState] = useRecoilState(atomMapState)
-  const [mapSetting, setMapSetting] = useRecoilState(atomMapSetting)
+  const [chartSettings, setChartSettings] = useRecoilState(atomChartSettings)
   const layersTaggable = useRecoilValue(atomLayersTaggable)
   const [layersShowing, setLayersShowing] = useRecoilState(atomLayersShowing)
   const sensorLayersTaggable = useRecoilValue(atomSensorLayersTaggable)
   const [sensorLayersShowing, setSensorLayersShowing] = useRecoilState(atomSensorLayersShowing)
   const osPos = useRecoilValue(OS_POSITIONS)
   const osPosSetting = useRecoilValue(OS_POSITION_SETTING)
+
+  // Get the name of the default basemap
 
   const zoomOut = () => {
     setMapState({
@@ -120,34 +155,31 @@ export default function ChartControls() {
     )
   }
 
-
-  
-
   const setOsPosChartCenter = () => {
     setMapState({
       ...mapState,
       latitude: osPos[osPosSetting.source].latitude,
       longitude: osPos[osPosSetting.source].longitude,
     })
-    setMapSetting({
-      ...mapSetting,
+    setChartSettings({
+      ...chartSettings,
       chartFix: "OS",
     })
   }
 
   const setOsPosChartManual = () => {
-    setMapSetting({
-      ...mapSetting,
+    setChartSettings({
+      ...chartSettings,
       chartFix: "MANUAL",
     })
   }
 
   return (
     <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-      <Button onClick={setOsPosChartCenter} variant={mapSetting.chartFix === "OS" ? "contained" : "outlined"}>
+      <Button onClick={setOsPosChartCenter} variant={chartSettings.chartFix === "OS" ? "contained" : "outlined"}>
         Center OS
       </Button>
-      <Button onClick={setOsPosChartManual} variant={mapSetting.chartFix === "MANUAL" ? "contained" : "outlined"}>
+      <Button onClick={setOsPosChartManual} variant={chartSettings.chartFix === "MANUAL" ? "contained" : "outlined"}>
         Manual
       </Button>
 
@@ -170,32 +202,7 @@ export default function ChartControls() {
         <Button onClick={set3D}>3D</Button>
       </ButtonGroup>
 
-      {/* MAP TILES SELECT */}
-      <FormControl sx={{ width: 300 }} size="small">
-        <InputLabel id="demo-multiple-chip-label">Chart Layers</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={layersShowing}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chart Layers" />}
-          renderValue={selected => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map(value => (
-                <Chip key={value} label={value} size="small" />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {layersTaggable.map(name => (
-            <MenuItem key={name} value={name} style={getStyles(layersTaggable, name, theme)}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <BasemapSelector />
 
       {/* SENSOR LAYERS SELECTOR */}
       <FormControl sx={{ width: 500 }} size="small">
@@ -225,10 +232,8 @@ export default function ChartControls() {
       </FormControl>
 
       {/* Radar range shore radar */}
-      <RadarRangeChange/>
-      <RadarOSRangeChange/>
-  
-
+      <RadarRangeChange />
+      <RadarOSRangeChange />
     </Stack>
   )
 }
