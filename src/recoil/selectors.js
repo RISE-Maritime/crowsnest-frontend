@@ -1,5 +1,5 @@
 import { selector } from "recoil"
-import protobuf from "protobufjs/minimal.js"
+import protobuf from "protobufjs"
 import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
 
@@ -27,7 +27,9 @@ import {
   OS_RADAR_1_SWEEP,
   ATOM_OS_RUDDERS,
   ATOM_OS_ENGINES,
-  ATOM_OS_THRUSTERS
+  ATOM_OS_THRUSTERS,
+  ATOM_KEELSON_KEYEXP_MANAGED,
+  ATOM_KEELSON_KEYEXP_UNMANAGED
 } from "./atoms"
 
 export const selectUser = selector({
@@ -69,8 +71,16 @@ export const protoParser = selector({
   },
   set: ({ get, set }, latestMsg) => {
     // Load the bundle.json file using protobufjs
+  
     const root = protobuf.Root.fromJSON(bundle)
     let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
+    const Envelope = root.lookupType("Envelope")
+    const decodedEnvelope = Envelope.decode(bytes)
+    const seconds = decodedEnvelope.enclosedAt.seconds
+    const nanos = decodedEnvelope.enclosedAt.nanos
+
+    const envelopeEncodedAtDate = new Date(seconds * 1000 + nanos / 1000000)
+
 
 
     switch (latestMsg.key) {
@@ -78,41 +88,40 @@ export const protoParser = selector({
         ?.input: {
         // Assume that `bytes` is a Uint8Array containing the serialized protobuf message
 
-        const Envelope = root.lookupType("Envelope")
         const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
-        const decodedMessage = Envelope.decode(bytes)
-        const readable = PrimitivesTimeFloat.decode(decodedMessage.payload)
+        const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
 
-        console.log("HERE readabel:", readable)
-
-        // set(atomKeelsonKeyExpressionHandled, currentObj => ({
-        //   ...currentObj,
-        //   [latestMsg.keyExpression]: {
-        //     time_received: new Date(),
-        //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
-        //   },
-        // }))
-
+        console.log("HERE readable:", readable)
         // let lastValue = get(atom_OS_AZIMUTH_LEFT)
         // if (lastValue.vertical !== latestMsg.payload) {
-
         //   set(atom_OS_AZIMUTH_LEFT, currentObj => ({
         //     ...currentObj,
         //     vertical: latestMsg.payload,
         //   }))
         // }
 
+        set(ATOM_KEELSON_KEYEXP_MANAGED, currentObj => ({
+          ...currentObj,
+          [latestMsg.key]: {
+            time_received: new Date(),
+            time_encoded: envelopeEncodedAtDate,
+            count: currentObj[latestMsg.key]?.count ? currentObj[latestMsg.key].count + 1 : 1,
+          },
+        }))
+
+
         break
       }
 
       default: {
-        // set(atomKeelsonKeyExpressionUnmanaged, currentObj => ({
-        //   ...currentObj,
-        //   [latestMsg.keyExpression]: {
-        //     time_received: new Date(),
-        //     count: currentObj[latestMsg.keyExpression]?.count ? currentObj[latestMsg.keyExpression].count + 1 : 1,
-        //   },
-        // }))
+        set(ATOM_KEELSON_KEYEXP_UNMANAGED, currentObj => ({
+          ...currentObj,
+          [latestMsg.key]: {
+            time_received: new Date(),
+            time_encoded: envelopeEncodedAtDate,
+            count: currentObj[latestMsg.key]?.count ? currentObj[latestMsg.key].count + 1 : 1,
+          },
+        }))
         break
       }
     }
