@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import axios from "axios"
 import * as yup from "yup"
 import { useFormik } from "formik"
@@ -13,13 +13,6 @@ export default function KeelsonGetLoop() {
   const [isStarted, setIsStarted] = useState(false)
   const protoDecoder = useSetRecoilState(protoParser)
 
-  useEffect(() => {
-    console.log("KeelsonGetLoop mounted")
-
-    return () => {
-      console.log("KeelsonGetLoop unmounted")
-    }
-  }, [])
 
   const validationSchema = yup.object({
     hostLoop: yup.string().required("Required"),
@@ -32,6 +25,7 @@ export default function KeelsonGetLoop() {
     // password: process.env.REACT_APP_MQTT_PASSWORD ? process.env.REACT_APP_MQTT_PASSWORD : "",
     hostLoop: "http://localhost:8000",
     keyExprLoop: "rise/masslab/**",
+    // keyExprLoop: "**",
   }
   /* eslint-enable */
 
@@ -45,18 +39,22 @@ export default function KeelsonGetLoop() {
 
   const submitMsg = values => {
     console.log("Submit", values)
+
     const URL = values.hostLoop + "/" + values.keyExprLoop
 
     const interval = setInterval(() => {
+     
       axios.get(URL).then(res => {
-        let time = new Date()
-        console.log("Loop Response: ", time, res)
+        // let time = new Date()
+        // console.log("Loop Response: ", time, res)
 
         res.data.forEach(element => {
-          console.log("For Each : ", element)
+          // console.log("For Each : ", element)
           protoDecoder(element)
         })
       })
+
+
     }, 1000)
 
     setIntervalVar(interval)
