@@ -34,9 +34,11 @@ export default function KeelsonQueryable() {
 
     axios.get(values.host + "/" + values.keyExprVar, { test: "body_msg" }).then(res => {
       console.log("Queryable Response: ", res)
+    }).catch(err => {
+      console.log("Queryable Error: ", err)
     })
 
-    return values
+    // return values
   }
 
   return (
