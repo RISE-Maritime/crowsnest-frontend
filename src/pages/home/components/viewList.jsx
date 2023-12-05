@@ -10,8 +10,8 @@ import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded"
 import SportsEsportsRoundedIcon from "@mui/icons-material/SportsEsportsRounded"
 import TrackChangesRoundedIcon from "@mui/icons-material/TrackChangesRounded"
 import VrpanoIcon from "@mui/icons-material/Vrpano"
-import SettingsIcon from '@mui/icons-material/Settings';
-import RouteIcon from '@mui/icons-material/Route';
+import SettingsIcon from "@mui/icons-material/Settings"
+import RouteIcon from "@mui/icons-material/Route"
 
 const GridCenter = styled(Grid)(() => ({
   display: "grid",
@@ -51,7 +51,6 @@ export default function viewList() {
         }
       />
 
-
       <ViewListItem
         routeLink={ROUTES.CONNING}
         viewName={"Conning"}
@@ -81,6 +80,19 @@ export default function viewList() {
       <ViewListItem
         routeLink={ROUTES.CAMERA_STREAMS}
         viewName={"Camera Streams"}
+        icon={
+          <VrpanoIcon
+            sx={{
+              fontSize: "4rem",
+              color: theme.palette.info.main,
+            }}
+          />
+        }
+      />
+
+      <ViewListItem
+        routeLink={ROUTES.LOOKOUT_360}
+        viewName={"Lookout 360"}
         icon={
           <VrpanoIcon
             sx={{

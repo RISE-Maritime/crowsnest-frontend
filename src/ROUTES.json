@@ -11,5 +11,6 @@
   "E_LOOKOUT": "/e_lookout",
   "CAMERA_STREAMS": "/camera_streams",
   "DEVICE_SENSORS": "/device_sensors",
-  "ROUTE_EDITOR": "/route_editor"
+  "ROUTE_EDITOR": "/route_editor",
+  "LOOKOUT_360": "/lookout_360"
 }
