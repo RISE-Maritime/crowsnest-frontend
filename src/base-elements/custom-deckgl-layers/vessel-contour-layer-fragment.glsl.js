@@ -28,5 +28,5 @@ void main(void) {
   }
   gl_FragColor = picking_filterPickingColor(gl_FragColor);
 }
-`;
+`
 /* eslint-enable */

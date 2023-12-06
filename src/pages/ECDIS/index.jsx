@@ -13,9 +13,8 @@ export default function Ecdis() {
           xs={10}
           sx={{
             position: "relative",
-            //height: "calc(100vh - 95px)",
             padding: "0px",
-            height: "calc(80vh)",
+            height: "calc(99vh - 95px)",
             cursor: "crosshair",
             overflow: "hidden",
           }}
@@ -29,7 +28,7 @@ export default function Ecdis() {
             display: "grid",
             placeItems: "center",
             position: "relative",
-            height: "calc(80vh)",
+            height: "calc(99vh - 95px)",
           }}
         >
           <StatusSideBar />
@@ -41,7 +40,7 @@ export default function Ecdis() {
         sx={{
           display: "grid",
           position: "relative",
-          height: "calc(15vh)",
+          height: "50px",
         }}
       >
         <ChartControls />

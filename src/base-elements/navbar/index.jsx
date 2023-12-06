@@ -14,88 +14,66 @@
 
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 // Recoil
-import { useRecoilState } from "recoil";
-import { appState } from "../../recoil/atoms";
+import { useRecoilState } from "recoil"
+import { appState } from "../../recoil/atoms"
 // Components
-import Clock from "react-live-clock";
-import GridCenter from "../components/GridCenter";
-import LeftDrawer from "./LeftDrawer";
-import RightDrawer from "./RightDrawer";
-import {
-  Grid,
-  AppBar,
-  IconButton,
-  Typography,
-  SwipeableDrawer,
-  Stack,
-  Avatar,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import Clock from "react-live-clock"
+import GridCenter from "../components/GridCenter"
+import LeftDrawer from "./LeftDrawer"
+import RightDrawer from "./RightDrawer"
+import { Grid, AppBar, IconButton, Typography, SwipeableDrawer, Stack, Avatar } from "@mui/material"
+import { useTheme } from "@mui/material/styles"
 // Icons & Images
-import LogoCrowsnest from "../../resources/crowsnest.png";
-import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
-import MenuIcon from "@mui/icons-material/Menu";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import LogoCrowsnest from "../../resources/crowsnest.png"
+import AppsRoundedIcon from "@mui/icons-material/AppsRounded"
+import MenuIcon from "@mui/icons-material/Menu"
+import LightModeIcon from "@mui/icons-material/LightMode"
+import DarkModeIcon from "@mui/icons-material/DarkMode"
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
 
 export default function NavBar() {
   const theme = useTheme()
-  const [appObj, setAppObj] = useRecoilState(appState);
+  const [appObj, setAppObj] = useRecoilState(appState)
   const [drawerState, setDrawerState] = useState({
     left: false,
     right: false,
-  });
+  })
 
-  useEffect(() => {}, []);
+  useEffect(() => {}, [])
 
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
+  const toggleDrawer = (anchor, open) => event => {
+    if (event && event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
+      return
     }
 
-    setDrawerState({ ...drawerState, [anchor]: open });
-  };
+    setDrawerState({ ...drawerState, [anchor]: open })
+  }
 
   const ToggleThemeMode = () => {
     if (appObj.appActiveColorTheme === "light") {
       setAppObj({
         ...appObj,
         appActiveColorTheme: "dark",
-      });
+      })
     } else {
       setAppObj({
         ...appObj,
         appActiveColorTheme: "light",
-      });
+      })
     }
-  };
+  }
 
   return (
-    <AppBar position="static">
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+    <AppBar position="static" sx={{ height: "40px" }}>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
         {/* Left side */}
         <GridCenter item xs={4}>
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={2}
-          >
+          <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
             {/* App navigation button */}
             <IconButton onClick={toggleDrawer("left", true)}>
-              <MenuIcon sx={{color: theme.palette.primary.contrastText}}/>
+              <MenuIcon sx={{ color: theme.palette.primary.contrastText }} />
             </IconButton>
             {/* Active view status text */}
             <Typography variant={"h6"}>Crowsnest</Typography>
@@ -112,21 +90,12 @@ export default function NavBar() {
         {/* Time */}
         <GridCenter item xs={2}>
           <Typography variant={"subtitle1"}>
-            <Clock
-              format={"YYYY-MM-DD  HH:mm:ss"}
-              ticking={true}
-              timezone={"Europe/Stockholm"}
-            />
+            <Clock format={"YYYY-MM-DD  HH:mm:ss"} ticking={true} timezone={"Europe/Stockholm"} />
           </Typography>
         </GridCenter>
 
         <Grid item xs={3}>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            alignItems="center"
-            spacing={2}
-          >
+          <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
             {/* Alarm management */}
             <NotificationsNoneIcon />
 
@@ -138,15 +107,15 @@ export default function NavBar() {
             {/* Day and night mode (App color theme) */}
             <IconButton onClick={ToggleThemeMode}>
               {appObj.appActiveColorTheme === "light" ? (
-                <DarkModeIcon sx={{color: theme.palette.primary.contrastText}}/>
+                <DarkModeIcon sx={{ color: theme.palette.primary.contrastText }} />
               ) : (
-                <LightModeIcon sx={{color: theme.palette.primary.contrastText}}/>
+                <LightModeIcon sx={{ color: theme.palette.primary.contrastText }} />
               )}
             </IconButton>
 
             {/* Floating mini apps */}
             <IconButton onClick={toggleDrawer("right", true)}>
-              <AppsRoundedIcon sx={{color: theme.palette.primary.contrastText}}/>
+              <AppsRoundedIcon sx={{ color: theme.palette.primary.contrastText }} />
             </IconButton>
           </Stack>
         </Grid>
@@ -172,5 +141,5 @@ export default function NavBar() {
         <RightDrawer side={"right"} toggleDrawer={toggleDrawer} />
       </SwipeableDrawer>
     </AppBar>
-  );
+  )
 }
