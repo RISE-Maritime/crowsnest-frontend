@@ -17,6 +17,7 @@ import KeelsonPush from "./components/KeelsonPush"
 import KeelsonQueryable from "./components/KeelsonQueryable"
 import KeelsonFlow from "./components/KeelsonFlow"
 import KeelsonGetLoop from "./components/KeelsonGetLoop"
+import DockerMonitoring from "./components/DockerMonitoring"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -84,6 +85,9 @@ export default function DataFlow() {
 
       <GridCenter item xs={12}>
         <StatsHW />
+      </GridCenter>
+      <GridCenter item xs={12}>
+        <DockerMonitoring />
       </GridCenter>
     </Grid>
   )

@@ -1,15 +1,15 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from "react"
 import axios from "axios"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs/minimal.js"
 import bundle from "../../../proto/bundle.json"
 import jpeg from "jpeg-js"
 import CamCanvas from "./CamCanvas"
+import { Typography } from "@mui/material"
 
 let frameCount = 0
 
-export default function ViewWindow({URLcam}) {
-
+export default function ViewWindow({ URLcam }) {
   const [camFrame, setCamFrame] = useState({ height: 1080, width: 1920, data: null, hasData: false })
   const [startTime, setStartTime] = useState(Date.now())
   const [metadata, setMetadata] = useState({
@@ -22,15 +22,14 @@ export default function ViewWindow({URLcam}) {
     const interval = setInterval(() => {
       getFrame(URLcam)
     }, 1000) // intervalMilliseconds
-  
+
     return () => {
       clearInterval(interval)
     }
   }, [URLcam])
-  
 
-  const getFrame = (URLcam) => {
-    console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ getFrame ~ URLcam", URLcam);
+  const getFrame = URLcam => {
+    console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ getFrame ~ URLcam", URLcam)
     axios.get(URLcam).then(res => {
       console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ axios.get ~ res:", res)
 
@@ -85,6 +84,11 @@ export default function ViewWindow({URLcam}) {
   }
 
   return (
-    <CamCanvas jpegFrame={camFrame} />
+    <>
+      <CamCanvas jpegFrame={camFrame} />
+      <Typography variant="body1" align="center">
+        {metadata.envelope_time} ({metadata.latency}) 
+      </Typography>
+    </>
   )
 }

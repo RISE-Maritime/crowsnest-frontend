@@ -539,12 +539,12 @@ export const messageParser = selector({
         break
       }
 
-      case latestMessage.topic.match(/CROWSNEST\/\w{1,55}..\/HW\/0\/JSON/)?.input: {
+      case latestMessage.topic.match(/CROWSNEST\/\w{1,55}..\/HW\/\d\/JSON/)?.input: {
         // case /CROWSNEST\/\w{1,55}\/HW/0/JSON/g.test(latestMessage.topic):{
 
         let sent_at = new Date(latestMessage.payload.sent_at)
         let network_delay = Math.abs((sent_at.getTime() - new Date().getTime()) / 1000)
-
+        
         //  MQTT logger topics
         set(atomMQTTtopics, currentObj => ({
           ...currentObj,
