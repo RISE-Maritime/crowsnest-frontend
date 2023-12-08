@@ -34,6 +34,7 @@ export default function MqttBrokerLogin() {
   const parseWsMessage = useSetRecoilState(messageParser)
 
   useEffect(() => {
+
     if (client) {
       client.on("connect", () => {
         console.log("Connected to REMOTE MQTT broker!")

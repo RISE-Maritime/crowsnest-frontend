@@ -29,9 +29,9 @@ export default function ViewWindow({ URLcam }) {
   }, [URLcam])
 
   const getFrame = URLcam => {
-    console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ getFrame ~ URLcam", URLcam)
+    // console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ getFrame ~ URLcam", URLcam)
     axios.get(URLcam).then(res => {
-      console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ axios.get ~ res:", res)
+      // console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ axios.get ~ res:", res)
 
       let msgValue = res.data[0].value // Base64 encoded JPEG
       const root = protobuf.Root.fromJSON(bundle)
@@ -87,7 +87,7 @@ export default function ViewWindow({ URLcam }) {
     <>
       <CamCanvas jpegFrame={camFrame} />
       <Typography variant="body1" align="center">
-        {metadata.envelope_time} ({metadata.latency}) 
+        {metadata.envelope_time} {/*({metadata.latency})*/} 
       </Typography>
     </>
   )
