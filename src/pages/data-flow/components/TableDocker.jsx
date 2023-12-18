@@ -6,6 +6,9 @@ import axios from "axios"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs"
 import bundle from "../../../proto/bundle.json"
+import RestartAltIcon from "@mui/icons-material/RestartAlt"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import StopIcon from '@mui/icons-material/Stop';
 
 export default function TableDocker({ dockerContainers, URL }) {
   const [logOutput, setLogOutput] = useState("Logs output if requested by pressing the button in the table")
@@ -43,17 +46,63 @@ export default function TableDocker({ dockerContainers, URL }) {
             sx={{
               color: "primary.main",
             }}
-            onClick={handleSaveClick(id)}
+            onClick={handleClickGetLogs(id)}
           />,
         ]
       },
     },
+
+    {
+      field: "restart",
+      type: "actions",
+      headerName: "Restart",
+      width: 80,
+      cellClassName: "actions",
+      getActions: (rowData ) => {
+        console.log("🚀 ~ file: TableDocker.jsx:78 ~ TableDocker ~ id, status:", rowData)
+
+        if (rowData.row.status == "running") {
+          return [
+            <GridActionsCellItem
+              key={"erffre"}
+              icon={<StopIcon />}
+              label="Stop"
+              sx={{
+                color: "primary.main",
+              }}
+              onClick={handleClickStop(rowData?.row.id)}
+            />,
+            <GridActionsCellItem
+              key={"ertgeregrewrwta"}
+              icon={<RestartAltIcon />}
+              label="Restart"
+              sx={{
+                color: "primary.main",
+              }}
+              onClick={handleClickRestart(rowData?.row.id)}
+            />,
+          ]
+        } else {
+          return [
+            <GridActionsCellItem
+              key={"ertgeregrewrferrwta"}
+              icon={<PlayArrowIcon />}
+              label="Start"
+              sx={{
+                color: "primary.main",
+              }}
+              onClick={handleClickStart(rowData.row.id)}
+            />,
+          ]
+        }
+      },
+    },
   ]
 
-  const handleSaveClick = id => () => {
+  const handleClickGetLogs = id => () => {
     console.log("Get Logs for ", id)
 
-    axios.get(URL+"?logs="+id).then(res => {
+    axios.get(URL + "?logs=" + id).then(res => {
       let time = new Date()
       console.log("Loop Response: ", time, res)
 
@@ -68,16 +117,98 @@ export default function TableDocker({ dockerContainers, URL }) {
       // setTimeMsg(envelopeEncodedAtDate.toLocaleString("sv-SV"))
 
       console.log("🚀 ~ file: DockerMonitoring.jsx:35 ~ axios.get ~ envelopeEncodedAtDate:", envelopeEncodedAtDate)
-      
+
       let decoder = new TextDecoder("utf-8")
       let decodedData = decoder.decode(decodedEnvelope.payload)
       let jsonData = JSON.parse(decodedData)
       console.log("🚀 ~ file: DockerMonitoring.jsx:30 ~ axios.get ~ jsonData:", jsonData)
       // setDockerContainers(jsonData)
-      setLogOutput("Get Logs for " + id + " \n\n"+ jsonData)
+      setLogOutput("Get Logs for " + id + " \n\n" + jsonData)
     })
+  }
 
+  const handleClickRestart = id => () => {
+    console.log("Restart container ", id)
 
+    axios.get(URL + "?restart=" + id).then(res => {
+      let time = new Date()
+      console.log("Response: ", time, res)
+
+      let data_values = res.data[0].value
+      let bytes = new Uint8Array(ByteBuffer.fromBase64(data_values).toArrayBuffer())
+      const root = protobuf.Root.fromJSON(bundle)
+      const Envelope = root.lookupType("Envelope")
+      const decodedEnvelope = Envelope.decode(bytes)
+      const envelopeEncodedAtDate = new Date(
+        decodedEnvelope.enclosedAt.seconds * 1000 + decodedEnvelope.enclosedAt.nanos / 1000000
+      )
+      // setTimeMsg(envelopeEncodedAtDate.toLocaleString("sv-SV"))
+
+      console.log("🚀 ~ file: DockerMonitoring.jsx:35 ~ axios.get ~ envelopeEncodedAtDate:", envelopeEncodedAtDate)
+
+      let decoder = new TextDecoder("utf-8")
+      let decodedData = decoder.decode(decodedEnvelope.payload)
+      let jsonData = JSON.parse(decodedData)
+      console.log("🚀 ~ file: DockerMonitoring.jsx:30 ~ axios.get ~ RESTART:", jsonData)
+      // setDockerContainers(jsonData)
+      // setLogOutput("Get Logs for " + id + " \n\n"+ jsonData)
+    })
+  }
+
+  const handleClickStart = id => () => {
+    console.log("Restart container ", id)
+
+    axios.get(URL + "?start=" + id).then(res => {
+      let time = new Date()
+      console.log("Response: ", time, res)
+
+      let data_values = res.data[0].value
+      let bytes = new Uint8Array(ByteBuffer.fromBase64(data_values).toArrayBuffer())
+      const root = protobuf.Root.fromJSON(bundle)
+      const Envelope = root.lookupType("Envelope")
+      const decodedEnvelope = Envelope.decode(bytes)
+      const envelopeEncodedAtDate = new Date(
+        decodedEnvelope.enclosedAt.seconds * 1000 + decodedEnvelope.enclosedAt.nanos / 1000000
+      )
+      // setTimeMsg(envelopeEncodedAtDate.toLocaleString("sv-SV"))
+
+      console.log("🚀 ~ file: DockerMonitoring.jsx:35 ~ axios.get ~ envelopeEncodedAtDate:", envelopeEncodedAtDate)
+
+      let decoder = new TextDecoder("utf-8")
+      let decodedData = decoder.decode(decodedEnvelope.payload)
+      let jsonData = JSON.parse(decodedData)
+      console.log("🚀 ~ file: DockerMonitoring.jsx:30 ~ axios.get ~ START:", jsonData)
+      // setDockerContainers(jsonData)
+      // setLogOutput("Get Logs for " + id + " \n\n"+ jsonData)
+    })
+  }
+
+  const handleClickStop = id => () => {
+    console.log("Restart container ", id)
+
+    axios.get(URL + "?stop=" + id).then(res => {
+      let time = new Date()
+      console.log("Response: ", time, res)
+
+      let data_values = res.data[0].value
+      let bytes = new Uint8Array(ByteBuffer.fromBase64(data_values).toArrayBuffer())
+      const root = protobuf.Root.fromJSON(bundle)
+      const Envelope = root.lookupType("Envelope")
+      const decodedEnvelope = Envelope.decode(bytes)
+      const envelopeEncodedAtDate = new Date(
+        decodedEnvelope.enclosedAt.seconds * 1000 + decodedEnvelope.enclosedAt.nanos / 1000000
+      )
+      // setTimeMsg(envelopeEncodedAtDate.toLocaleString("sv-SV"))
+
+      console.log("🚀 ~ file: DockerMonitoring.jsx:35 ~ axios.get ~ envelopeEncodedAtDate:", envelopeEncodedAtDate)
+
+      let decoder = new TextDecoder("utf-8")
+      let decodedData = decoder.decode(decodedEnvelope.payload)
+      let jsonData = JSON.parse(decodedData)
+      console.log("🚀 axios.get ~ STOP:", jsonData)
+      // setDockerContainers(jsonData)
+      // setLogOutput("Get Logs for " + id + " \n\n"+ jsonData)
+    })
   }
 
   return (
