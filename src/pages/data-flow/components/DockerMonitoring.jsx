@@ -92,7 +92,7 @@ export default function DockerMonitoring() {
         </Grid>
 
         <Grid item xs={12}>
-          <TableDocker dockerContainers={dockerContainers} />
+          <TableDocker dockerContainers={dockerContainers} URL={URL} />
         </Grid>
       </Grid>
     </div>

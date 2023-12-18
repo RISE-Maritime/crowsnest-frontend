@@ -7,7 +7,7 @@ import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs"
 import bundle from "../../../proto/bundle.json"
 
-export default function TableDocker({ dockerContainers }) {
+export default function TableDocker({ dockerContainers, URL }) {
   const [logOutput, setLogOutput] = useState("Logs output if requested by pressing the button in the table")
 
   const columns = [
@@ -53,7 +53,7 @@ export default function TableDocker({ dockerContainers }) {
   const handleSaveClick = id => () => {
     console.log("Get Logs for ", id)
 
-    axios.get("http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id?logs="+id).then(res => {
+    axios.get(URL+"?logs="+id).then(res => {
       let time = new Date()
       console.log("Loop Response: ", time, res)
 
