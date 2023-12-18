@@ -6,11 +6,18 @@ import protobuf from "protobufjs"
 import bundle from "../../../proto/bundle.json"
 import TableDocker from "./TableDocker"
 
+/* eslint-disable */
 const URLdockers = [
-  "http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id",
-  "http://localhost:8000/rise/masslab/docker-sdk/masslab-3/docker/id",
-  "http://localhost:8000/rise/masslab/docker-sdk/ted/docker/id",
+  (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
+  "/rise/seahorse/docker-sdk/sh-1/docker/id",
+  (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
+  "/rise/masslab/docker-sdk/masslab-3/docker/id",
+  (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
+  "/rise/masslab/docker-sdk/masslab-4/docker/id",
+  (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
+  "/rise/masslab/docker-sdk/ted/docker/id"
 ]
+/* eslint-enable */
 
 export default function DockerMonitoring() {
   const [timeMsg, setTimeMsg] = useState(null)
@@ -18,12 +25,12 @@ export default function DockerMonitoring() {
   const [URL, setURL] = useState("http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id")
 
   useEffect(() => {
-    // const interval = setInterval(() => {
-    //   getDockerState()
-    // }, 5000)
-    // return () => {
-    //   clearInterval(interval)
-    // }
+    const interval = setInterval(() => {
+      getDockerState()
+    }, 5000)
+    return () => {
+      clearInterval(interval)
+    }
   }, [])
 
   function getDockerState() {
