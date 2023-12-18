@@ -27,11 +27,11 @@ export default function DockerMonitoring() {
   useEffect(() => {
     const interval = setInterval(() => {
       getDockerState()
-    }, 5000)
+    }, 15000)
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [URL])
 
   function getDockerState() {
     
