@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react"
-import { Typography, Grid, Button } from "@mui/material"
+import { Typography, Grid, Button, Autocomplete, TextField, Stack } from "@mui/material"
 import axios from "axios"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs"
 import bundle from "../../../proto/bundle.json"
 import TableDocker from "./TableDocker"
 
-const URL = "http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id"
+const URLdockers = [
+  "http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id",
+  "http://localhost:8000/rise/masslab/docker-sdk/masslab-3/docker/id",
+  "http://localhost:8000/rise/masslab/docker-sdk/ted/docker/id",
+]
 
 export default function DockerMonitoring() {
-
   const [timeMsg, setTimeMsg] = useState(null)
   const [dockerContainers, setDockerContainers] = useState([])
+  const [URL, setURL] = useState("http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id")
 
   useEffect(() => {
     // const interval = setInterval(() => {
@@ -23,7 +27,12 @@ export default function DockerMonitoring() {
   }, [])
 
   function getDockerState() {
+    
+    console.log("🚀 ~ file: DockerMonitoring.jsx:32 ~ axios.get ~ URL:", URL)
+    
     axios.get(URL).then(res => {
+
+
       let time = new Date()
       console.log("Loop retrieved update: ", time, res)
 
@@ -38,7 +47,7 @@ export default function DockerMonitoring() {
       setTimeMsg(envelopeEncodedAtDate.toLocaleString("sv-SV"))
 
       console.log("🚀 ~ file: DockerMonitoring.jsx:35 ~ axios.get ~ envelopeEncodedAtDate:", envelopeEncodedAtDate)
-      
+
       let decoder = new TextDecoder("utf-8")
       let decodedData = decoder.decode(decodedEnvelope.payload)
       let jsonData = JSON.parse(decodedData)
@@ -55,19 +64,36 @@ export default function DockerMonitoring() {
         </Grid>
 
         <Grid item xs={12}>
-          <Typography variant="caption">Last retrieved date at {timeMsg ? timeMsg : "-" }</Typography>
+          <Typography variant="caption">Last retrieved date at {timeMsg ? timeMsg : "-"}</Typography>
         </Grid>
 
         <Grid item xs={12}>
-          <Button variant="contained" onClick={getDockerState}>
-            Get Docker State
-          </Button>
+          <Stack direction="row" spacing={2} sx={{ margin: "0.5rem" }}>
+            <Autocomplete
+              freeSolo
+              id="autocomplete-camera-url"
+              options={URLdockers}
+              sx={{ width: 800 }}
+              value={URL}
+              // onChange={(event, newValue) => {
+              //   console.log("newValue", newValue);
+              //   setURLcam(newValue)
+              // }}
+              onInputChange={(event, newValue) => {
+                // console.log("newValue2", newValue);
+                setURL(newValue)
+              }}
+              renderInput={params => <TextField {...params} label="URL" size="small" />}
+            />
+            <Button variant="contained" onClick={getDockerState}>
+              Get Docker State
+            </Button>
+          </Stack>
         </Grid>
 
         <Grid item xs={12}>
-          <TableDocker dockerContainers={dockerContainers}/>
+          <TableDocker dockerContainers={dockerContainers} />
         </Grid>
-
       </Grid>
     </div>
   )
