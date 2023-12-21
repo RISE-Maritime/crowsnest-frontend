@@ -5,6 +5,7 @@ import PicSeahorse from "../resources/platforms/seahorse.png"
 import PicLandkrabban from "../resources/platforms/landkrabban.png"
 import PicVikingGrace from "../resources/platforms/viking_grace.png"
 import PicJutlandica from "../resources/platforms/jutlandica.png"
+import PicGota from "../resources/platforms/farja_gota.jpg"
 
 const localStorageEffect =
   key =>
@@ -100,6 +101,16 @@ export const atomPlatforms = atom({
       mmsi: 3,
       imo: 3,
       picture: PicSeahorse,
+    },
+    gota: {
+      name: "Göta",
+      key: "gota",
+      source_position: "GNSS_0",
+      MQTTpath: "",
+      mmsi: 265522230,
+      imo: 8311481,
+      callsign: "SFHQ",
+      picture: PicGota,
     },
   },
 })
@@ -594,7 +605,7 @@ export const ATOM_OS_COMMAND = atom({
   key: "atom_os_command",
   default: {
     guiInCommand: false,
-  unitInCommand: "Nobody knows"
+    unitInCommand: "Nobody knows",
   },
 })
 
@@ -609,12 +620,12 @@ export const atomKeelsonConnectionState = atom({
   default: false,
 })
 
-export const atomKeelsonKeyExpressionHandled = atom({
-  key: "atom_keelson_key_expression_handled",
+export const ATOM_KEELSON_KEYEXP_MANAGED = atom({
+  key: "atom_keelson_key_expression_managed",
   default: {},
 })
 
-export const atomKeelsonKeyExpressionUnmanaged = atom({
+export const ATOM_KEELSON_KEYEXP_UNMANAGED = atom({
   key: "atom_keelson_key_expression_unmanaged",
   default: {},
 })
@@ -760,4 +771,169 @@ export const ownShipDataAtom = atom({
 export const atomRouteEditorRightClickMenu = atom({
   key: "route_editor_right_click_menu",
   default: { xPos: 0, yPos: 0, showMenu: false },
+})
+
+// PONTOS
+
+export const atomPontosVesselList = atom({
+  key: "atom_pontos_vessel_list",
+  default: [
+    {
+      vessel_id: "example_vessel",
+    },
+    {
+      vessel_id: "imo_7522148",
+      name: "Linda",
+      imo: 7522148,
+      mmsi: 265549760,
+      vessel_type: "roadferry",
+      route: "Nordöleden (Ökerö)",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "imo_7932018",
+      name: "Ada",
+      imo: 7932018,
+      mmsi: 265522210,
+      vessel_type: "roadferry",
+      route: "Hönöleden (Hönö)",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "imo_7943354",
+      name: "Capella",
+      imo: 7943354,
+      mmsi: 265725450,
+      vessel_type: "ferry",
+      route: "Norrfjärden - Holmön (Holmön)",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "imo_8602713",
+      name: "Buro",
+      imo: 8602713,
+      mmsi: 265513810,
+      vessel_type: "ferry",
+      route: "Björkö",
+      company: "",
+    },
+    {
+      vessel_id: "imo_8612055",
+      name: "Marie",
+      imo: 8612055,
+      mmsi: 265522240,
+      vessel_type: "roadferry",
+      route: "Hönöleden (Hönö)",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "imo_8804440",
+      name: "Yxlan",
+      imo: 8804440,
+      mmsi: 265546920,
+      vessel_type: "roadferry",
+      route: "Karlskrona - Aspö (Aspö)",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "imo_8816900",
+      name: "Ebba Brahe",
+      imo: 8816900,
+      mmsi: 265523890,
+      vessel_type: "roadferry",
+      route: "Gränna - Visingsö (Gränna)",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "imo_9007116",
+      name: "Tycho Brahe",
+      imo: 9007116,
+      mmsi: 219230000,
+      vessel_type: "roadferry",
+      route: "Helsingborg - Helsingör (Helsingborg)",
+      company: "Scandlines",
+    },
+
+    {
+      vessel_id: "imo_9007128",
+      name: "AURORA AF HELSINGBORG",
+      imo: 9007128,
+      mmsi: 265041000,
+      vessel_type: "roadferry",
+      route: "Helsingborg - Helsingör (Helsingborg)",
+      company: "Scandlines",
+    },
+    {
+      vessel_id: "imo_9150030",
+      name: "HAMLET",
+      imo: 9150030,
+      mmsi: 219622000,
+      vessel_type: "roadferry",
+      route: "Helsingborg - Helsingör (Helsingborg)",
+      company: "Scandlines",
+    },
+    {
+      vessel_id: "mmsi_265546940",
+      name: "MERKURIUS",
+      imo: 0,
+      mmsi: 265546940,
+      vessel_type: "roadferry",
+      route: "Furusund",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "mmsi_265558290",
+      name: "FRAGANCIA",
+      imo: 0,
+      mmsi: 265558290,
+      vessel_type: "roadferry",
+      route: "Oxdjupet",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "mmsi_265585310",
+      name: "JUPITER",
+      imo: 0,
+      mmsi: 265585310,
+      vessel_type: "roadferry",
+      route: "Vaxholm",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "name_SD401Fredrika",
+      name: "Fredrika",
+      imo: 0,
+      mmsi: 0,
+      vessel_type: "fishing",
+      route: "",
+      company: "",
+    },
+    {
+      vessel_id: "name_froja",
+      name: "Fröja",
+      imo: 0,
+      mmsi: 0,
+      vessel_type: "roadferry",
+      route: "Isöleden (Isö)",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "name_sedna",
+      name: "Sedna",
+      imo: 0,
+      mmsi: 0,
+      vessel_type: "roadferry",
+      route: "Vinöleden i Hjälmaren",
+      company: "Färjerederiet",
+    },
+    {
+      vessel_id: "name_skidbladner",
+      name: "Skidbladner",
+      imo: 0,
+      mmsi: 0,
+      vessel_type: "roadferry",
+      route: "Håkansta och Norderön",
+      company: "Färjerederiet",
+    },
+  ],
 })

@@ -1,16 +1,21 @@
 import React from "react"
-import { Grid } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import { useRecoilValue } from "recoil"
 import { atomMQTTtopics, atomMQTTtopicsUnhandled } from "../../../recoil/atoms"
 
-export default function MqttFlowIN() {
+export default function MqttFlow() {
   let mqtt_topics = useRecoilValue(atomMQTTtopics)
   let mqtt_topics_unhandled = useRecoilValue(atomMQTTtopicsUnhandled)
 
   return (
     <Grid container>
       <Grid item xs={12}>
-        <h1> flow in:</h1>
+        <Typography variant="h3">MQTT flow</Typography>
+        <hr />
+
+        <Typography variant="h4">Managed Topics</Typography>
+        {Object.keys(mqtt_topics).length === 0 && <p>No managed Topics</p>}
+
         {Object.keys(mqtt_topics).map(topic => {
           return (
             <p key={"regeqrg" + topic}>
@@ -24,7 +29,10 @@ export default function MqttFlowIN() {
             </p>
           )
         })}
-        <h1>Unhandled Topics</h1>
+
+        <Typography variant="h4">Unmanaged Topics</Typography>
+        {Object.keys(mqtt_topics).length === 0 && <p>No managed Topics</p>}
+
         {Object.keys(mqtt_topics_unhandled).map(topic => {
           return (
             <p key={"rgeargae" + topic}>

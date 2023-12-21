@@ -1,14 +1,10 @@
-import React, {  useRef } from "react"
+import React, { useRef } from "react"
 import { useFormik } from "formik"
 import * as yup from "yup"
 import { Grid, TextField, Button } from "@mui/material"
-import {  protoParser } from "../../../recoil/selectors"
+import { protoParser } from "../../../recoil/selectors"
 import { atomKeelsonConnectionState } from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import protobuf from "protobufjs"
-import envelope from "../../../proto/envelope.proto"
-import primitives from "../../../proto/primitives.proto"
-import ByteBuffer from "bytebuffer"
 
 const validationSchema = yup.object({
   hostSub: yup.string().required("Required"),
@@ -23,44 +19,15 @@ const initFormValuesManual = {
 }
 /* eslint-enable */
 
-
-
 export default function ConnKeelson() {
   const [keelsonConState, setKeelsonConState] = useRecoilState(atomKeelsonConnectionState)
   let router = useRef(null)
-  const parseKeelsonMsg = useSetRecoilState(protoParser)
-
+  const protoDecoder = useSetRecoilState(protoParser)
 
   function parseMessage(e) {
     // Parsing Zenoh (key & value)
     let msg = JSON.parse(e.data)
-    let bytes = new Uint8Array(ByteBuffer.fromBase64(msg.value).toArrayBuffer())
-    let keyExpression = msg.key
-
-   
-    protobuf.load(envelope, function (err, root) {
-      if (err) throw err
-
-      // Get a reference to your message type
-      const Envelope = root.lookupType("core.Envelope")
-
-      // Decode the buffer back into a message
-      const decodedMessage = Envelope.decode(bytes)
-
-      
-
-      protobuf.load(primitives, function (err, root) {
-        // Get a reference to your message type
-        const PrimitivesTimeFloat = root.lookupType("brefv.primitives.TimestampedFloat")
-
-        const readable = PrimitivesTimeFloat.decode(decodedMessage.payload)
-        parseKeelsonMsg({keyExpression: keyExpression, payload: readable})
-        // console.log("readable", readable)
-      })
-
-    })
-
-
+    protoDecoder(msg)
   }
 
   const disconnectKeelson = () => {
