@@ -342,6 +342,18 @@ export const OS_POSITIONS = atom({
       timeCreated: null,
       delay: null,
     },
+    SIM: {
+      latitude: 0.0, // degrees
+      longitude: 0.0, // degrees
+      altitude: 0.0, // meters
+      std_dev_altitude: 0.0,
+      std_dev_longitude: 0.0,
+      std_dev_latitude: 0.0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeCreated: null,
+      delay: null,
+    },
   },
 })
 
@@ -937,3 +949,8 @@ export const atomPontosVesselList = atom({
     },
   ],
 })
+
+
+// -----------------------------------------------------------
+
+

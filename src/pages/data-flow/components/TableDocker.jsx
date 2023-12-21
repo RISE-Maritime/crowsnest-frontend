@@ -1,14 +1,14 @@
 import React, { useState } from "react"
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid"
 import LogoDevIcon from "@mui/icons-material/LogoDev"
-import { TextField } from "@mui/material"
+import { TextField, Tooltip } from "@mui/material"
 import axios from "axios"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs"
 import bundle from "../../../proto/bundle.json"
 import RestartAltIcon from "@mui/icons-material/RestartAlt"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
-import StopIcon from '@mui/icons-material/Stop';
+import StopIcon from "@mui/icons-material/Stop"
 
 export default function TableDocker({ dockerContainers, URL }) {
   const [logOutput, setLogOutput] = useState("Logs output if requested by pressing the button in the table")
@@ -30,7 +30,18 @@ export default function TableDocker({ dockerContainers, URL }) {
       valueFormatter: params => new Date(params.value).toLocaleString("SV-sv"),
     },
     { field: "restart_policy", headerName: "Restart policy", width: 150 },
-    { field: "status", headerName: "Status", width: 100, valueFormatter: params => params.value.toUpperCase() },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 100,
+      renderCell: params => {
+        if (params.value == "running") {
+          return <span style={{ color: "green", fontWeight: "bold" }}>{params.value.toUpperCase()}</span>
+        } else {
+          return <span style={{ color: "red", fontWeight: "bold" }}>{params.value.toUpperCase()}</span>
+        }
+      },
+    },
     {
       field: "actions",
       type: "actions",
@@ -39,15 +50,17 @@ export default function TableDocker({ dockerContainers, URL }) {
       cellClassName: "actions",
       getActions: ({ id }) => {
         return [
-          <GridActionsCellItem
-            key={"ertgrwta"}
-            icon={<LogoDevIcon />}
-            label="Get logs"
-            sx={{
-              color: "primary.main",
-            }}
-            onClick={handleClickGetLogs(id)}
-          />,
+          <Tooltip title="Get LOGS" key={"erfeq"}>
+            <GridActionsCellItem
+              key={"ertgrwta"}
+              icon={<LogoDevIcon />}
+              label="Get logs"
+              sx={{
+                color: "primary.main",
+              }}
+              onClick={handleClickGetLogs(id)}
+            />
+          </Tooltip>,
         ]
       },
     },
@@ -58,41 +71,45 @@ export default function TableDocker({ dockerContainers, URL }) {
       headerName: "Restart",
       width: 80,
       cellClassName: "actions",
-      getActions: (rowData ) => {
+      getActions: rowData => {
         console.log("🚀 ~ file: TableDocker.jsx:78 ~ TableDocker ~ id, status:", rowData)
 
         if (rowData.row.status == "running") {
           return [
-            <GridActionsCellItem
-              key={"erffre"}
-              icon={<StopIcon />}
-              label="Stop"
-              sx={{
-                color: "primary.main",
-              }}
-              onClick={handleClickStop(rowData?.row.id)}
-            />,
-            <GridActionsCellItem
-              key={"ertgeregrewrwta"}
-              icon={<RestartAltIcon />}
-              label="Restart"
-              sx={{
-                color: "primary.main",
-              }}
-              onClick={handleClickRestart(rowData?.row.id)}
-            />,
+            <Tooltip title="Stop" key={"regeere"}>
+              <GridActionsCellItem
+                icon={<StopIcon />}
+                label="Stop"
+                sx={{
+                  color: "#ff0000",
+                }}
+                onClick={handleClickStop(rowData?.row.id)}
+              />
+            </Tooltip>,
+            <Tooltip title="Restart" key={"ertgeregrewrwta"}>
+              <GridActionsCellItem
+                icon={<RestartAltIcon />}
+                label="Restart"
+                sx={{
+                  color: "primary.main",
+                }}
+                onClick={handleClickRestart(rowData?.row.id)}
+              />
+            </Tooltip>,
           ]
         } else {
           return [
-            <GridActionsCellItem
-              key={"ertgeregrewrferrwta"}
-              icon={<PlayArrowIcon />}
-              label="Start"
-              sx={{
-                color: "primary.main",
-              }}
-              onClick={handleClickStart(rowData.row.id)}
-            />,
+            <Tooltip title="Start" key={"etrrtrg"}>
+              <GridActionsCellItem
+                key={"ertgeregrewrferrwta"}
+                icon={<PlayArrowIcon />}
+                label="Start"
+                sx={{
+                  color: "primary.main",
+                }}
+                onClick={handleClickStart(rowData.row.id)}
+              />
+            </Tooltip>,
           ]
         }
       },

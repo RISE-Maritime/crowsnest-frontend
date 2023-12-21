@@ -18,6 +18,7 @@ import KeelsonQueryable from "./components/KeelsonQueryable"
 import KeelsonFlow from "./components/KeelsonFlow"
 import KeelsonGetLoop from "./components/KeelsonGetLoop"
 import DockerMonitoring from "./components/DockerMonitoring"
+import SimpleShipSim from "./components/SimpleShipSim"
 
 const GridCenter = styled(Grid)(({ theme }) => ({
   display: "grid",
@@ -60,7 +61,6 @@ export default function DataFlow() {
           <KeelsonSubscribe connectionName={"Keelson Subscriber"} isConnected={keelsonConnectionState} />
           <KeelsonPush />
           <KeelsonQueryable />
-      
         </Stack>
       </GridCenter>
       <GridCenter item xs={12}>
@@ -88,6 +88,10 @@ export default function DataFlow() {
       </GridCenter>
       <GridCenter item xs={12}>
         <DockerMonitoring />
+      </GridCenter>
+
+      <GridCenter item xs={12}>
+        <SimpleShipSim />
       </GridCenter>
     </Grid>
   )

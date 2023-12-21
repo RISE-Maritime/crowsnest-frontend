@@ -874,3 +874,56 @@ export const selSetThruster = selector({
     }))
   },
 })
+
+
+
+
+
+
+export const updateSimState = selector({
+  key: "update_sim_state",
+  get: () => {
+    return null
+  },
+  set: ({ set, get }, input) => {
+    
+    const shipModel = {
+      speed_minimum: -10.0, // knots
+      speed_maximum: 25.0, // knots
+    }
+
+    const os_eng = get(ATOM_OS_ENGINES)
+
+    console.log("HERE",os_eng["ENGINE_0"].setPower);
+
+    if (os_eng["ENGINE_0"].setPower > 0.0) {
+      console.log("NEW SOG: ", os_eng["ENGINE_0"].setPower * (shipModel.speed_maximum/100) ) 
+    } else if (os_eng["ENGINE_0"].setPower < 0.0) {
+      console.log("NEW SOG: ", -os_eng["ENGINE_0"].setPower * (shipModel.speed_minimum/100))
+    }
+
+    let new_sog = os_eng["ENGINE_0"].setPower * (shipModel.speed_maximum - shipModel.speed_minimum) + shipModel.speed_minimum
+
+
+    set(OS_POSITIONS, currentObj => ({
+      ...currentObj,
+      SIM: {
+        ...currentObj.SIM,
+        latitude: currentObj.SIM.latitude + 0.001, // degrees
+        longitude: currentObj.SIM.longitude + 0.001, // degrees
+      },
+    }))
+
+    set(OS_VELOCITY, currentObj => ({
+      ...currentObj,
+      SIM: {
+        ...currentObj.SIM,
+        cog: currentObj.SIM.cog + 0.1, // degrees
+        sog: new_sog, // knots
+      },
+    }))
+
+  },
+})
+
+
