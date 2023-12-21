@@ -3,7 +3,6 @@ import protobuf from "protobufjs"
 import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
 
-
 import {
   userState,
   observationsStateAtom,
@@ -29,7 +28,7 @@ import {
   ATOM_OS_ENGINES,
   ATOM_OS_THRUSTERS,
   ATOM_KEELSON_KEYEXP_MANAGED,
-  ATOM_KEELSON_KEYEXP_UNMANAGED
+  ATOM_KEELSON_KEYEXP_UNMANAGED,
 } from "./atoms"
 
 export const selectUser = selector({
@@ -71,7 +70,7 @@ export const protoParser = selector({
   },
   set: ({ get, set }, latestMsg) => {
     // Load the bundle.json file using protobufjs
-  
+
     const root = protobuf.Root.fromJSON(bundle)
     let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
     const Envelope = root.lookupType("Envelope")
@@ -81,24 +80,33 @@ export const protoParser = selector({
 
     const envelopeEncodedAtDate = new Date(seconds * 1000 + nanos / 1000000)
 
+    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/vertical = degrees
 
+    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/right
+    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/horizontal
+    // rise/masslab/haddock/masslab-5/haddock/arduino/right
+    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/left
 
     switch (latestMsg.key) {
-      case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/left\/azimuth\/vertical/)
+      // RUDDER 0 (right)
+      case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)
         ?.input: {
-        // Assume that `bytes` is a Uint8Array containing the serialized protobuf message
 
         const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
         const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
 
-        console.log("HERE readable:", readable)
-        // let lastValue = get(atom_OS_AZIMUTH_LEFT)
-        // if (lastValue.vertical !== latestMsg.payload) {
-        //   set(atom_OS_AZIMUTH_LEFT, currentObj => ({
-        //     ...currentObj,
-        //     vertical: latestMsg.payload,
-        //   }))
-        // }
+        console.log("RUDDER 0:", readable.value)
+        let lastValue = get(ATOM_OS_RUDDERS)
+
+        if (lastValue["RUDDER_0"].setAngle !== readable.value) {
+          set(ATOM_OS_RUDDERS, currentObj => ({
+            ...currentObj,
+            RUDDER_0: {
+              ...currentObj["RUDDER_0"],
+              setAngle: readable.value,
+            },
+          }))
+        }
 
         set(ATOM_KEELSON_KEYEXP_MANAGED, currentObj => ({
           ...currentObj,
@@ -109,9 +117,40 @@ export const protoParser = selector({
           },
         }))
 
-
         break
       }
+
+            // RENGINE_0 (right)
+            case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/right\/azimuth\/horizontal/)
+            ?.input: {
+    
+            const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+            const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
+    
+            console.log("ENGINE_0:", readable.value)
+            let lastValue = get(ATOM_OS_ENGINES)
+    
+            if (lastValue["ENGINE_0"].setPower !== readable.value) {
+              set(ATOM_OS_ENGINES, currentObj => ({
+                ...currentObj,
+                ENGINE_0: {
+                  ...currentObj["ENGINE_0"],
+                  setPower: readable.value,
+                },
+              }))
+            }
+    
+            set(ATOM_KEELSON_KEYEXP_MANAGED, currentObj => ({
+              ...currentObj,
+              [latestMsg.key]: {
+                time_received: new Date(),
+                time_encoded: envelopeEncodedAtDate,
+                count: currentObj[latestMsg.key]?.count ? currentObj[latestMsg.key].count + 1 : 1,
+              },
+            }))
+    
+            break
+          }
 
       default: {
         set(ATOM_KEELSON_KEYEXP_UNMANAGED, currentObj => ({
@@ -539,7 +578,7 @@ export const messageParser = selector({
         break
       }
 
-      case latestMessage.topic.match(/CROWSNEST\/\w{1,55}..\/HW\/0\/JSON/)?.input: {
+      case latestMessage.topic.match(/CROWSNEST\/\w{1,55}..\/HW\/\d\/JSON/)?.input: {
         // case /CROWSNEST\/\w{1,55}\/HW/0/JSON/g.test(latestMessage.topic):{
 
         let sent_at = new Date(latestMessage.payload.sent_at)
@@ -695,8 +734,6 @@ export const selectRoutePathList = selector({
   },
 })
 
-
-
 export const selSetRudder = selector({
   key: "sel_set_rudder",
   get: () => {
@@ -791,7 +828,6 @@ export const selSetEngine = selector({
   },
 })
 
-
 export const selSetThruster = selector({
   key: "sel_set_thruster",
   get: () => {
@@ -838,3 +874,56 @@ export const selSetThruster = selector({
     }))
   },
 })
+
+
+
+
+
+
+export const updateSimState = selector({
+  key: "update_sim_state",
+  get: () => {
+    return null
+  },
+  set: ({ set, get }, input) => {
+    
+    const shipModel = {
+      speed_minimum: -10.0, // knots
+      speed_maximum: 25.0, // knots
+    }
+
+    const os_eng = get(ATOM_OS_ENGINES)
+
+    console.log("HERE",os_eng["ENGINE_0"].setPower);
+
+    if (os_eng["ENGINE_0"].setPower > 0.0) {
+      console.log("NEW SOG: ", os_eng["ENGINE_0"].setPower * (shipModel.speed_maximum/100) ) 
+    } else if (os_eng["ENGINE_0"].setPower < 0.0) {
+      console.log("NEW SOG: ", -os_eng["ENGINE_0"].setPower * (shipModel.speed_minimum/100))
+    }
+
+    let new_sog = os_eng["ENGINE_0"].setPower * (shipModel.speed_maximum - shipModel.speed_minimum) + shipModel.speed_minimum
+
+
+    set(OS_POSITIONS, currentObj => ({
+      ...currentObj,
+      SIM: {
+        ...currentObj.SIM,
+        latitude: currentObj.SIM.latitude + 0.001, // degrees
+        longitude: currentObj.SIM.longitude + 0.001, // degrees
+      },
+    }))
+
+    set(OS_VELOCITY, currentObj => ({
+      ...currentObj,
+      SIM: {
+        ...currentObj.SIM,
+        cog: currentObj.SIM.cog + 0.1, // degrees
+        sog: new_sog, // knots
+      },
+    }))
+
+  },
+})
+
+

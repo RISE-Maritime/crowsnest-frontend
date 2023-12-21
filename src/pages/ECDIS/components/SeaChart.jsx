@@ -106,7 +106,7 @@ export const atomSensorLayersTaggable = atom({
 
 export const atomSensorLayersShowing = atom({
   key: "atom_sensor_layers_showing",
-  default: ["AIS", "OS Radar-0 Heatmap", "OS Radar-1 Heatmap", "Shore Radar-0 Heatmap", "Shore Radar-1 Heatmap"],
+  default: ["AIS", "OS Radar-0 Heatmap", "OS Radar-1 Heatmap",  "OS LIDAR 3D-point"],
 })
 
 function getTooltip({ object }) {

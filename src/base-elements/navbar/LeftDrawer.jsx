@@ -69,6 +69,14 @@ export default function LeftDrawer(props) {
           <ListItemText primary={"Camera Streams"} />
         </ListItemButton>
 
+        <ListItemButton key={"Lookout 360"} component={Link} to={ROUTES.LOOKOUT_360}>
+          <ListItemIcon>
+            <VrpanoIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Lookout 360"} />
+        </ListItemButton>
+
+
         <ListItemButton key={"remoteControl"} component={Link} to={ROUTES.REMOTE_CONTROL}>
           <ListItemIcon>
             <SportsEsportsRoundedIcon />
