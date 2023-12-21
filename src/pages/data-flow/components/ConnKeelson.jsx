@@ -27,6 +27,8 @@ export default function ConnKeelson() {
   function parseMessage(e) {
     // Parsing Zenoh (key & value)
     let msg = JSON.parse(e.data)
+    console.log("🚀 ~ file: ConnKeelson.jsx:30 ~ parseMessage ~ msg:", msg)
+    
     protoDecoder(msg)
   }
 

@@ -5,7 +5,6 @@ import jpeg from "jpeg-js"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs/minimal.js"
 import bundle from "../../../proto/bundle.json"
-import { log } from "deck.gl"
 import CamCanvas from "./CamCanvas"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import StopIcon from "@mui/icons-material/Stop"
@@ -14,6 +13,14 @@ import CamFlowMetadata from "./CamFlowMetadata"
 const URLcameras = [
   "http://localhost:8000/rise/marie/mediamtx/sealog-4/compressed_image/axis",
   "http://localhost:8000/rise/marie/mediamtx/sealog-4/raw_image/axis",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-2",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-3",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-4",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-5",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-6",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-7",
+  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-8",
 ]
 
 const marks = [
@@ -69,7 +76,7 @@ let frameCount = 0
 
 export default function CamFrameKeelson() {
   let router = useRef()
-  const [URLcam, setURLcam] = useState("http://localhost:8000/rise/marie/mediamtx/sealog-4/compressed_image/axis")
+  const [URLcam, setURLcam] = useState("http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1")
   const [intervalFps, setIntervalFps] = useState(null)
   const [loopFps, setLoopFps] = useState(1)
   const [isActive, setIsActive] = useState("")
@@ -81,10 +88,10 @@ export default function CamFrameKeelson() {
     model: "-",
   })
 
-
   const getFrame = () => {
-   
     axios.get(URLcam).then(res => {
+      console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ axios.get ~ res:", res)
+
       let msgValue = res.data[0].value // Base64 encoded JPEG
       const root = protobuf.Root.fromJSON(bundle)
       let bytes = new Uint8Array(ByteBuffer.fromBase64(msgValue).toArrayBuffer())
@@ -168,7 +175,6 @@ export default function CamFrameKeelson() {
   }
 
   function subParseFrame(e) {
-  
     let zenohVal = JSON.parse(e.data)
     let bytes = new Uint8Array(ByteBuffer.fromBase64(zenohVal.value).toArrayBuffer())
     const root = protobuf.Root.fromJSON(bundle)
@@ -211,6 +217,7 @@ export default function CamFrameKeelson() {
           <Typography variant="h5" sx={{ padding: "0.8rem" }}>
             Keelson
           </Typography>
+          {/* <p>URL: {URLcam}</p> */}
 
           <Autocomplete
             freeSolo
@@ -218,8 +225,12 @@ export default function CamFrameKeelson() {
             options={URLcameras}
             sx={{ width: 800 }}
             value={URLcam}
-            onChange={(event, newValue) => {
-              log.info("newValue", newValue)
+            // onChange={(event, newValue) => {
+            //   console.log("newValue", newValue);
+            //   setURLcam(newValue)
+            // }}
+            onInputChange={(event, newValue) => {
+              // console.log("newValue2", newValue);
               setURLcam(newValue)
             }}
             renderInput={params => <TextField {...params} label="URL" size="small" />}

@@ -127,3 +127,19 @@ rise/crowsnest/<internal_app_name>/<user_name>/<tag>/<react_component>
 ]
 
 https://github.com/react-grid-layout/react-draggable
+
+## Example .env development setup
+
+If running development following setup allows for quick configurations to each station
+
+```
+REACT_APP_MQTT_USERNAME=""
+REACT_APP_MQTT_PASSWORD=""
+REACT_APP_MQTT_BROKER_ADDRESS="wss://crowsnest.mo.ri.se:443/mqtt"
+REACT_APP_WEBRTC_USERNAME=""
+REACT_APP_WEBRTC_PASSWORD=""
+REACT_APP_MQTT_LOCAL_BROKER_ADDRESS="localhost"
+REACT_APP_MQTT_LOCAL_USERNAME=""
+REACT_APP_MQTT_LOCAL_PASSWORD=""
+REACT_APP_ZENOH_LOCAL_ROUTER_URL_="http://localhost:8000"
+```

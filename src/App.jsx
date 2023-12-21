@@ -23,6 +23,7 @@ import PageConfiguration from "./pages/configuration"
 import RouteEditor from "./pages/route-editor"
 
 import DeviceConnection from "./base-elements/DeviceConnection"
+import Lookout360 from "./pages/lookout-360"
 
 export default function App() {
   const app_state = useRecoilValue(appState)
@@ -120,6 +121,7 @@ export default function App() {
               <Route exact path={ROUTES.DEVICE_SENSORS} element={<DeviceSensors />} />
               <Route exact path={ROUTES.REMOTE_CONTROL} element={<PageRemoteControl />} />
               <Route exact path={ROUTES.ROUTE_EDITOR} element={<RouteEditor />} />
+              <Route exact path={ROUTES.LOOKOUT_360} element={<Lookout360/>} />
             </Routes>
           </BasePage>
         </Router>
