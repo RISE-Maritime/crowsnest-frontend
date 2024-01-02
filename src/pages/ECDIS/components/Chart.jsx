@@ -50,13 +50,10 @@ const aisData = [
   },
 ]
 
-const step = 1
-const loopLength = 2500
-
 export default function Chart() {
   const chartSettings = useRecoilValue(atomChartSettings)
   const [animation] = useState({})
-  const [startTime, setStartTime] = useState(null)
+  const [worker, setWorker] = useState(null)
   const [time, setTime] = useState(0)
   const [viewState, setViewState] = React.useState({
     longitude: 11.97,
@@ -65,24 +62,53 @@ export default function Chart() {
     pitch: 0,
     bearing: 0,
   })
-  console.log("refreshn")
 
   function animate(timestamp) {
     setTime(t => (t + timestamp) / 1000)
     window.requestAnimationFrame(animate)
   }
 
-  console.log(time)
-
   useEffect(() => {
-    console.log("starting animation")
-    setStartTime(new Date().getTime())
+    // AIS data
+    const myWorker = new SharedWorker(new URL("./workerMqttConnection.js", import.meta.url))
+    myWorker.port.onmessage = e => {
+      console.log("Message from worker ...")
+      console.log(e.data)
+    }
+    myWorker.port.start()
+    setWorker(myWorker)
+    // AIS datad
+    // if (!window.SharedWorker) {
+    //   console.log("Shared worker not supported")
+    // }
+    // tmpWorker = new SharedWorker("./workerMqttConnection.js")
+    // tmpWorker.port.onmessage = function (e) {
+    //   console.log("message from worker: ")
+    //   console.log(e.data)
+    // }
+    // tmpWorker.port.onerror = function (e) {
+    //   console.log("error")
+    //   console.log(e.data)
+    // }
+    // tmpWorker.port.start()
+    // tmpWorker.port.postMessage("hellow")
+    // console.log("tmpWorker")
+    // console.log(tmpWorker)
+
+    // Animation
+    console.log("Starting animation ...")
     animation.id = window.requestAnimationFrame(animate)
     return () => {
-      console.log("stopping animation")
+      console.log("Stopping animation ...")
       window.cancelAnimationFrame(animation.id)
+      console.log("Stopping workers ...")
+      worker.terminate()
     }
   }, [])
+
+  if (worker) {
+    worker.port.postMessage(20)
+  }
 
   const layers = [
     new TargetLayer({
