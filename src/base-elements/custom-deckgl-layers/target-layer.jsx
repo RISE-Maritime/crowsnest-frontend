@@ -34,11 +34,17 @@ export default class AisTargetLayer extends Layer {
         accessor: "getHeading",
         defaultValue: 0,
       },
+      instanceCourse: {
+        size: 1,
+        transition: true,
+        accessor: "getCourse",
+        defaultValue: 0,
+      },
       instanceSpeed: {
         size: 1,
         transition: true,
         accessor: "getSpeed",
-        defaultValue: 10,
+        defaultValue: 0,
       },
       instanceFillColors: {
         size: this.props.colorFormat.length,

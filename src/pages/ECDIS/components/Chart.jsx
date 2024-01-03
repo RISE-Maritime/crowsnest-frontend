@@ -41,20 +41,13 @@ export const atomChartSettings = atom({
   },
 })
 
-const aisData = [
-  {
-    lon: 11.955110513070922,
-    lat: 57.70674369756177,
-    sog: 2,
-    heading: 340,
-  },
-]
-
 export default function Chart() {
   const chartSettings = useRecoilValue(atomChartSettings)
   const [animation] = useState({})
   const [worker, setWorker] = useState(null)
+  const [hoverInfo, setHoverInfo] = useState({})
   const [time, setTime] = useState(0)
+  const [ais, setAis] = useState([])
   const [viewState, setViewState] = React.useState({
     longitude: 11.97,
     latitude: 57.70887,
@@ -72,28 +65,10 @@ export default function Chart() {
     // AIS data
     const myWorker = new SharedWorker(new URL("./workerMqttConnection.js", import.meta.url))
     myWorker.port.onmessage = e => {
-      console.log("Message from worker ...")
-      console.log(e.data)
+      setAis(e.data)
     }
     myWorker.port.start()
     setWorker(myWorker)
-    // AIS datad
-    // if (!window.SharedWorker) {
-    //   console.log("Shared worker not supported")
-    // }
-    // tmpWorker = new SharedWorker("./workerMqttConnection.js")
-    // tmpWorker.port.onmessage = function (e) {
-    //   console.log("message from worker: ")
-    //   console.log(e.data)
-    // }
-    // tmpWorker.port.onerror = function (e) {
-    //   console.log("error")
-    //   console.log(e.data)
-    // }
-    // tmpWorker.port.start()
-    // tmpWorker.port.postMessage("hellow")
-    // console.log("tmpWorker")
-    // console.log(tmpWorker)
 
     // Animation
     console.log("Starting animation ...")
@@ -106,22 +81,22 @@ export default function Chart() {
     }
   }, [])
 
-  if (worker) {
-    worker.port.postMessage(20)
-  }
+  // getHeading: d => (d.heading * Math.PI) / 180,
 
   const layers = [
     new TargetLayer({
       id: "target-layer",
-      data: aisData,
-      visible: aisData,
+      data: ais,
+      visible: true,
       getCoordinates: d => [d.lon, d.lat],
-      getHeading: d => (d.heading * Math.PI) / 180,
+      getHeading: d => (d.heading * Math.PI) / 180, // deg to rad
+      getCourse: d => (d.course * Math.PI) / 180,
       getFillColor: () => [65, 210, 82, 250],
-      getSpeed: d => d.sog,
+      getSpeed: d => d.speed * 0.514444, // knots to m/s
       pickable: true,
       iconSize: 100,
       elapsedTime: time,
+      onHover: info => setHoverInfo(info),
     }),
   ]
 
@@ -146,7 +121,6 @@ export default function Chart() {
     }
     setViewState(tempViewState)
   }
-
   return (
     <DeckGL
       layers={layers}
@@ -155,6 +129,11 @@ export default function Chart() {
       controller={{ dragPan: "dragging" }}
     >
       <ReactMapGl mapStyle={basemaps[chartSettings.basemap]} />
+      {hoverInfo.object && (
+        <div style={{ position: "absolute", zIndex: 1, pointerEvents: "none", left: hoverInfo.x, top: hoverInfo.y }}>
+          {hoverInfo.object.mmsi}
+        </div>
+      )}
     </DeckGL>
   )
 }

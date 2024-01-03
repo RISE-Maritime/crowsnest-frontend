@@ -8,6 +8,7 @@ attribute vec3 instancePositions;
 attribute vec3 instancePositions64Low;
 attribute float instanceHeading;
 attribute float instanceSpeed;
+attribute float instanceCourse;
 attribute vec4 instanceFillColors;
 
 attribute vec3 instancePickingColors;
@@ -36,7 +37,7 @@ void main(void) {
   vec3 mod_vertices = vertices * project_size(iconSize);
   mod_vertices = rotateZ(mod_vertices, instanceHeading);
   float distance = instanceSpeed*elapsedTime;
-  mod_vertices = translateXY(mod_vertices, instanceHeading, distance);
+  mod_vertices = translateXY(mod_vertices, instanceCourse, distance);
   gl_Position = project_position_to_clipspace(instancePositions, instancePositions64Low, mod_vertices);
       
   vFillColor = vec4(instanceFillColors.rgb, instanceFillColors.a * opacity);
