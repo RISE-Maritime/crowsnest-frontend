@@ -1,8 +1,8 @@
+// Controlling pop up mini apps existing in folder ./components/mini_app 
+
 import React from "react";
-// Recoil
 import { showMiniAppsObj } from "../../recoil/atoms";
 import { useRecoilState } from "recoil";
-// Components
 import {
   Box,
   List,
@@ -32,6 +32,8 @@ export default function RightDrawer(props) {
       onKeyDown={props.toggleDrawer(props.side, false)}
     >
       <List>
+
+        {/* WIND */}
         <ListItemButton
           selected={showMiniApp.wind}
           onClick={() => ToggleMiniApp("windCurrent")}
@@ -44,6 +46,7 @@ export default function RightDrawer(props) {
           <ListItemText primary="Wind & Current" />
         </ListItemButton>
 
+        {/* Playback */}
         <ListItemButton
           selected={showMiniApp.playback}
           onClick={() => ToggleMiniApp("playback")}
@@ -54,6 +57,19 @@ export default function RightDrawer(props) {
             color="secondary"
           />
           <ListItemText primary="Playback" />
+        </ListItemButton>
+
+
+        <ListItemButton
+          selected={showMiniApp.playback}
+          onClick={() => ToggleMiniApp("controls")}
+        >
+          <Checkbox
+            edge="start"
+            checked={showMiniApp.playback}
+            color="secondary"
+          />
+          <ListItemText primary="Controls" />
         </ListItemButton>
       </List>
     </Box>

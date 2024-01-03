@@ -1,9 +1,14 @@
 import React, { useState } from "react"
 import { Button, Typography } from "@mui/material"
-import { OS_POSITIONS } from "../../../recoil/atoms"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { OS_POSITIONS, OS_HEADING, OS_VELOCITY, ATOM_OS_RUDDERS, ATOM_OS_ENGINES } from "../../../recoil/atoms"
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
 import { updateSimState } from "../../../recoil/selectors"
+
 export default function SimpleShipSim() {
+  const osHeading = useRecoilValue(OS_HEADING)
+  const osVelocity = useRecoilValue(OS_VELOCITY)
+  const osRudder = useRecoilValue(ATOM_OS_RUDDERS)
+  const osEng = useRecoilValue(ATOM_OS_ENGINES)
   const [osPositions, setOsPositions] = useRecoilState(OS_POSITIONS)
   const setUpdateSimState = useSetRecoilState(updateSimState)
   const [simInterval, setSimInterval] = useState()
@@ -17,13 +22,12 @@ export default function SimpleShipSim() {
     engine: 0, // -100% to 100%
   })
 
-
   function startSim() {
     console.log("Start")
 
     let interval = setInterval(() => {
-      setUpdateSimState()
-    }, 1000)
+      setUpdateSimState(100)
+    }, 100)
 
     setSimInterval(interval)
   }
@@ -40,19 +44,21 @@ export default function SimpleShipSim() {
       <Typography variant="h6">
         <b> OS State </b>
         <br />
-        Position: Lat {osPositions.SIM.latitude}  Long {osPositions.SIM.longitude}
+        Lat {osPositions.SIM?.latitude.toFixed(4)}°
         <br />
-        Heading:  {shipState.heading}
+        Long {osPositions.SIM?.longitude.toFixed(4)}°
         <br />
-        SOG: {shipState.sog}
+        Heading: {osHeading?.SIM?.heading.toFixed(1)}°
         <br />
-        COG: {shipState.cog}
+        SOG: {osVelocity?.SIM?.sog.toFixed(1)} kts 
         <br />
-        ROT: {shipState.rot}
+        COG: {osVelocity?.SIM?.cog.toFixed(1)}°
         <br />
-        Rudder: {shipState.rudder}
+        ROT: {osVelocity.SIM?.rot.toFixed(0)}°/min
         <br />
-        Engine: {shipState.engine}
+        Rudder: {(osRudder.RUDDER_0?.maxAngle * (osRudder.RUDDER_0?.setAngle/100)).toFixed(0) } °
+        <br />
+        Engine: {osEng.ENGINE_0?.setPower}%
       </Typography>
 
       <Button variant="contained" color="primary" onClick={startSim}>

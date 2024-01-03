@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Paper } from "@mui/material";
 import { Rnd } from "react-rnd";
-import Playback from "../apps/Playback";
+import Playback from "../components/Playback";
 
 export default function FloatAppWind() {
   const { innerWidth: width, innerHeight: height } = window;

@@ -5,7 +5,7 @@ import PauseIcon from "@mui/icons-material/Pause";
 import { styled, useTheme } from "@mui/material/styles";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/Lock";
-import { playbackState } from "../../../recoil/atoms";
+import { playbackState } from "../../recoil/atoms";
 import { useRecoilState } from "recoil";
 // import { mqttPublishRemote } from "../../MqttConnectionREMOTE";
 
