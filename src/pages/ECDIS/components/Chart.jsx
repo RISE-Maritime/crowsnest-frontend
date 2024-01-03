@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react"
+import Paper from "@mui/material/Paper"
+import Typography from "@mui/material/Typography"
+import Grid from "@mui/material/Grid"
 
 import { atom, useRecoilValue } from "recoil"
 
@@ -41,13 +44,42 @@ export const atomChartSettings = atom({
   },
 })
 
+const DataPresentationComponent = ({ hoverInfo }) => {
+  const to_show = {
+    shipname: "Name",
+    speed: "SOG",
+    heading: "HDG",
+    course: "COG",
+    callsign: "CallSign",
+    // Add other key mappings as needed
+  }
+
+  return (
+    <div style={{ position: "absolute", zIndex: 1, pointerEvents: "none", left: hoverInfo.x, top: hoverInfo.y }}>
+      <Paper square style={{ padding: "10px" }}>
+        <Grid container spacing={0}>
+          {Object.entries(to_show).map(([key, label]) => (
+            <Grid item xs={12} key={key}>
+              <Typography variant="caption">
+                {label}:{" "}
+                {hoverInfo.object[key] !== null && hoverInfo.object[key] !== undefined ? hoverInfo.object[key].toString() : "---"}
+              </Typography>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+    </div>
+  )
+}
+
 export default function Chart() {
   const chartSettings = useRecoilValue(atomChartSettings)
   const [animation] = useState({})
   const [worker, setWorker] = useState(null)
   const [hoverInfo, setHoverInfo] = useState({})
   const [time, setTime] = useState(0)
-  const [ais, setAis] = useState([])
+  const [targets, setTargets] = useState([])
+  const [iconSize, setIconSize] = useState(14 * 7)
   const [viewState, setViewState] = React.useState({
     longitude: 11.97,
     latitude: 57.70887,
@@ -63,9 +95,18 @@ export default function Chart() {
 
   useEffect(() => {
     // AIS data
-    const myWorker = new SharedWorker(new URL("./workerMqttConnection.js", import.meta.url))
+    const myWorker = new SharedWorker(new URL("./workerAis.js", import.meta.url))
     myWorker.port.onmessage = e => {
-      setAis(e.data)
+      switch (e.data.type) {
+        case "error":
+          console.log(e.data.payload)
+          break
+        case "targets":
+          setTargets(e.data.payload)
+          break
+        default:
+          console.log("Unexpected message type " + e.data.type + " from workerAis")
+      }
     }
     myWorker.port.start()
     setWorker(myWorker)
@@ -81,20 +122,18 @@ export default function Chart() {
     }
   }, [])
 
-  // getHeading: d => (d.heading * Math.PI) / 180,
-
   const layers = [
     new TargetLayer({
       id: "target-layer",
-      data: ais,
+      data: targets,
       visible: true,
       getCoordinates: d => [d.lon, d.lat],
       getHeading: d => (d.heading * Math.PI) / 180, // deg to rad
       getCourse: d => (d.course * Math.PI) / 180,
-      getFillColor: () => [65, 210, 82, 250],
-      getSpeed: d => d.speed * 0.514444, // knots to m/s
+      getFillColor: d => d.color,
+      getSpeed: d => d.speed * 0, //0.514444, // knots to m/s
       pickable: true,
-      iconSize: 100,
+      iconSize: iconSize,
       elapsedTime: time,
       onHover: info => setHoverInfo(info),
     }),
@@ -120,6 +159,11 @@ export default function Chart() {
       tempViewState.bearing = 0
     }
     setViewState(tempViewState)
+    if (e.viewState.zoom < 14) {
+      setIconSize(14 * 8)
+    } else {
+      setIconSize((20 - e.viewState.zoom) * 8)
+    }
   }
   return (
     <DeckGL
@@ -129,11 +173,7 @@ export default function Chart() {
       controller={{ dragPan: "dragging" }}
     >
       <ReactMapGl mapStyle={basemaps[chartSettings.basemap]} />
-      {hoverInfo.object && (
-        <div style={{ position: "absolute", zIndex: 1, pointerEvents: "none", left: hoverInfo.x, top: hoverInfo.y }}>
-          {hoverInfo.object.mmsi}
-        </div>
-      )}
+      {hoverInfo.object && <DataPresentationComponent hoverInfo={hoverInfo} />}
     </DeckGL>
   )
 }
