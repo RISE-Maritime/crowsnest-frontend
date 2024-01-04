@@ -109,6 +109,13 @@ export default function Chart() {
       }
     }
     myWorker.port.start()
+    myWorker.port.postMessage({
+      type: "credentials",
+      payload: {
+        username: "luisdummy",
+        password: "foofightersrock11",
+      },
+    })
     setWorker(myWorker)
 
     // Animation
@@ -131,7 +138,7 @@ export default function Chart() {
       getHeading: d => (d.heading * Math.PI) / 180, // deg to rad
       getCourse: d => (d.course * Math.PI) / 180,
       getFillColor: d => d.color,
-      getSpeed: d => d.speed * 0, //0.514444, // knots to m/s
+      getSpeed: d => d.speed * 0, // 0.514444, // knots to m/s
       pickable: true,
       iconSize: iconSize,
       elapsedTime: time,

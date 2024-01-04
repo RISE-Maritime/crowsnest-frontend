@@ -27,36 +27,36 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-  gis:
-    image: git.ri.se:4567/mo-rise/crowsnest-gis:latest
-    restart: unless-stopped
-    environment:
-      - POSTGRES_USER=postgres # Must be 'postgres'
-      - POSTGRES_PASSWORD=${CROWSNEST_GIS_DB_PASSWORD}
-      - POSTGRES_DB=${CROWSNEST_GIS_DB}
-    ports:
-      - 5432:5432
+  # gis:
+  #   image: git.ri.se:4567/mo-rise/crowsnest-gis:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     - POSTGRES_USER=postgres # Must be 'postgres'
+  #     - POSTGRES_PASSWORD=${CROWSNEST_GIS_DB_PASSWORD}
+  #     - POSTGRES_DB=${CROWSNEST_GIS_DB}
+  #   ports:
+  #     - 5432:5432
     
-  postgrest:
-    image: postgrest/postgrest:v11.2.0
-    restart: unless-stopped
-    labels:
-      - crowsnest.expose=true
-      - traefik.http.routers.gis-router.rule=PathPrefix(`/gis/api`)
-      - traefik.http.middlewares.gis-strip.stripprefix.prefixes=/gis/api
-      - traefik.http.routers.gis-router.entryPoints=web
-      - traefik.http.services.gis-service.loadbalancer.server.port=3000
-      - traefik.http.routers.gis-router.service=gis-service
-      - traefik.http.routers.gis-router.middlewares=gis-strip
-    environment:
-      - PGRST_DB_URI=postgresql://postgres:${CROWSNEST_GIS_DB_PASSWORD}@gis/${CROWSNEST_GIS_DB}
-      - PGRST_DB_ANON_ROLE=web_anon
-      - PGRST_DB_SCHEMA=public
-      - PGRST_JWT_SECRET=${CROWSNEST_GIS_JWT}
-      - PGRST_JWT_SECRET_IS_BASE64=false
+  # postgrest:
+  #   image: postgrest/postgrest:v11.2.0
+  #   restart: unless-stopped
+  #   labels:
+  #     - crowsnest.expose=true
+  #     - traefik.http.routers.gis-router.rule=PathPrefix(`/gis/api`)
+  #     - traefik.http.middlewares.gis-strip.stripprefix.prefixes=/gis/api
+  #     - traefik.http.routers.gis-router.entryPoints=web
+  #     - traefik.http.services.gis-service.loadbalancer.server.port=3000
+  #     - traefik.http.routers.gis-router.service=gis-service
+  #     - traefik.http.routers.gis-router.middlewares=gis-strip
+  #   environment:
+  #     - PGRST_DB_URI=postgresql://postgres:${CROWSNEST_GIS_DB_PASSWORD}@gis/${CROWSNEST_GIS_DB}
+  #     - PGRST_DB_ANON_ROLE=web_anon
+  #     - PGRST_DB_SCHEMA=public
+  #     - PGRST_JWT_SECRET=${CROWSNEST_GIS_JWT}
+  #     - PGRST_JWT_SECRET_IS_BASE64=false
 
   tiles:
-      image: git.ri.se:4567/mo-rise/crowsnest-tiles:latest
+      image: maptiler/tileserver-gl #git.ri.se:4567/mo-rise/crowsnest-tiles:latest
       restart: unless-stopped
       labels:
         - crowsnest.expose=true
@@ -75,3 +75,5 @@ services:
         - --public_url
         - ${CROWSNEST_PROTOCOL}${CROWSNEST_HOST}/tiles
         - --verbose
+      volumes:
+       - ../crowsnest-tiles:/data

@@ -3,17 +3,12 @@ import mqtt from "precompiled-mqtt"
 const mqttOptions = {
   clientId: "crowsnest_app_" + Math.random(),
   connectTimeout: 4000,
-  username: "luisdummy",
-  password: "dummywasabadidea99!",
   protocolVersion: 5,
 }
-
 const mqttHost = "wss://crowsnest.mo.ri.se:443/mqtt"
-
 var ports = [] // Array to hold connected ports
 let mqttConnection = null
 const targetsBuffer = {}
-let ownshipMmsi
 const sendTargetsInterval = 2500 // Interval to send messages (in milliseconds)
 const handleOldMessagesInterval = 10000
 const deleteOldMessagesAt = 60000
@@ -40,7 +35,7 @@ function handleOldMessages() {
 
     // Change the color to red if the message is old, but not old enough to delete
     if (messageAge > flagOldMessagesAt && messageAge <= deleteOldMessagesAt) {
-      targetsBuffer[mmsi].color = [219, 63, 55, 250] 
+      targetsBuffer[mmsi].color = [219, 63, 55, 250]
     }
 
     // Delete the message is so old it should be deleted
@@ -48,6 +43,16 @@ function handleOldMessages() {
       delete targetsBuffer[mmsi]
     }
   })
+}
+
+function CreateMqttConnection(credentials) {
+  mqttConnection = mqtt.connect(mqttHost, { ...mqttOptions, ...credentials })
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/1", error => sendError(error))
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/2", error => sendError(error))
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/3", error => sendError(error))
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/8", error => sendError(error))
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/5", error => sendError(error))
+  sendError("Connection created")
 }
 
 function MqttConnectionManagement() {
@@ -77,25 +82,15 @@ function MqttConnectionManagement() {
           message["color"] = [70, 219, 110, 250]
         }
 
-        if (message.mmsi === ownshipMmsi) {
-          ports.forEach(port => {
-            port.postMessage({ type: "ownship", payload: message })
-          })
-          if (message.mmsi in targetsBuffer) {
-            delete targetsBuffer[message.mmsi]
-          }
+        if (targetsBuffer[message.mmsi]) {
+          // Merge the new message into the existing message
+          targetsBuffer[message.mmsi] = { ...targetsBuffer[message.mmsi], ...message }
         } else {
-          if (targetsBuffer[message.mmsi]) {
-            // Merge the new message into the existing message
-            targetsBuffer[message.mmsi] = { ...targetsBuffer[message.mmsi], ...message }
-          } else {
-            // No existing message, simply add the new one
-            targetsBuffer[message.mmsi] = message
-          }
+          // No existing message, simply add the new one
+          targetsBuffer[message.mmsi] = message
         }
       }
     })
-
 
     setInterval(sendTargets, sendTargetsInterval)
     setInterval(handleOldMessages, handleOldMessagesInterval)
@@ -105,15 +100,14 @@ function MqttConnectionManagement() {
 self.onconnect = e => {
   const port = e.ports[0]
   ports.push(port)
-  port.start()
-  if (!mqttConnection) {
-    mqttConnection = mqtt.connect(mqttHost, mqttOptions)
-    mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/1", error => sendError(error))
-    mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/2", error => sendError(error))
-    mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/3", error => sendError(error))
-    mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/8", error => sendError(error))
-    mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/5", error => sendError(error))
+
+  port.onmessage = e => {
+    if (e.data.type === "credentials") {
+      sendError(e.data.payload)
+      CreateMqttConnection(e.data.payload)
+      MqttConnectionManagement()
+    }
   }
+  port.start()
   MqttConnectionManagement()
-  
 }
