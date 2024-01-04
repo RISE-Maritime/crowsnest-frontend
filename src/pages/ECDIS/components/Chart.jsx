@@ -9,7 +9,7 @@ import DeckGL from "@deck.gl/react"
 import ReactMapGl from "react-map-gl/maplibre"
 
 import basemaps from "./baseMaps.json"
-import TargetLayer from "../../../base-elements/custom-deckgl-layers/target-layer"
+import AisLayer from "../../../base-elements/custom-deckgl-layers/ais-layer"
 
 // Atoms
 export const vesselTargetsAtom = atom({
@@ -44,14 +44,13 @@ export const atomChartSettings = atom({
   },
 })
 
-const DataPresentationComponent = ({ hoverInfo }) => {
+const AisDataHoverBox = ({ hoverInfo }) => {
   const to_show = {
     shipname: "Name",
     speed: "SOG",
     heading: "HDG",
     course: "COG",
     callsign: "CallSign",
-    // Add other key mappings as needed
   }
 
   return (
@@ -72,13 +71,11 @@ const DataPresentationComponent = ({ hoverInfo }) => {
   )
 }
 
-export default function Chart() {
+export default function Chart({ ais }) {
   const chartSettings = useRecoilValue(atomChartSettings)
   const [animation] = useState({})
-  const [worker, setWorker] = useState(null)
   const [hoverInfo, setHoverInfo] = useState({})
   const [time, setTime] = useState(0)
-  const [targets, setTargets] = useState([])
   const [iconSize, setIconSize] = useState(14 * 7)
   const [viewState, setViewState] = React.useState({
     longitude: 11.97,
@@ -94,45 +91,17 @@ export default function Chart() {
   }
 
   useEffect(() => {
-    // AIS data
-    const myWorker = new SharedWorker(new URL("./workerAis.js", import.meta.url))
-    myWorker.port.onmessage = e => {
-      switch (e.data.type) {
-        case "error":
-          console.log(e.data.payload)
-          break
-        case "targets":
-          setTargets(e.data.payload)
-          break
-        default:
-          console.log("Unexpected message type " + e.data.type + " from workerAis")
-      }
-    }
-    myWorker.port.start()
-    myWorker.port.postMessage({
-      type: "credentials",
-      payload: {
-        username: "luisdummy",
-        password: "foofightersrock11",
-      },
-    })
-    setWorker(myWorker)
-
     // Animation
-    console.log("Starting animation ...")
     animation.id = window.requestAnimationFrame(animate)
     return () => {
-      console.log("Stopping animation ...")
       window.cancelAnimationFrame(animation.id)
-      console.log("Stopping workers ...")
-      worker.terminate()
     }
   }, [])
 
   const layers = [
-    new TargetLayer({
+    new AisLayer({
       id: "target-layer",
-      data: targets,
+      data: ais,
       visible: true,
       getCoordinates: d => [d.lon, d.lat],
       getHeading: d => (d.heading * Math.PI) / 180, // deg to rad
@@ -180,7 +149,7 @@ export default function Chart() {
       controller={{ dragPan: "dragging" }}
     >
       <ReactMapGl mapStyle={basemaps[chartSettings.basemap]} />
-      {hoverInfo.object && <DataPresentationComponent hoverInfo={hoverInfo} />}
+      {hoverInfo.object && <AisDataHoverBox hoverInfo={hoverInfo} />}
     </DeckGL>
   )
 }

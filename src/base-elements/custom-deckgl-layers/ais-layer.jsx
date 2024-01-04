@@ -2,8 +2,8 @@ import { Layer, project32, picking } from "@deck.gl/core"
 import GL from "@luma.gl/constants"
 import { Model, Geometry } from "@luma.gl/core"
 
-import vs from "./ais-target-layer-vertex.glsl"
-import fs from "./ais-target-layer-fragment.glsl"
+import vs from "./ais-layer-vertex.glsl"
+import fs from "./ais-layer-fragment.glsl"
 
 const DEFAULT_COLOR = [255, 0, 0, 255]
 

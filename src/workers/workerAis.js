@@ -17,7 +17,7 @@ const flagOldMessagesAt = 30000
 function sendTargets() {
   const targetsArray = Object.values(targetsBuffer).sort((a, b) => a.mmsi - b.mmsi)
   ports.forEach(port => {
-    port.postMessage({ type: "targets", payload: targetsArray })
+    port.postMessage({ type: "ais", payload: targetsArray })
   })
 }
 
@@ -47,12 +47,21 @@ function handleOldMessages() {
 
 function CreateMqttConnection(credentials) {
   mqttConnection = mqtt.connect(mqttHost, { ...mqttOptions, ...credentials })
-  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/1", error => sendError(error))
-  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/2", error => sendError(error))
-  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/3", error => sendError(error))
-  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/8", error => sendError(error))
-  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/5", error => sendError(error))
-  sendError("Connection created")
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/1", error => {
+    error && sendError(error)
+  })
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/2", error => {
+    error && sendError(error)
+  })
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/3", error => {
+    error && sendError(error)
+  })
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/8", error => {
+    error && sendError(error)
+  })
+  mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/5", error => {
+    error && sendError(error)
+  })
 }
 
 function MqttConnectionManagement() {
@@ -103,7 +112,6 @@ self.onconnect = e => {
 
   port.onmessage = e => {
     if (e.data.type === "credentials") {
-      sendError(e.data.payload)
       CreateMqttConnection(e.data.payload)
       MqttConnectionManagement()
     }
