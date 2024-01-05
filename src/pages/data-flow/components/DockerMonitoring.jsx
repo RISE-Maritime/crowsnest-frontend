@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { Typography, Grid, Button, Autocomplete, TextField, Stack } from "@mui/material"
 import axios from "axios"
 import ByteBuffer from "bytebuffer"
@@ -23,13 +23,12 @@ export default function DockerMonitoring() {
   const [timeMsg, setTimeMsg] = useState(null)
   const [dockerContainers, setDockerContainers] = useState([])
   const [URL, setURL] = useState("http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id")
+  const requestInterval = useRef(null)
+  const [loopState, setLoopState] = useState("STOPPED")
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      getDockerState()
-    }, 15000)
     return () => {
-      clearInterval(interval)
+      clearInterval(requestInterval.current)
     }
   }, [URL])
 
@@ -65,6 +64,19 @@ export default function DockerMonitoring() {
     })
   }
 
+  function startLoop() {
+    // Set interval to get data
+    requestInterval.current = setInterval(() => {
+      getDockerState()
+    }, 15000)
+    setLoopState("RUNNING")
+  }
+
+  function stopLoop() {
+    clearInterval(requestInterval.current)
+    setLoopState("STOPPED")
+  }
+
   return (
     <div style={{ width: "100%" }}>
       <Grid container>
@@ -97,6 +109,15 @@ export default function DockerMonitoring() {
             <Button variant="contained" onClick={getDockerState}>
               Get Docker State
             </Button>
+            { loopState === "STOPPED" ?
+            <Button variant="contained" onClick={startLoop}>
+              Start GET Loop (15 sec)
+            </Button>
+            :
+            <Button variant="contained" onClick={stopLoop} sx={{background: "red"}}>
+              Stop GET Loop
+            </Button>
+            }
           </Stack>
         </Grid>
 

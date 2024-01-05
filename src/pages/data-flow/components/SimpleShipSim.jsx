@@ -1,73 +1,102 @@
-import React, { useState } from "react"
-import { Button, Typography } from "@mui/material"
-import { OS_POSITIONS, OS_HEADING, OS_VELOCITY, ATOM_OS_RUDDERS, ATOM_OS_ENGINES } from "../../../recoil/atoms"
+import React, { useRef, useState } from "react"
+import { Button, Typography, Grid } from "@mui/material"
+import {
+  OS_POSITIONS,
+  OS_HEADING,
+  OS_VELOCITY,
+  ATOM_OS_RUDDERS,
+  ATOM_SIM_STATE,
+  ATOM_OS_ENGINES,
+  showMiniAppsObj,
+} from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
 import { updateSimState } from "../../../recoil/selectors"
+import SimMap from "./SimMap"
+import VideogameAssetOffIcon from "@mui/icons-material/VideogameAssetOff"
+import VideogameAssetIcon from "@mui/icons-material/VideogameAsset"
+import SimCommands from "./SimCommands"
+import SimStateSetup from "./SimStateSetup"
+import SimShipModelSelector from "./SimShipModelSelector"
 
 export default function SimpleShipSim() {
   const osHeading = useRecoilValue(OS_HEADING)
   const osVelocity = useRecoilValue(OS_VELOCITY)
   const osRudder = useRecoilValue(ATOM_OS_RUDDERS)
   const osEng = useRecoilValue(ATOM_OS_ENGINES)
-  const [osPositions, setOsPositions] = useRecoilState(OS_POSITIONS)
+  const osPositions = useRecoilValue(OS_POSITIONS)
   const setUpdateSimState = useSetRecoilState(updateSimState)
-  const [simInterval, setSimInterval] = useState()
-  const [shipState, setShipState] = useState({
-    position: [0, 0],
-    heading: 0,
-    sog: 0,
-    cog: 0,
-    rot: 0,
-    rudder: 0, // -35 to 35 degrees
-    engine: 0, // -100% to 100%
-  })
+  const simInterval = useRef(null)
+  const [simState, setSimState] = useRecoilState(ATOM_SIM_STATE)
 
   function startSim() {
     console.log("Start")
-
-    let interval = setInterval(() => {
-      setUpdateSimState(100)
-    }, 100)
-
-    setSimInterval(interval)
+    simInterval.current = setInterval(() => {
+      setUpdateSimState(simState.updateMilSec)
+    }, simState.updateMilSec / simState.runTimeSpeedUp)
+    setSimState({
+      ...simState,
+      state: "RUNNING",
+    })
   }
 
-  function stopSim() {
-    console.log("Stop")
-    clearInterval(simInterval)
+  function pauseSim() {
+    console.log("Pause")
+    clearInterval(simInterval.current)
+    setSimState({
+      ...simState,
+      state: "PAUSED",
+    })
+  }
+
+  function restartSim() {
+    console.log("Restart")
+    clearInterval(simInterval.current)
+    setSimState({
+      ...simState,
+      milSecElapsed: 0,
+      state: "STOPPED",
+    })
+  }
+
+  let [showMiniApp, setShowMiniApp] = useRecoilState(showMiniAppsObj)
+
+  const ToggleMiniApp = appName => {
+    console.log(appName, !showMiniApp[appName])
+    setShowMiniApp({
+      ...showMiniApp,
+      [appName]: !showMiniApp[appName],
+    })
   }
 
   return (
-    <div>
-      <Typography variant="h4">SimpleShipSim</Typography>
+    <div style={{ width: "100%" }}>
+      <Grid container>
+        <Grid item xs={4}>
+          <SimCommands simTimeMilSec={simState.milSecElapsed} pauseSim={pauseSim} startSim={startSim} />
 
-      <Typography variant="h6">
-        <b> OS State </b>
-        <br />
-        Lat {osPositions.SIM?.latitude.toFixed(4)}°
-        <br />
-        Long {osPositions.SIM?.longitude.toFixed(4)}°
-        <br />
-        Heading: {osHeading?.SIM?.heading.toFixed(1)}°
-        <br />
-        SOG: {osVelocity?.SIM?.sog.toFixed(1)} kts 
-        <br />
-        COG: {osVelocity?.SIM?.cog.toFixed(1)}°
-        <br />
-        ROT: {osVelocity.SIM?.rot.toFixed(0)}°/min
-        <br />
-        Rudder: {(osRudder.RUDDER_0?.maxAngle * (osRudder.RUDDER_0?.setAngle/100)).toFixed(0) } °
-        <br />
-        Engine: {osEng.ENGINE_0?.setPower}%
-      </Typography>
+          <br />
+          <Button variant="contained" color="primary" onClick={() => ToggleMiniApp("controls")}>
+            {!showMiniApp.controls ? <VideogameAssetIcon /> : <VideogameAssetOffIcon />}
+          </Button>
+          <br />
+          <SimShipModelSelector />
+        </Grid>
 
-      <Button variant="contained" color="primary" onClick={startSim}>
-        Start
-      </Button>
-
-      <Button variant="contained" color="primary" onClick={stopSim}>
-        Stop
-      </Button>
+        <Grid item xs={3}>
+          <SimStateSetup restartSim={restartSim} />
+        </Grid>
+        <Grid
+          item
+          xs={5}
+          sx={{
+            display: "grid",
+            position: "relative",
+            height: "40rem",
+          }}
+        >
+          <SimMap />
+        </Grid>
+      </Grid>
     </div>
   )
 }

@@ -8,7 +8,9 @@ import LockOpenIcon from "@mui/icons-material/LockOpen"
 import LockIcon from "@mui/icons-material/Lock"
 
 export default function FloatAppWind() {
-  const { innerWidth: width, innerHeight: height } = window
+  const { innerWidth: width, innerHeight: height,  } = window
+  const pageHeight = document.documentElement.scrollHeight
+  const scrollPosition = window.scrollY;
   const [isDraggable, setIsDraggable] = useState(true)
 
   const toggleDraggable = () => {
@@ -18,8 +20,8 @@ export default function FloatAppWind() {
   return (
     <Rnd
       default={{
-        x: width * 0.1,
-        y: height * 0.1,
+        x: width * 0.05,
+        y: scrollPosition + 50,
       }}
       style={{ zIndex: "10000" }}
       disableDragging={!isDraggable}

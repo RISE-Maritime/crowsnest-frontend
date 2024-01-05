@@ -158,7 +158,7 @@ export function calcBearingBetween(lat1, lon1, lat2, lon2) {
  * @param  {[float]} bearing in degrees from north
  * @param  {[float]} distance in nauctical miles
  * @param  {[float]} distance_unit default "km"
- * @return [float, float] --> [final_lon, final_lat] 
+ * @return [float, float] --> [final_lon, final_lat]
  */
 export function calcPosFromBearingDistance(latitude, longitude, bearing, distance, distance_unit = "km") {
   const bearing_rad = toRadians(bearing)
@@ -377,4 +377,24 @@ function identifyTurn(initialHeading, finalHeading) {
   } else {
     return "starboard"
   }
+}
+
+/**
+ * Format milliseconds to time string
+ * @param  {[number]} milliseconds
+ */
+export function millisecondsToTime(milliseconds) {
+  let seconds = Math.floor((milliseconds / 1000) % 60)
+  if (seconds < 10) {
+    seconds = "0" + seconds
+  }
+  let minutes = Math.floor((milliseconds / (1000 * 60)) % 60)
+  if (minutes < 10) {
+    minutes = "0" + minutes
+  }
+  let hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24)
+  if (hours < 10) {
+    hours = "0" + hours
+  }
+  return `${hours}:${minutes}:${seconds}`
 }

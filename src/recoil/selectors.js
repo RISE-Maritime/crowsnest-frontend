@@ -30,6 +30,9 @@ import {
   ATOM_OS_THRUSTERS,
   ATOM_KEELSON_KEYEXP_MANAGED,
   ATOM_KEELSON_KEYEXP_UNMANAGED,
+  ATOM_SIM_STATE,
+  ATOM_SIM_ACTIVE_MODELS,
+  ATOM_SIM_SHIP_MODELS
 } from "./atoms"
 
 export const selectUser = selector({
@@ -880,7 +883,6 @@ export const updateSimState = selector({
     return null
   },
   set: ({ set, get }, intervalMilSec) => {
-
     const shipModel = {
       speed_min: -10.0, // knots
       speed_max: 25.0, // knots
@@ -894,28 +896,28 @@ export const updateSimState = selector({
     const os_vel = get(OS_VELOCITY)
     const os_head = get(OS_HEADING)
     const os_pos = get(OS_POSITIONS)
+    const active_model = get(ATOM_SIM_ACTIVE_MODELS)
+    const ship_models = get(ATOM_SIM_SHIP_MODELS)
 
     // Values to be updated
     let new_sog = 0
     let new_rot = 0
     let new_cog = 0
     let new_heading = 0
- 
-    // Calc new SOG 
-    let os_cur_eng = os_eng["ENGINE_0"].setPower
-    let old_sog = os_vel.SIM.sog*0.5144
-    let T = os_cur_eng * 2000 // Newton  
-    let R = 7500 * old_sog**2 // constantan resistance  
-    let massa = 5000000 // kg
-    let acc = (T-R)/massa
 
-    let new_ms = (acc * (intervalMilSec /1000) ) + old_sog
-    new_sog = new_ms / 0.5144 
-    // if (os_cur_eng >= 0.0) {
-    //   new_sog = os_cur_eng * (shipModel.speed_max / 100)
-    // } else if (os_cur_eng < 0.0) {
-    //   new_sog = -os_cur_eng * (shipModel.speed_min / 100)
-    // }
+    
+    const engNewton = ship_models[active_model].engine_newton // Newton
+    let massa = ship_models[active_model].mass_kg // kg
+    const resistance = ship_models[active_model].resistance // constant resistance
+
+    // Calc new SOG
+    let os_cur_eng = os_eng["ENGINE_0"].setPower
+    let old_sog = os_vel.SIM.sog * 0.5144
+    let T = os_cur_eng * engNewton // Newton
+    let R = resistance * old_sog ** 2
+    let acc = (T - R) / massa
+    let new_ms = acc * (intervalMilSec / 1000) + old_sog
+    new_sog = new_ms / 0.5144
 
     // Calc new ROT
     let os_cur_rudAng = os_rud.RUDDER_0.setAngle
@@ -923,7 +925,7 @@ export const updateSimState = selector({
 
     // Calc new Heading
     let os_cur_haed = os_head.SIM.heading
-    let rot_interval = (new_rot / 60) * (intervalMilSec /1000)
+    let rot_interval = (new_rot / 60) * (intervalMilSec / 1000)
     new_heading = keepWithin360(rot_interval + os_cur_haed)
 
     // Calc new COG
@@ -936,22 +938,18 @@ export const updateSimState = selector({
     // Calc new Position
     let os_cur_lat = os_pos.SIM.latitude
     let os_cur_long = os_pos.SIM.longitude
-    let distance_traveled = ( Math.abs(new_sog) / 3600) * (intervalMilSec /1000)
-    console.log(distance_traveled, new_cog);
-    let new_pos = calcPosFromBearingDistance(os_cur_lat, os_cur_long, new_cog,distance_traveled, "nm")
+    let distance_traveled = (Math.abs(new_sog) / 3600) * (intervalMilSec / 1000)
+    let new_pos = calcPosFromBearingDistance(os_cur_lat, os_cur_long, new_cog, distance_traveled, "nm")
     let new_lon = new_pos[0]
     let new_lat = new_pos[1]
 
-    console.log("NEW", new_lon, new_lat);
-
     // Setting new ship state
-
     set(OS_POSITIONS, currentObj => ({
       ...currentObj,
       SIM: {
         ...currentObj.SIM,
         latitude: new_lat, // degrees
-        longitude: new_lon // degrees
+        longitude: new_lon, // degrees
       },
     }))
 
@@ -971,6 +969,11 @@ export const updateSimState = selector({
         ...currentObj.SIM,
         heading: new_heading, // degrees
       },
+    }))
+
+    set(ATOM_SIM_STATE, currentObj => ({
+      ...currentObj,
+      milSecElapsed: currentObj.milSecElapsed + intervalMilSec,
     }))
   },
 })

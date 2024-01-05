@@ -66,7 +66,7 @@ export default function RightDrawer(props) {
         >
           <Checkbox
             edge="start"
-            checked={showMiniApp.playback}
+            checked={showMiniApp.controls}
             color="secondary"
           />
           <ListItemText primary="Controls" />
