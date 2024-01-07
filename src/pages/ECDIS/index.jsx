@@ -19,12 +19,14 @@ function getCookieValue(cookieName) {
 
 export default function Ecdis() {
   const [ais, setAis] = useState([])
+  const [monitorData, setMonitorData] = useState({})
   const [aisWorker, setAisWorker] = useState(null)
-
+  const [monitorWorker, setMonitorWorker] = useState(null)
+  console.log(monitorData)
   useEffect(() => {
     // AIS WORKER
-    const worker = new SharedWorker(new URL("../../workers/workerAis.js", import.meta.url))
-    worker.port.onmessage = e => {
+    const tmpAisWorker = new SharedWorker(new URL("../../workers/workerAis.js", import.meta.url))
+    tmpAisWorker.port.onmessage = e => {
       switch (e.data.type) {
         case "error":
           console.log(e.data.payload)
@@ -36,8 +38,28 @@ export default function Ecdis() {
           console.log("Unexpected message type " + e.data.type + " from workerAis")
       }
     }
-    worker.port.start()
-    // Send the worker the login credentials
+    tmpAisWorker.port.start()
+
+    // MONITOR WORKER
+    let tmpData
+    const tmpMonitorWorker = new SharedWorker(new URL("../../workers/workerMonitor.js", import.meta.url))
+    tmpMonitorWorker.port.onmessage = e => {
+      switch (e.data.type) {
+        case "error":
+          console.log(e.data.payload)
+          break
+        case "ais":
+          tmpData = {}
+          tmpData[e.data.payload.mmsi] = e.data.payload
+          setMonitorData({ ...monitorData, ...tmpData })
+          break
+        default:
+          console.log("Unexpected message type " + e.data.type + " from workerMonitor")
+      }
+    }
+    tmpMonitorWorker.port.start()
+
+    // Send the workers the MQTT credentials
     let credentials
     const token = getCookieValue("crowsnest-auth-acccess")
     if (token) {
@@ -53,18 +75,31 @@ export default function Ecdis() {
       console.log("Env var credentials.")
     }
     if (credentials) {
-      worker.port.postMessage({
-        type: "credentials",
+      tmpAisWorker.port.postMessage({
+        type: "mqtt_credentials",
+        payload: credentials,
+      })
+      tmpMonitorWorker.port.postMessage({
+        type: "mqtt_credentials",
         payload: credentials,
       })
     } else {
-      console.log("Error: Credentials for AIS worker missing!")
+      console.log("Error: Credentials for MQTT worker missing!")
     }
-    setAisWorker(worker)
+
+    // Send a monitored ais vessel
+    tmpMonitorWorker.port.postMessage({
+      type: "add_ais_mmsi",
+      identifier: 219002801,
+    })
+
+    setAisWorker(tmpAisWorker)
+    setMonitorWorker(tmpMonitorWorker)
 
     // Cleanup
     return () => {
       aisWorker.terminate()
+      monitorWorker.terminate()
     }
   }, [])
 

@@ -123,7 +123,7 @@ self.onconnect = e => {
   ports.push(port)
 
   port.onmessage = e => {
-    if (e.data.type === "credentials") {
+    if (e.data.type === "mqtt_credentials") {
       CreateMqttConnection(e.data.payload)
       MqttConnectionManagement()
     }

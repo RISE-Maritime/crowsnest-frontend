@@ -20,14 +20,14 @@ export default function ChartControls() {
         <ButtonGroup size="small">
           <Button
             onClick={() => {
-              setChartSettings({ ...chartSettings, zoom: -1 })
+              setChartSettings({ ...chartSettings, zoom: chartSettings.zoom - 1 })
             }}
           >
             <ZoomOutIcon />
           </Button>
           <Button
             onClick={() => {
-              setChartSettings({ ...chartSettings, zoom: +1 })
+              setChartSettings({ ...chartSettings, zoom: chartSettings.zoom + 1 })
             }}
           >
             <ZoomInIcon />

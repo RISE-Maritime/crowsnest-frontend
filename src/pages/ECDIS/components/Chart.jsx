@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import Grid from "@mui/material/Grid"
 
-import { atom, useRecoilValue } from "recoil"
+import { atom, useRecoilState } from "recoil"
 
 import DeckGL from "@deck.gl/react"
 import ReactMapGl from "react-map-gl/maplibre"
@@ -47,6 +47,7 @@ export const atomChartSettings = atom({
 const AisDataHoverBox = ({ hoverInfo }) => {
   const to_show = {
     shipname: "Name",
+    mmsi: "MMSI",
     speed: "SOG",
     heading: "HDG",
     course: "COG",
@@ -72,8 +73,13 @@ const AisDataHoverBox = ({ hoverInfo }) => {
 }
 
 export default function Chart({ ais }) {
-  const chartSettings = useRecoilValue(atomChartSettings)
+  /*
+  Notes:
+   - The constant timeRef is used to reduce the size of the number passed to the Deck.gl layer, it cannot handle the size of a unixtime for some reason.
+  */
+  const [chartSettings, setChartSettings] = useRecoilState(atomChartSettings)
   const requestRef = useRef()
+  const timeRef = useRef(Date.now() / 1000)
   const [hoverInfo, setHoverInfo] = useState({})
   const [time, setTime] = useState(0)
   const [iconSize, setIconSize] = useState(14 * 7)
@@ -85,42 +91,30 @@ export default function Chart({ ais }) {
     bearing: 0,
   })
 
-  console.log(ais)
-
   function animate() {
-    setTime(Date.now())
+    setTime(Date.now() / 1000)
     requestRef.current = requestAnimationFrame(animate)
   }
-
-  // useEffect(() => {
-  //   // Animation
-  //   animation.id = window.requestAnimationFrame(animate)
-  //   return () => {
-  //     window.cancelAnimationFrame(animation.id)
-  //   }
-  // }, [])
-
   useEffect(() => {
-    setTime(Date.now())
+    setTime(Date.now() / 1000)
     requestRef.current = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(requestRef.current)
   }, [])
 
-  console.log(time)
   const layers = [
     new AisLayer({
       id: "ais-dead-reckoning-layer",
       data: ais,
       visible: true,
       getCoordinates: d => [d.lon, d.lat],
-      getHeading: d => (d.heading * Math.PI) / 180, // deg to rad
-      getCourse: d => (d.course * Math.PI) / 180,
+      getHeading: d => d.heading, // in deg
+      getCourse: d => d.course, // in deg
       getFillColor: [100, 100, 100, 230],
-      getSpeed: d => d.speed * 0.514444, // knots to m/s
-      getTimestamp: d => (d.position_report_timestamp * 1000 - 1704610621811) / 1000,
+      getSpeed: d => d.speed, // in knots
+      getTimestamp: d => d.position_report_timestamp - timeRef.current,
       pickable: true,
-      iconSize: iconSize,
-      currentTime: (time - 1704610621811) / 1000,
+      iconSize: iconSize, // in meters
+      currentTime: time - timeRef.current,
       onHover: info => setHoverInfo(info),
     }),
     new AisLayer({
@@ -128,38 +122,43 @@ export default function Chart({ ais }) {
       data: ais,
       visible: true,
       getCoordinates: d => [d.lon, d.lat],
-      getHeading: d => (d.heading * Math.PI) / 180, // deg to rad
-      getCourse: d => (d.course * Math.PI) / 180,
+      getHeading: d => d.heading, // in deg
+      getCourse: d => d.course, // in deg
       getFillColor: d => d.color,
-      getSpeed: d => d.speed * 0, // 0.514444, // knots to m/s
-      getTimestamp: d => d.position_report_timestamp,
+      getSpeed: 0, // in knots, zero because we want no motion
+      getTimestamp: d => d.position_report_timestamp - timeRef.current,
       pickable: true,
-      iconSize: iconSize,
-      currentTime: time,
+      iconSize: iconSize, // in meters
+      currentTime: time - timeRef.current,
       onHover: info => setHoverInfo(info),
     }),
   ]
+
   React.useEffect(() => {
     var changes = {}
-    if (chartSettings.visualisation === "2D") {
+    if (chartSettings.visualisation === "2D" && changes.pitch !== 0.0) {
       changes.pitch = 0.0
     }
-
-    if (chartSettings.verticalFix === "northUp") {
+    if (chartSettings.visualisation === "3D" && changes.pitch !== 45.0) {
+      changes.pitch = 45.0
+    }
+    if (chartSettings.verticalFix === "northUp" && viewState.bearing !== 0.0) {
       changes.bearing = 0.0
     }
     setViewState({ ...viewState, ...changes })
   }, [chartSettings])
 
   function changeViewState(e) {
-    var tempViewState = e.viewState
-    if (chartSettings.visualisation === "2D") {
-      tempViewState.pitch = 0
-    }
-    if (chartSettings.verticalFix === "northUp") {
-      tempViewState.bearing = 0
-    }
-    setViewState(tempViewState)
+    setViewState(e.viewState)
+
+    //setChartSettings({ ...chartSettings, zoom: tempViewState.zoom })
+    // if (chartSettings.visualisation === "2D") {
+    //   tempViewState.pitch = 0
+    // }
+    // if (chartSettings.verticalFix === "northUp") {
+    //   tempViewState.bearing = 0
+    // }
+
     if (e.viewState.zoom < 14) {
       setIconSize(14 * 8)
     } else {

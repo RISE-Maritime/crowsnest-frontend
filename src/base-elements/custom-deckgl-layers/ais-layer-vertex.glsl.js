@@ -37,10 +37,10 @@ vec3 translateXY(vec3 vector, float angle, float distance) {
 void main(void) {
 
   vec3 mod_vertices = vertices * project_size(iconSize);
-  mod_vertices = rotateZ(mod_vertices, instanceHeading);
+  mod_vertices = rotateZ(mod_vertices, radians(instanceHeading));
   float elapsedTime = currentTime - instanceTimestamp;
-  float distance = instanceSpeed*elapsedTime;
-  mod_vertices = translateXY(mod_vertices, instanceCourse, distance);
+  float distance = 0.514444*instanceSpeed*elapsedTime;
+  mod_vertices = translateXY(mod_vertices, radians(instanceCourse), distance);
   gl_Position = project_position_to_clipspace(instancePositions, instancePositions64Low, mod_vertices);
       
   vFillColor = vec4(instanceFillColors.rgb, instanceFillColors.a * opacity);
