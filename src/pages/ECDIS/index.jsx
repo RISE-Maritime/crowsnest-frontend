@@ -4,6 +4,19 @@ import StatusSideBar from "./components/StatusSideBarNEW"
 import Chart from "./components/Chart"
 import ChartControls from "./components/ChartControls"
 
+function getCookieValue(cookieName) {
+  const allCookies = document.cookie
+  const cookieArray = allCookies.split("; ")
+
+  for (let cookie of cookieArray) {
+    const [key, value] = cookie.split("=")
+    if (key === cookieName) {
+      return value
+    }
+  }
+  return null // Return null if the cookie was not found
+}
+
 export default function Ecdis() {
   const [ais, setAis] = useState([])
   const [aisWorker, setAisWorker] = useState(null)
@@ -25,13 +38,28 @@ export default function Ecdis() {
     }
     worker.port.start()
     // Send the worker the login credentials
-    worker.port.postMessage({
-      type: "credentials",
-      payload: {
+    let credentials
+    const token = getCookieValue("crowsnest-auth-acccess")
+    if (token) {
+      credentials = {
+        username: token,
+      }
+      console.log("Cookie credentials.")
+    } else {
+      credentials = {
         username: process.env.REACT_APP_MQTT_USERNAME,
         password: process.env.REACT_APP_MQTT_PASSWORD,
-      },
-    })
+      }
+      console.log("Env var credentials.")
+    }
+    if (credentials) {
+      worker.port.postMessage({
+        type: "credentials",
+        payload: credentials,
+      })
+    } else {
+      console.log("Error: Credentials for AIS worker missing!")
+    }
     setAisWorker(worker)
 
     // Cleanup

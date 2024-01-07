@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default `\
 #define SHADER_NAME ais-target-layer-vertex-shader
-
+precision highp float;  
 attribute vec3 vertices;
 
 attribute vec3 instancePositions;
@@ -9,13 +9,15 @@ attribute vec3 instancePositions64Low;
 attribute float instanceHeading;
 attribute float instanceSpeed;
 attribute float instanceCourse;
+attribute highp float instanceTimestamp;
 attribute vec4 instanceFillColors;
+
 
 attribute vec3 instancePickingColors;
 
 uniform float opacity;
 uniform float iconSize;
-uniform float elapsedTime;
+uniform highp float currentTime;
 
 varying vec4 vFillColor;
 
@@ -36,6 +38,7 @@ void main(void) {
 
   vec3 mod_vertices = vertices * project_size(iconSize);
   mod_vertices = rotateZ(mod_vertices, instanceHeading);
+  float elapsedTime = currentTime - instanceTimestamp;
   float distance = instanceSpeed*elapsedTime;
   mod_vertices = translateXY(mod_vertices, instanceCourse, distance);
   gl_Position = project_position_to_clipspace(instancePositions, instancePositions64Low, mod_vertices);

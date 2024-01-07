@@ -12,7 +12,6 @@ export default function ChartControls() {
   const [chartSettings, setChartSettings] = useRecoilState(atomChartSettings)
 
   //const theme = useTheme()
-  console.log(chartSettings)
 
   return (
     <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", padding: "10px" }}>

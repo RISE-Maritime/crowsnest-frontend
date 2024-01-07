@@ -46,7 +46,9 @@ function handleOldMessages() {
 }
 
 function CreateMqttConnection(credentials) {
-  mqttConnection = mqtt.connect(mqttHost, { ...mqttOptions, ...credentials })
+  mqttConnection = mqtt.connect(mqttHost, { ...mqttOptions, ...credentials }, error => {
+    error && sendError(error)
+  })
   mqttConnection.subscribe("CROWSNEST/EXTERNAL/AIS/SJOFARTSVERKET/+/1", error => {
     error && sendError(error)
   })
@@ -68,6 +70,7 @@ function MqttConnectionManagement() {
   if (mqttConnection) {
     mqttConnection.on("message", (topic, payload) => {
       let message
+      let newDate
 
       // Parse the message
       try {
@@ -78,6 +81,12 @@ function MqttConnectionManagement() {
       }
       if ("mmsi" in message.message) {
         message = { sent_at: message.sent_at, ...message.message }
+
+        // Position report timestamp
+        if (message.msg_type !== 5) {
+          newDate = new Date(message.sent_at)
+          message["position_report_timestamp"] = newDate.getTime() / 1000
+        }
 
         // Approximate course if missing
         if (!("course" in message)) {
@@ -90,6 +99,9 @@ function MqttConnectionManagement() {
         } else {
           message["color"] = [70, 219, 110, 250]
         }
+
+        // Set timestamp
+        //message['timestamp'] = Date(message.sent_at).getTime()
 
         if (targetsBuffer[message.mmsi]) {
           // Merge the new message into the existing message

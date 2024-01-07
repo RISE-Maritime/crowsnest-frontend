@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 import Grid from "@mui/material/Grid"
@@ -73,7 +73,7 @@ const AisDataHoverBox = ({ hoverInfo }) => {
 
 export default function Chart({ ais }) {
   const chartSettings = useRecoilValue(atomChartSettings)
-  const [animation] = useState({})
+  const requestRef = useRef()
   const [hoverInfo, setHoverInfo] = useState({})
   const [time, setTime] = useState(0)
   const [iconSize, setIconSize] = useState(14 * 7)
@@ -85,22 +85,46 @@ export default function Chart({ ais }) {
     bearing: 0,
   })
 
-  function animate(timestamp) {
-    setTime(t => (t + timestamp) / 1000)
-    window.requestAnimationFrame(animate)
+  console.log(ais)
+
+  function animate() {
+    setTime(Date.now())
+    requestRef.current = requestAnimationFrame(animate)
   }
 
+  // useEffect(() => {
+  //   // Animation
+  //   animation.id = window.requestAnimationFrame(animate)
+  //   return () => {
+  //     window.cancelAnimationFrame(animation.id)
+  //   }
+  // }, [])
+
   useEffect(() => {
-    // Animation
-    animation.id = window.requestAnimationFrame(animate)
-    return () => {
-      window.cancelAnimationFrame(animation.id)
-    }
+    setTime(Date.now())
+    requestRef.current = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(requestRef.current)
   }, [])
 
+  console.log(time)
   const layers = [
     new AisLayer({
-      id: "target-layer",
+      id: "ais-dead-reckoning-layer",
+      data: ais,
+      visible: true,
+      getCoordinates: d => [d.lon, d.lat],
+      getHeading: d => (d.heading * Math.PI) / 180, // deg to rad
+      getCourse: d => (d.course * Math.PI) / 180,
+      getFillColor: [100, 100, 100, 230],
+      getSpeed: d => d.speed * 0.514444, // knots to m/s
+      getTimestamp: d => (d.position_report_timestamp * 1000 - 1704610621811) / 1000,
+      pickable: true,
+      iconSize: iconSize,
+      currentTime: (time - 1704610621811) / 1000,
+      onHover: info => setHoverInfo(info),
+    }),
+    new AisLayer({
+      id: "ais-layer",
       data: ais,
       visible: true,
       getCoordinates: d => [d.lon, d.lat],
@@ -108,18 +132,19 @@ export default function Chart({ ais }) {
       getCourse: d => (d.course * Math.PI) / 180,
       getFillColor: d => d.color,
       getSpeed: d => d.speed * 0, // 0.514444, // knots to m/s
+      getTimestamp: d => d.position_report_timestamp,
       pickable: true,
       iconSize: iconSize,
-      elapsedTime: time,
+      currentTime: time,
       onHover: info => setHoverInfo(info),
     }),
   ]
-
   React.useEffect(() => {
     var changes = {}
     if (chartSettings.visualisation === "2D") {
       changes.pitch = 0.0
     }
+
     if (chartSettings.verticalFix === "northUp") {
       changes.bearing = 0.0
     }

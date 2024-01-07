@@ -46,6 +46,12 @@ export default class AisTargetLayer extends Layer {
         accessor: "getSpeed",
         defaultValue: 0,
       },
+      instanceTimestamp: {
+        size: 1,
+        transition: true,
+        accessor: "getTimestamp",
+        defaultValue: 0,
+      },
       instanceFillColors: {
         size: this.props.colorFormat.length,
         transition: true,
@@ -72,7 +78,7 @@ export default class AisTargetLayer extends Layer {
       uniforms: {
         ...uniforms,
         iconSize: this.props.iconSize,
-        elapsedTime: this.props.elapsedTime,
+        currentTime: this.props.currentTime,
       },
     })
   }
