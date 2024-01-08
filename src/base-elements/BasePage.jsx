@@ -2,16 +2,17 @@
   Base page
   ----------------------
   - Controls base layout with components that renders on all pages
-  - Manage render of floating apps 
+  - Manage render of floating components 
   - Mange MQTT data flow initialization   
 */
 
 import React from "react"
 import NavigationBar from "./navbar"
 import { useTheme } from "@mui/material/styles"
-// APPs
-import FloatAppWind from "./components/mini_app/FloatAppWind"
-import FloatAppPlayback from "./components/mini_app/FloatAppPlayback"
+// Floating APPs
+import FloatAppWind from "./float_comp/FloatAppWind"
+import FloatAppPlayback from "./float_comp/FloatAppPlayback"
+import FloatBoxControls from "./float_comp/FloatBoxControls"
 // Recoil
 import { showMiniAppsObj } from "../recoil/atoms"
 import { useRecoilValue } from "recoil"
@@ -23,9 +24,10 @@ export default function BasePage(props) {
     <>
       <NavigationBar />
 
-      {/* Mini floating APPs */}
+      {/* Mini floating components */}
       {showMiniApp.windCurrent ? <FloatAppWind /> : null}
       {showMiniApp.playback ? <FloatAppPlayback /> : null}
+      {showMiniApp.controls ? <FloatBoxControls /> : null}
 
       <div
         style={{

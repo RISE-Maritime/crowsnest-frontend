@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { Typography, Grid, Button, Autocomplete, TextField, Stack } from "@mui/material"
 import axios from "axios"
 import ByteBuffer from "bytebuffer"
@@ -9,13 +9,13 @@ import TableDocker from "./TableDocker"
 /* eslint-disable */
 const URLdockers = [
   (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
-  "/rise/seahorse/docker-sdk/sh-1/docker/id",
+    "/rise/seahorse/docker-sdk/sh-1/docker/id",
   (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
-  "/rise/masslab/docker-sdk/masslab-3/docker/id",
+    "/rise/masslab/docker-sdk/masslab-3/docker/id",
   (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
-  "/rise/masslab/docker-sdk/masslab-4/docker/id",
+    "/rise/masslab/docker-sdk/masslab-4/docker/id",
   (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_ : "http://localhost:8000") +
-  "/rise/masslab/docker-sdk/ted/docker/id"
+    "/rise/masslab/docker-sdk/ted/docker/id",
 ]
 /* eslint-enable */
 
@@ -23,44 +23,58 @@ export default function DockerMonitoring() {
   const [timeMsg, setTimeMsg] = useState(null)
   const [dockerContainers, setDockerContainers] = useState([])
   const [URL, setURL] = useState("http://localhost:8000/rise/seahorse/docker-sdk/sh-1/docker/id")
+  const requestInterval = useRef(null)
+  const [loopState, setLoopState] = useState("STOPPED")
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      getDockerState()
-    }, 15000)
     return () => {
-      clearInterval(interval)
+      clearInterval(requestInterval.current)
     }
   }, [URL])
 
   function getDockerState() {
-    
     console.log("🚀 ~ file: DockerMonitoring.jsx:32 ~ axios.get ~ URL:", URL)
-    
+
     axios.get(URL).then(res => {
-
-
       let time = new Date()
       console.log("Loop retrieved update: ", time, res)
+      console.log("🚀 ~ file: DockerMonitoring.jsx:45 ~ axios.get ~ res:", res)
 
-      let data_values = res.data[0].value
-      let bytes = new Uint8Array(ByteBuffer.fromBase64(data_values).toArrayBuffer())
-      const root = protobuf.Root.fromJSON(bundle)
-      const Envelope = root.lookupType("Envelope")
-      const decodedEnvelope = Envelope.decode(bytes)
-      const envelopeEncodedAtDate = new Date(
-        decodedEnvelope.enclosedAt.seconds * 1000 + decodedEnvelope.enclosedAt.nanos / 1000000
-      )
-      setTimeMsg(envelopeEncodedAtDate.toLocaleString("sv-SV"))
+      if (res.data.length >= 1) {
+        let data_values = res.data[0].value
+        let bytes = new Uint8Array(ByteBuffer.fromBase64(data_values).toArrayBuffer())
+        const root = protobuf.Root.fromJSON(bundle)
+        const Envelope = root.lookupType("Envelope")
+        const decodedEnvelope = Envelope.decode(bytes)
+        const envelopeEncodedAtDate = new Date(
+          decodedEnvelope.enclosedAt.seconds * 1000 + decodedEnvelope.enclosedAt.nanos / 1000000
+        )
+        setTimeMsg(envelopeEncodedAtDate.toLocaleString("sv-SV"))
 
-      console.log("🚀 ~ file: DockerMonitoring.jsx:35 ~ axios.get ~ envelopeEncodedAtDate:", envelopeEncodedAtDate)
+        console.log("🚀 ~ file: DockerMonitoring.jsx:35 ~ axios.get ~ envelopeEncodedAtDate:", envelopeEncodedAtDate)
 
-      let decoder = new TextDecoder("utf-8")
-      let decodedData = decoder.decode(decodedEnvelope.payload)
-      let jsonData = JSON.parse(decodedData)
-      console.log("🚀 ~ file: DockerMonitoring.jsx:30 ~ axios.get ~ jsonData:", jsonData)
-      setDockerContainers(jsonData)
+        let decoder = new TextDecoder("utf-8")
+        let decodedData = decoder.decode(decodedEnvelope.payload)
+        let jsonData = JSON.parse(decodedData)
+        console.log("🚀 ~ file: DockerMonitoring.jsx:30 ~ axios.get ~ jsonData:", jsonData)
+        setDockerContainers(jsonData)
+      } else {
+        console.log("No data received in Docker Request")
+      }
     })
+  }
+
+  function startLoop() {
+    // Set interval to get data
+    requestInterval.current = setInterval(() => {
+      getDockerState()
+    }, 15000)
+    setLoopState("RUNNING")
+  }
+
+  function stopLoop() {
+    clearInterval(requestInterval.current)
+    setLoopState("STOPPED")
   }
 
   return (
@@ -95,6 +109,15 @@ export default function DockerMonitoring() {
             <Button variant="contained" onClick={getDockerState}>
               Get Docker State
             </Button>
+            { loopState === "STOPPED" ?
+            <Button variant="contained" onClick={startLoop}>
+              Start GET Loop (15 sec)
+            </Button>
+            :
+            <Button variant="contained" onClick={stopLoop} sx={{background: "red"}}>
+              Stop GET Loop
+            </Button>
+            }
           </Stack>
         </Grid>
 
