@@ -136,15 +136,15 @@ export default function Chart({ ais }) {
 
   React.useEffect(() => {
     var changes = {}
-    if (chartSettings.visualisation === "2D" && changes.pitch !== 0.0) {
-      changes.pitch = 0.0
-    }
-    if (chartSettings.visualisation === "3D" && changes.pitch !== 45.0) {
-      changes.pitch = 45.0
-    }
-    if (chartSettings.verticalFix === "northUp" && viewState.bearing !== 0.0) {
-      changes.bearing = 0.0
-    }
+    // if (chartSettings.visualisation === "2D" && changes.pitch !== 0.0) {
+    //   changes.pitch = 0.0
+    // }
+    // if (chartSettings.visualisation === "3D" && changes.pitch !== 45.0) {
+    //   changes.pitch = 45.0
+    // }
+    // if (chartSettings.verticalFix === "northUp" && viewState.bearing !== 0.0) {
+    //   changes.bearing = 0.0
+    // }
     setViewState({ ...viewState, ...changes })
   }, [chartSettings])
 

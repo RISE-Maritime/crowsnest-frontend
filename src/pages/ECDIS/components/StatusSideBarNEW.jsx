@@ -6,7 +6,7 @@ import AisInfo from "./AisInfo"
 import OsInfo from "./OsInfo"
 import MonitorManager from "./MonitorManager"
 
-export default function StatusSideBar() {
+export default function StatusSideBar({ data, identifier }) {
   return (
     <Grid container sx={{ height: "100%" }}>
       <Grid item xs={12}>
@@ -16,7 +16,7 @@ export default function StatusSideBar() {
         <PositionStatusSmall />
       </Grid>
       <Grid item xs={12}>
-        <OsInfo />
+        <OsInfo data={data} identifier={identifier} />
       </Grid>
       <Grid item xs={12}>
         <AisInfo />

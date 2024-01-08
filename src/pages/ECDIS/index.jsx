@@ -4,6 +4,8 @@ import StatusSideBar from "./components/StatusSideBarNEW"
 import Chart from "./components/Chart"
 import ChartControls from "./components/ChartControls"
 
+const identifier = 265810550
+
 function getCookieValue(cookieName) {
   const allCookies = document.cookie
   const cookieArray = allCookies.split("; ")
@@ -90,7 +92,7 @@ export default function Ecdis() {
     // Send a monitored ais vessel
     tmpMonitorWorker.port.postMessage({
       type: "add_ais_mmsi",
-      identifier: 219002801,
+      identifier: identifier,
     })
 
     setAisWorker(tmpAisWorker)
@@ -129,7 +131,7 @@ export default function Ecdis() {
             height: "calc(99vh - 95px)",
           }}
         >
-          <StatusSideBar />
+          <StatusSideBar data={monitorData} identifier={identifier} />
         </Grid>
       </Grid>
       <Grid
