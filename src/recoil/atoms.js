@@ -57,6 +57,7 @@ export const showMiniAppsObj = atom({
   default: {
     windCurrent: false,
     playback: false,
+    controls: false,
   },
 })
 
@@ -283,7 +284,7 @@ export const atomRouteTurningRadiusEnd = atom({
 export const OS_POSITION_SETTING = atom({
   key: "os_position_stetting",
   default: {
-    source: "GNSS_0",
+    source: "SIM",
     status: "normal", // [normal, warning, error]
     statusText: "Normal",
     timeCreated: "",
@@ -343,8 +344,8 @@ export const OS_POSITIONS = atom({
       delay: null,
     },
     SIM: {
-      latitude: 0.0, // degrees
-      longitude: 0.0, // degrees
+      latitude: 57.683, // degrees
+      longitude: 11.84, // degrees
       altitude: 0.0, // meters
       std_dev_altitude: 0.0,
       std_dev_longitude: 0.0,
@@ -362,7 +363,7 @@ export const OS_POSITIONS = atom({
 export const OS_VELOCITY_SETTING = atom({
   key: "os_velocity_stetting",
   default: {
-    source: "GNSS_0",
+    source: "SIM",
     status: "normal", // [normal, warning, error]
     statusText: "Normal",
     timeCreated: "", // Delay in system
@@ -383,6 +384,7 @@ export const OS_VELOCITY = atom({
     DEVICE: {
       sog: 0.0, // units?
       cog: 0.0, // units?
+      rot: 0.0, // degrees per minute
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeCreated: "", // Delay in system
@@ -390,6 +392,7 @@ export const OS_VELOCITY = atom({
     GNSS_0: {
       sog: 0.0, // units?
       cog: 0.0, // units?
+      rot: 0.0, // degrees per minute
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeCreated: "", // Delay in system
@@ -397,6 +400,15 @@ export const OS_VELOCITY = atom({
     MANUAL: {
       sog: 0.0, // knots
       cog: 0.0, // units?
+      rot: 0.0, // degrees per minute
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeCreated: "", // Delay in system
+    },
+    SIM: {
+      sog: 0.0, // knots
+      cog: 80.0, // units?
+      rot: 0.0, // degrees per minute
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeCreated: "", // Delay in system
@@ -409,7 +421,7 @@ export const OS_VELOCITY = atom({
 export const OS_HEADING_SETTING = atom({
   key: "os_heading_stetting",
   default: {
-    source: "GNSS_0",
+    source: "SIM",
     status: "normal", // [normal, warning, error]
     statusText: "Normal",
     timeCreated: "", // Delay in system
@@ -442,6 +454,13 @@ export const OS_HEADING = atom({
     },
     MANUAL: {
       heading: 0.0, // degrees
+      heading_accuracy: 0.0,
+      status: "normal", // [normal, warning, error]
+      statusText: "Normal",
+      timeCreated: "", // Delay in system
+    },
+    SIM: {
+      heading: 80.0, // degrees
       heading_accuracy: 0.0,
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
@@ -571,12 +590,13 @@ export const ATOM_OS_THRUSTERS = atom({
   },
 })
 
+//
 export const ATOM_OS_ENGINES = atom({
   key: "atom_os_engines",
   default: {
     ENGINE_0: {
-      setPower: 0,
-      actPower: 0,
+      setPower: 0, // -100 to 100 --> displayed as %
+      actPower: 0, // -100 to 100 --> displayed as %
       status: "normal", // [normal, warning, error]
       statusText: "Normal",
       timeUpdated: "", // Delay in system
@@ -950,7 +970,75 @@ export const atomPontosVesselList = atom({
   ],
 })
 
-
 // -----------------------------------------------------------
+// Simulator data
 
+// Route Editor Right Click Menu
+export const ATOM_SIM_STATE = atom({
+  key: "atom_sim_state",
+  default: { updateMilSec: 100, milSecElapsed: 0, state: "STOPPED", runTimeSpeedUp: 1 },
+})
 
+export const ATOM_SIM_ACTIVE_MODELS = atom({
+  key: "atom_sim_active_models",
+  default: "bulk_small",
+})
+
+export const ATOM_SIM_SHIP_MODELS = atom({
+  key: "atom_sim_ship_models",
+  default: {
+    bulk_small: {
+      id: "bulk_small",
+      name: "Bulk small",
+      length: 100,
+      width: 10,
+      height: 10,
+      draught: 5,
+      picture: null,
+      icon: null,
+      engine_newton: 1500,
+      mass_kg: 3000000,
+      resistance: 6500,
+    },
+    bulk_medium: {
+      id: "bulk_medium",
+      name: "Bulk medium",
+      length: 100,
+      width: 10,
+      height: 10,
+      draught: 5,
+      picture: null,
+      icon: null,
+      engine_newton: 2000,
+      mass_kg: 5000000,
+      resistance: 7500,
+    },
+    bulk_large: {
+      id: "bulk_large",
+      name: "Bulk large",
+      length: 100,
+      width: 10,
+      height: 10,
+      draught: 5,
+      picture: null,
+      icon: null,
+      engine_newton: 3000,
+      mass_kg: 8000000,
+      resistance: 9500,
+    },
+    road_ferry: {
+      id: "road_ferry",
+      name: "Road ferry",
+      length: 80,
+      width: 15,
+      height: 12,
+      draught: 3,
+      picture: null,
+      icon: null,
+      engine_newton: 3000,
+      mass_kg: 4000000,
+      resistance: 7000,
+  
+    },
+  },
+})

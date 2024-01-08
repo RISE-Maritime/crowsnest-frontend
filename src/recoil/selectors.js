@@ -2,6 +2,7 @@ import { selector } from "recoil"
 import protobuf from "protobufjs"
 import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
+import { keepWithin360, calcPosFromBearingDistance } from "../utils"
 
 import {
   userState,
@@ -29,6 +30,9 @@ import {
   ATOM_OS_THRUSTERS,
   ATOM_KEELSON_KEYEXP_MANAGED,
   ATOM_KEELSON_KEYEXP_UNMANAGED,
+  ATOM_SIM_STATE,
+  ATOM_SIM_ACTIVE_MODELS,
+  ATOM_SIM_SHIP_MODELS
 } from "./atoms"
 
 export const selectUser = selector({
@@ -91,7 +95,6 @@ export const protoParser = selector({
       // RUDDER 0 (right)
       case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)
         ?.input: {
-
         const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
         const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
 
@@ -120,37 +123,36 @@ export const protoParser = selector({
         break
       }
 
-            // RENGINE_0 (right)
-            case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/right\/azimuth\/horizontal/)
-            ?.input: {
-    
-            const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
-            const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
-    
-            console.log("ENGINE_0:", readable.value)
-            let lastValue = get(ATOM_OS_ENGINES)
-    
-            if (lastValue["ENGINE_0"].setPower !== readable.value) {
-              set(ATOM_OS_ENGINES, currentObj => ({
-                ...currentObj,
-                ENGINE_0: {
-                  ...currentObj["ENGINE_0"],
-                  setPower: readable.value,
-                },
-              }))
-            }
-    
-            set(ATOM_KEELSON_KEYEXP_MANAGED, currentObj => ({
-              ...currentObj,
-              [latestMsg.key]: {
-                time_received: new Date(),
-                time_encoded: envelopeEncodedAtDate,
-                count: currentObj[latestMsg.key]?.count ? currentObj[latestMsg.key].count + 1 : 1,
-              },
-            }))
-    
-            break
-          }
+      // RENGINE_0 (right)
+      case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/right\/azimuth\/horizontal/)
+        ?.input: {
+        const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
+        const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
+
+        console.log("ENGINE_0:", readable.value)
+        let lastValue = get(ATOM_OS_ENGINES)
+
+        if (lastValue["ENGINE_0"].setPower !== readable.value) {
+          set(ATOM_OS_ENGINES, currentObj => ({
+            ...currentObj,
+            ENGINE_0: {
+              ...currentObj["ENGINE_0"],
+              setPower: readable.value,
+            },
+          }))
+        }
+
+        set(ATOM_KEELSON_KEYEXP_MANAGED, currentObj => ({
+          ...currentObj,
+          [latestMsg.key]: {
+            time_received: new Date(),
+            time_encoded: envelopeEncodedAtDate,
+            count: currentObj[latestMsg.key]?.count ? currentObj[latestMsg.key].count + 1 : 1,
+          },
+        }))
+
+        break
+      }
 
       default: {
         set(ATOM_KEELSON_KEYEXP_UNMANAGED, currentObj => ({
@@ -875,42 +877,79 @@ export const selSetThruster = selector({
   },
 })
 
-
-
-
-
-
 export const updateSimState = selector({
   key: "update_sim_state",
   get: () => {
     return null
   },
-  set: ({ set, get }, input) => {
-    
+  set: ({ set, get }, intervalMilSec) => {
     const shipModel = {
-      speed_minimum: -10.0, // knots
-      speed_maximum: 25.0, // knots
+      speed_min: -10.0, // knots
+      speed_max: 25.0, // knots
+      rot_max: 120, // degrees per minute
     }
 
+    // Getting current state
     const os_eng = get(ATOM_OS_ENGINES)
+    const os_rud = get(ATOM_OS_RUDDERS)
+    const os_thr = get(ATOM_OS_THRUSTERS)
+    const os_vel = get(OS_VELOCITY)
+    const os_head = get(OS_HEADING)
+    const os_pos = get(OS_POSITIONS)
+    const active_model = get(ATOM_SIM_ACTIVE_MODELS)
+    const ship_models = get(ATOM_SIM_SHIP_MODELS)
 
-    console.log("HERE",os_eng["ENGINE_0"].setPower);
+    // Values to be updated
+    let new_sog = 0
+    let new_rot = 0
+    let new_cog = 0
+    let new_heading = 0
 
-    if (os_eng["ENGINE_0"].setPower > 0.0) {
-      console.log("NEW SOG: ", os_eng["ENGINE_0"].setPower * (shipModel.speed_maximum/100) ) 
-    } else if (os_eng["ENGINE_0"].setPower < 0.0) {
-      console.log("NEW SOG: ", -os_eng["ENGINE_0"].setPower * (shipModel.speed_minimum/100))
+    
+    const engNewton = ship_models[active_model].engine_newton // Newton
+    let massa = ship_models[active_model].mass_kg // kg
+    const resistance = ship_models[active_model].resistance // constant resistance
+
+    // Calc new SOG
+    let os_cur_eng = os_eng["ENGINE_0"].setPower
+    let old_sog = os_vel.SIM.sog * 0.5144
+    let T = os_cur_eng * engNewton // Newton
+    let R = resistance * old_sog ** 2
+    let acc = (T - R) / massa
+    let new_ms = acc * (intervalMilSec / 1000) + old_sog
+    new_sog = new_ms / 0.5144
+
+    // Calc new ROT
+    let os_cur_rudAng = os_rud.RUDDER_0.setAngle
+    new_rot = os_cur_rudAng * (shipModel.rot_max / 100)
+
+    // Calc new Heading
+    let os_cur_haed = os_head.SIM.heading
+    let rot_interval = (new_rot / 60) * (intervalMilSec / 1000)
+    new_heading = keepWithin360(rot_interval + os_cur_haed)
+
+    // Calc new COG
+    if (new_sog >= 0) {
+      new_cog = new_heading
+    } else {
+      new_cog = keepWithin360(new_heading - 180)
     }
 
-    let new_sog = os_eng["ENGINE_0"].setPower * (shipModel.speed_maximum - shipModel.speed_minimum) + shipModel.speed_minimum
+    // Calc new Position
+    let os_cur_lat = os_pos.SIM.latitude
+    let os_cur_long = os_pos.SIM.longitude
+    let distance_traveled = (Math.abs(new_sog) / 3600) * (intervalMilSec / 1000)
+    let new_pos = calcPosFromBearingDistance(os_cur_lat, os_cur_long, new_cog, distance_traveled, "nm")
+    let new_lon = new_pos[0]
+    let new_lat = new_pos[1]
 
-
+    // Setting new ship state
     set(OS_POSITIONS, currentObj => ({
       ...currentObj,
       SIM: {
         ...currentObj.SIM,
-        latitude: currentObj.SIM.latitude + 0.001, // degrees
-        longitude: currentObj.SIM.longitude + 0.001, // degrees
+        latitude: new_lat, // degrees
+        longitude: new_lon, // degrees
       },
     }))
 
@@ -918,12 +957,23 @@ export const updateSimState = selector({
       ...currentObj,
       SIM: {
         ...currentObj.SIM,
-        cog: currentObj.SIM.cog + 0.1, // degrees
+        cog: new_cog, // degrees
         sog: new_sog, // knots
+        rot: new_rot, // knots
       },
     }))
 
+    set(OS_HEADING, currentObj => ({
+      ...currentObj,
+      SIM: {
+        ...currentObj.SIM,
+        heading: new_heading, // degrees
+      },
+    }))
+
+    set(ATOM_SIM_STATE, currentObj => ({
+      ...currentObj,
+      milSecElapsed: currentObj.milSecElapsed + intervalMilSec,
+    }))
   },
 })
-
-
