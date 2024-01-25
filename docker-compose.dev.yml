@@ -56,7 +56,7 @@ services:
   #     - PGRST_JWT_SECRET_IS_BASE64=false
 
   tiles:
-      image: maptiler/tileserver-gl #git.ri.se:4567/mo-rise/crowsnest-tiles:latest
+      image: git.ri.se:4567/mo-rise/crowsnest-tiles:latest
       restart: unless-stopped
       labels:
         - crowsnest.expose=true
@@ -75,5 +75,5 @@ services:
         - --public_url
         - ${CROWSNEST_PROTOCOL}${CROWSNEST_HOST}/tiles
         - --verbose
-      volumes:
-       - ../crowsnest-tiles:/data
+      # volumes:
+      #  - ../crowsnest-tiles:/data
