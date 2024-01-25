@@ -6,21 +6,20 @@
   - Mange MQTT data flow initialization   
 */
 
-import React from "react";
-import NavigationBar from "./navbar";
-import { useTheme } from "@mui/material/styles";
+import React from "react"
+import NavigationBar from "./navbar"
+import { useTheme } from "@mui/material/styles"
 // Floating APPs
-import FloatAppWind from "./float_comp/FloatAppWind";
-import FloatAppPlayback from "./float_comp/FloatAppPlayback";
-import FloatBoxControls from "./float_comp/FloatBoxControls";
+import FloatAppWind from "./float_comp/FloatAppWind"
+import FloatAppPlayback from "./float_comp/FloatAppPlayback"
+import FloatBoxControls from "./float_comp/FloatBoxControls"
 // Recoil
-import { showMiniAppsObj } from "../recoil/atoms";
-import { useRecoilValue } from "recoil";
-
+import { showMiniAppsObj } from "../recoil/atoms"
+import { useRecoilValue } from "recoil"
 
 export default function BasePage(props) {
-  const theme = useTheme();
-  let showMiniApp = useRecoilValue(showMiniAppsObj);
+  const theme = useTheme()
+  let showMiniApp = useRecoilValue(showMiniAppsObj)
   return (
     <>
       <NavigationBar />
@@ -32,12 +31,12 @@ export default function BasePage(props) {
 
       <div
         style={{
-          minHeight: "94vh",
+          minHeight: "95vh",
           backgroundColor: theme.palette.background.default,
         }}
       >
         {props.children}
       </div>
     </>
-  );
+  )
 }

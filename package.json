@@ -26,6 +26,7 @@
     "google-protobuf": "^3.21.2",
     "jpeg-js": "^0.4.4",
     "mapbox-gl": "^2.15.0",
+    "maplibre-gl": "^3.6.2",
     "moment-timezone": "^0.5.43",
     "mui-file-input": "^3.0.2",
     "openbridge-css": "^0.2.3",

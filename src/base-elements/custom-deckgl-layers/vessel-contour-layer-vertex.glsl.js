@@ -39,5 +39,5 @@ void main(void) {
 
   picking_setPickingColor(instancePickingColors);
 }
-`;
+`
 /* eslint-enable */

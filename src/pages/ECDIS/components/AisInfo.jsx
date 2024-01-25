@@ -1,5 +1,5 @@
 import React from "react"
-import { clickInfoAtom } from "./SeaChart"
+import { clickInfoAtom } from "./Chart"
 import { useRecoilValue } from "recoil"
 import { Typography } from "@mui/material"
 

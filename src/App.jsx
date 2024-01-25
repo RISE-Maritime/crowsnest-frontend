@@ -25,7 +25,6 @@ import RouteEditor from "./pages/route-editor"
 import DeviceConnection from "./base-elements/DeviceConnection"
 import Lookout360 from "./pages/lookout-360"
 
-
 export default function App() {
   const app_state = useRecoilValue(appState)
   // -----------------------------------------------------------
@@ -102,7 +101,7 @@ export default function App() {
 
   return (
     <>
-      <DeviceConnection />
+      {/* <DeviceConnection /> */}
 
       <ThemeProvider theme={theme}>
         <CssBaseline />

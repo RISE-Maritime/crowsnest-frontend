@@ -28,6 +28,9 @@ import { TileLayer } from "@deck.gl/geo-layers"
 import PicOwnShipBlack from "../../../resources/chart_symbols/own_ship_black.png"
 import "mapbox-gl/dist/mapbox-gl.css"
 
+import chartStyle from "./chart_4000.json"
+
+import ReactMapGl from "react-map-gl/maplibre"
 
 // Atoms
 export const vesselTargetsAtom = atom({
@@ -125,8 +128,121 @@ function getTooltip({ object }) {
     Status: ${object.status}`
   )
 }
+// Use HTTP only when hosted locally, otherwise use HTTPS
+const protocol = window.location.hostname === "localhost" ? "http://" : "https://"
+
+// Get the URL corresponding to the charts of scale 4000
+const chart4000 = protocol + window.location.hostname + "/tiles/styles/chart_4000/style.json"
+
+const eniro = {
+  version: 8,
+  sources: {
+    "raster-tiles": {
+      type: "raster",
+      tiles: ["http: //map.eniro.com/geowebcache/service/tms1.0.0/nautical/{z}/{x}/{y}.png"],
+      tileSize: 256,
+    },
+  },
+  layers: [
+    {
+      id: "osm-tiles",
+      type: "raster",
+      source: "raster-tiles",
+      minzoom: 0,
+      maxzoom: 19,
+    },
+  ],
+}
+
+const darkMap = {
+  version: 8,
+  name: "Dark Map",
+  sources: {
+    rasterSource: {
+      type: "raster",
+      tiles: ["https://abcde.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"],
+      tileSize: 256,
+    },
+  },
+  layers: [
+    {
+      id: "rasterLayer",
+      type: "raster",
+      source: "rasterSource",
+      paint: {
+        "raster-opacity": 1,
+        "raster-fade-duration": 0,
+      },
+    },
+  ],
+}
+
+const openStreetMap = {
+  version: 8,
+  name: "Open Street Map",
+  sources: {
+    rasterSource: {
+      type: "raster",
+      tiles: ["https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tileSize: 256,
+    },
+  },
+  layers: [
+    {
+      id: "rasterLayer",
+      type: "raster",
+      source: "rasterSource",
+      paint: {
+        "raster-opacity": 1,
+        "raster-fade-duration": 0,
+      },
+    },
+  ],
+}
+
+const satellite = {
+  version: 8,
+  name: "Open Street Map",
+  sources: {
+    rasterSource: {
+      type: "raster",
+      tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+      tileSize: 256,
+    },
+  },
+  layers: [
+    {
+      id: "rasterLayer",
+      type: "raster",
+      source: "rasterSource",
+      paint: {
+        "raster-opacity": 1,
+        "raster-fade-duration": 0,
+      },
+    },
+  ],
+}
 
 export default function SeaChart() {
+  // Viewport settings
+  const INITIAL_VIEW_STATE = {
+    longitude: 11.97,
+    latitude: 57.70887,
+    zoom: 10,
+    pitch: 0,
+    bearing: 0,
+  }
+
+  return (
+    <div id="map-wrapper">
+      <DeckGL initialViewState={INITIAL_VIEW_STATE} controller={{ dragPan: "dragging" }}>
+        <ReactMapGl mapStyle={eniro} />
+      </DeckGL>
+    </div>
+  )
+}
+
+function SeaChartOLD() {
   const setClickInfo = useSetRecoilState(clickInfoAtom)
   const setMapCursorPos = useSetRecoilState(mapCursorPosAtom)
   const [mapState, setMapState] = useRecoilState(atomMapState)
@@ -630,7 +746,7 @@ export default function SeaChart() {
   return (
     <DeckGL
       layers={layers}
-      viewState={mapState}
+      //viewState={mapState}
       initialViewState={INITIAL_VIEW_STATE}
       onViewStateChange={e => changeViewState(e)}
       onHover={e => hoverMapCursor(e)}
@@ -640,3 +756,7 @@ export default function SeaChart() {
     ></DeckGL>
   )
 }
+
+
+
+

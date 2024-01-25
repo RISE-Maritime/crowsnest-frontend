@@ -1,0 +1,79 @@
+
+version: "3.8"
+
+services:
+
+  reverse-proxy:
+    image: "traefik:v2.10"
+    restart: unless-stopped
+    command:
+      - "--log.level=DEBUG"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.constraints=Label(`crowsnest.expose`, `true`)"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.traefik-dashboard.address=:8080"
+    # Dynamic Configuration
+    labels:
+      - "crowsnest.expose=true"
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`${CROWSNEST_HOST}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+      - "traefik.http.routers.traefik-dashboard.entryPoints=traefik-dashboard"
+      - "traefik.http.routers.traefik-dashboard.service=api@internal"
+
+    ports:
+      - "${CROWSNEST_EXTERNAL_HTTP_PORT:-80}:80"
+      - "${CROWSNEST_EXTERNAL_TRAEFIK_DASHBOARD_PORT:-0}:8080"
+
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  # gis:
+  #   image: git.ri.se:4567/mo-rise/crowsnest-gis:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     - POSTGRES_USER=postgres # Must be 'postgres'
+  #     - POSTGRES_PASSWORD=${CROWSNEST_GIS_DB_PASSWORD}
+  #     - POSTGRES_DB=${CROWSNEST_GIS_DB}
+  #   ports:
+  #     - 5432:5432
+    
+  # postgrest:
+  #   image: postgrest/postgrest:v11.2.0
+  #   restart: unless-stopped
+  #   labels:
+  #     - crowsnest.expose=true
+  #     - traefik.http.routers.gis-router.rule=PathPrefix(`/gis/api`)
+  #     - traefik.http.middlewares.gis-strip.stripprefix.prefixes=/gis/api
+  #     - traefik.http.routers.gis-router.entryPoints=web
+  #     - traefik.http.services.gis-service.loadbalancer.server.port=3000
+  #     - traefik.http.routers.gis-router.service=gis-service
+  #     - traefik.http.routers.gis-router.middlewares=gis-strip
+  #   environment:
+  #     - PGRST_DB_URI=postgresql://postgres:${CROWSNEST_GIS_DB_PASSWORD}@gis/${CROWSNEST_GIS_DB}
+  #     - PGRST_DB_ANON_ROLE=web_anon
+  #     - PGRST_DB_SCHEMA=public
+  #     - PGRST_JWT_SECRET=${CROWSNEST_GIS_JWT}
+  #     - PGRST_JWT_SECRET_IS_BASE64=false
+
+  tiles:
+      image: git.ri.se:4567/mo-rise/crowsnest-tiles:latest
+      restart: unless-stopped
+      labels:
+        - crowsnest.expose=true
+        - traefik.http.routers.tiles-router.rule=PathPrefix(`/tiles`)
+        - traefik.http.middlewares.tiles-strip.stripprefix.prefixes=/tiles
+        - traefik.http.routers.tiles-router.entryPoints=web
+        - traefik.http.services.tiles-service.loadbalancer.server.port=8080
+        - traefik.http.routers.tiles-router.service=tiles-service
+        - traefik.http.middlewares.tiles-cors.headers.accesscontrolallowmethods=GET
+        - traefik.http.middlewares.tiles-cors.headers.accesscontrolallowheaders=Authorization,Access-Control-Allow-Origin
+        - traefik.http.middlewares.tiles-cors.headers.accesscontrolalloworiginlist=*
+        - traefik.http.middlewares.tiles-cors.headers.accesscontrolmaxage=100
+        - traefik.http.middlewares.tiles-cors.headers.addvaryheader=true
+        - traefik.http.routers.tiles-router.middlewares=tiles-strip,tiles-cors
+      command:
+        - --public_url
+        - ${CROWSNEST_PROTOCOL}${CROWSNEST_HOST}/tiles
+        - --verbose
+      # volumes:
+      #  - ../crowsnest-tiles:/data

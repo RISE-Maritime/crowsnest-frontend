@@ -5,12 +5,11 @@ import BearingLines from "./components/BearingLines"
 import CamStreamYOLO from "./components/CamStreamYOLO"
 
 export default function CamLookout() {
-
   return (
     <Grid container>
       <Grid item xs={6} sx={{ border: "solid" }}>
         <CamStream ID={"A"} />
-        <BearingLines/>
+        <BearingLines />
       </Grid>
       <Grid item xs={6} sx={{ border: "solid" }}>
         <CamStream ID={"B"} />
