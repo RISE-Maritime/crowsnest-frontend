@@ -33,7 +33,7 @@ export const appState = atom({
     activeView: "Active view",
     activeMode: "DEMO MODE",
     activeVessel: "DEMO Vessel",
-    appActiveColorTheme: "night",
+    appActiveColorTheme: "day",
   },
 })
 
