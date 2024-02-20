@@ -33,7 +33,7 @@ export const appState = atom({
     activeView: "Active view",
     activeMode: "DEMO MODE",
     activeVessel: "DEMO Vessel",
-    appActiveColorTheme: "dark",
+    appActiveColorTheme: "night",
   },
 })
 
@@ -1038,7 +1038,6 @@ export const ATOM_SIM_SHIP_MODELS = atom({
       engine_newton: 3000,
       mass_kg: 4000000,
       resistance: 7000,
-  
     },
   },
 })

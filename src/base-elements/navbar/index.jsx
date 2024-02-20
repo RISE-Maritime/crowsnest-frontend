@@ -23,14 +23,12 @@ import Clock from "react-live-clock"
 import GridCenter from "../components/GridCenter"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
-import { Grid, AppBar, IconButton, Typography, SwipeableDrawer, Stack, Avatar } from "@mui/material"
+import { Grid, AppBar, IconButton, Typography, SwipeableDrawer, Stack, Avatar, Button } from "@mui/material"
 import { useTheme } from "@mui/material/styles"
 // Icons & Images
 import LogoCrowsnest from "../../resources/crowsnest.png"
 import AppsRoundedIcon from "@mui/icons-material/AppsRounded"
 import MenuIcon from "@mui/icons-material/Menu"
-import LightModeIcon from "@mui/icons-material/LightMode"
-import DarkModeIcon from "@mui/icons-material/DarkMode"
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
 
 export default function NavBar() {
@@ -49,6 +47,10 @@ export default function NavBar() {
     }
 
     setDrawerState({ ...drawerState, [anchor]: open })
+  }
+
+  const setTheme = themeName => () => {
+    setAppObj({ ...appObj, appActiveColorTheme: themeName })
   }
 
   const ToggleThemeMode = () => {
@@ -104,14 +106,20 @@ export default function NavBar() {
               D
             </Avatar>
 
-            {/* Day and night mode (App color theme) */}
-            <IconButton onClick={ToggleThemeMode}>
-              {appObj.appActiveColorTheme === "light" ? (
-                <DarkModeIcon sx={{ color: theme.palette.primary.contrastText }} />
-              ) : (
-                <LightModeIcon sx={{ color: theme.palette.primary.contrastText }} />
-              )}
-            </IconButton>
+            <Stack direction="row" spacing={2}>
+              <Button variant="text" onClick={setTheme("day")}>
+                Day
+              </Button>
+              <Button variant="text" onClick={setTheme("bright")}>
+                Bright
+              </Button>
+              <Button variant="text" onClick={setTheme("dusk")}>
+                Dusk
+              </Button>
+              <Button variant="text" onClick={setTheme("night")}>
+                Night
+              </Button>
+            </Stack>
 
             {/* Floating mini apps */}
             <IconButton onClick={toggleDrawer("right", true)}>
