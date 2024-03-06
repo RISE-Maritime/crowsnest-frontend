@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { appState } from "./recoil/atoms"
 // Styling
-import { createTheme, ThemeProvider, responsiveFontSizes } from "@mui/material/styles"
+import { responsiveFontSizes, Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
 // Pages
 import ROUTES from "./ROUTES.json"
@@ -54,7 +54,7 @@ export default function App() {
     <>
       {/* <DeviceConnection /> */}
 
-      <ThemeProvider theme={theme}>
+      <CssVarsProvider theme={theme}>
         <CssBaseline />
 
         <Router>
@@ -76,7 +76,7 @@ export default function App() {
             </Routes>
           </BasePage>
         </Router>
-      </ThemeProvider>
+      </CssVarsProvider>
     </>
   )
 }

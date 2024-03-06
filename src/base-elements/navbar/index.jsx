@@ -23,7 +23,8 @@ import Clock from "react-live-clock"
 import GridCenter from "../components/GridCenter"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
-import { Grid, AppBar, IconButton, Typography, SwipeableDrawer, Stack, Avatar, Button } from "@mui/material"
+import { Grid, AppBar, Typography, SwipeableDrawer, Stack, Avatar, Button } from "@mui/material"
+import IconButton from "../components/IconButton"
 import { styled, useTheme } from "@mui/material/styles"
 // Icons & Images
 import LogoCrowsnest from "../../resources/crowsnest.png"
@@ -69,11 +70,42 @@ export default function NavBar() {
 
   return (
     <AppBar>
+      <Stack direction="row" gap={4}>
+        <IconButton size="large" onClick={toggleDrawer("left", true)}>
+          <MenuIcon />
+        </IconButton>
+        <IconButton size="medium" onClick={toggleDrawer("left", true)}>
+          <MenuIcon />
+        </IconButton>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <SiteHeading>Crowsnest</SiteHeading>
+          <PageHeading>
+            {appObj.activeMode}, {appObj.activeVessel}
+          </PageHeading>
+        </Stack>
+      </Stack>
+      {/* Left app navigation menu */}
+      <SwipeableDrawer
+        anchor={"left"}
+        open={drawerState["left"]}
+        onClose={toggleDrawer("left", false)}
+        onOpen={toggleDrawer("left", true)}
+      >
+        <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} />
+      </SwipeableDrawer>
       <Stack direction="row" spacing={2} alignItems="center">
-        <SiteHeading>Crowsnest</SiteHeading>
-        <PageHeading>
-          {appObj.activeMode}, {appObj.activeVessel}
-        </PageHeading>
+        <Button variant="text" onClick={setTheme("day")}>
+          Day
+        </Button>
+        <Button variant="text" onClick={setTheme("bright")}>
+          Bright
+        </Button>
+        <Button variant="text" onClick={setTheme("dusk")}>
+          Dusk
+        </Button>
+        <Button variant="text" onClick={setTheme("night")}>
+          Night
+        </Button>
       </Stack>
     </AppBar>
   )
@@ -137,16 +169,6 @@ export default function NavBar() {
   //         </Stack>
   //       </Grid>
   //     </Grid>
-
-  //     {/* Left app navigation menu */}
-  //     <SwipeableDrawer
-  //       anchor={"left"}
-  //       open={drawerState["left"]}
-  //       onClose={toggleDrawer("left", false)}
-  //       onOpen={toggleDrawer("left", true)}
-  //     >
-  //       <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} />
-  //     </SwipeableDrawer>
 
   //     {/* Right mini app selector */}
   //     <SwipeableDrawer
