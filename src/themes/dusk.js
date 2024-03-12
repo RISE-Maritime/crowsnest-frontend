@@ -4,17 +4,11 @@ import { componentOverrides } from "./common"
 const duskTheme = extendTheme({
   cssVarPrefix: "",
   ...componentOverrides,
+
   colorSchemes: {
     light: {
       palette: {
         mode: "dark",
-        shadows: {
-          flat: "0 1px 1px rgba(0, 0, 0, 0.5)",
-          raised: "0 2px 4px rgba(0, 0, 0, 0.5)",
-          floating: "0 4px 16px rgba(0, 0, 0, 0.6)",
-          overlay: "0 8px 32px rgba(0, 0, 0, 0.8)",
-          //focused: "0 8px 32px rgba(0, 0, 0, 0.4)", // denna kanske är fel
-        },
         primary: {
           main: "#2196f3",
           light: "#66bb77",
@@ -44,20 +38,6 @@ const duskTheme = extendTheme({
         },
         text: {
           primary: "#fff",
-        },
-        //OpenBridge
-        container: {
-          "global-color": "#262626",
-        },
-        element: {
-          "active-color": "#F2F2F2",
-        },
-        flat: {
-          "enabled-background-color": "rgba(255, 255, 255, 0)",
-          "enabled-border-color": "rgba(0, 0, 0, 0)",
-        },
-        onFlat: {
-          "neutral-color": "rgba(255, 255, 255, 0.55)",
         },
       },
     },
