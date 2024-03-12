@@ -4,7 +4,7 @@ export const componentOverrides = {
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.vars.palette.backgroundColor,
-          color: theme.palette.element["active-color"],
+          color: theme.vars["element-active-color"],
           boxShadow: theme.shadows.raised,
         }),
       },
