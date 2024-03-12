@@ -5,6 +5,7 @@ const brightTheme = extendTheme({
   cssVarPrefix: "",
   ...componentOverrides,
   colorSchemes: {
+    light: {
       palette: {
         mode: "light",
 
