@@ -1,14 +1,21 @@
 export const componentOverrides = {
   components: {
-    MuiAppBar: {
+    MuiCssBaseline: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          backgroundColor: theme.vars.palette.backgroundColor,
-          color: theme.vars["element-active-color"],
-          boxShadow: theme.shadows.raised,
-        }),
+        body: {
+          backgroundColor: "var(--container-backdrop-color)",
+          color: "var(--element-active-color)",
+        },
       },
     },
+    /*MuiButton: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "var(--enabled-background-color)",
+          color: "var(--on-enabled-background-color)",
+        },
+      },
+    },*/
     MuiIconButton: {
       styleOverrides: {
         root: ({ theme, size }) => ({
@@ -16,7 +23,6 @@ export const componentOverrides = {
           padding: size === "normal" ? "5px" : "0px",
           height: "48px",
           width: "48px",
-          backgroundColor: "var(--element-active-color)",
         }),
       },
     },
@@ -25,13 +31,6 @@ export const componentOverrides = {
         root: ({ theme }) => ({
           borderRadius: 0,
         }),
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "hotpink",
-        },
       },
     },
   },

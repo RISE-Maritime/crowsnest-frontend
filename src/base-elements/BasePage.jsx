@@ -32,7 +32,6 @@ export default function BasePage(props) {
       <div
         style={{
           minHeight: "95vh",
-          backgroundColor: theme.palette.background.default,
         }}
       >
         {props.children}

@@ -35,7 +35,7 @@ export default function viewList() {
         ></div>
       </GridCenter>
       <GridCenter item xs={12}>
-        <h2 style={{ color: theme.palette.primary.contrastText }}>Applications list</h2>
+        <h2>Applications list</h2>
       </GridCenter>
 
       <ViewListItem
