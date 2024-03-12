@@ -28,10 +28,10 @@ import nightTheme from "./themes/night"
 
 import DeviceConnection from "./base-elements/DeviceConnection"
 import Lookout360 from "./pages/lookout-360"
+import "@oicl/openbridge-webcomponents/src/palettes/variables.css"
 
 export default function App() {
   const app_state = useRecoilValue(appState)
-  console.log(dayTheme)
 
   let usedTheme = dayTheme
   switch (app_state.appActiveColorTheme) {

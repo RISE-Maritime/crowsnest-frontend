@@ -14,7 +14,7 @@
 
  */
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 // Recoil
 import { useRecoilState } from "recoil"
 import { appState } from "../../recoil/atoms"
@@ -23,7 +23,7 @@ import Clock from "react-live-clock"
 import GridCenter from "../components/GridCenter"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
-import { Grid, AppBar, Typography, SwipeableDrawer, Stack, Avatar, Button } from "@mui/material"
+import { Grid, AppBar, Typography, SwipeableDrawer, Stack, Avatar, Popover } from "@mui/material"
 import IconButton from "../components/IconButton"
 import { styled, useTheme } from "@mui/material/styles"
 // Icons & Images
@@ -31,6 +31,14 @@ import LogoCrowsnest from "../../resources/crowsnest.png"
 import AppsRoundedIcon from "@mui/icons-material/AppsRounded"
 import MenuIcon from "@mui/icons-material/Menu"
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
+import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
+import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
+import { ObcNavigationMenu as NavigationMenu } from "@oicl/openbridge-webcomponents-react/components/navigation-menu/navigation-menu"
+import { ObcNavigationItem as NavigationItem } from "@oicl/openbridge-webcomponents-react/components/navigation-item/navigation-item"
+import ROUTES from "../../ROUTES.json"
+import MapRoundedIcon from "@mui/icons-material/MapRounded"
 
 export default function NavBar() {
   const theme = useTheme()
@@ -39,8 +47,12 @@ export default function NavBar() {
     left: false,
     right: false,
   })
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
-  useEffect(() => {}, [])
+  const handleBrillianceChange = e => {
+    document.documentElement.setAttribute("data-obc-theme", e.detail.value)
+    setTheme(e.detail.value)()
+  }
 
   const toggleDrawer = (anchor, open) => event => {
     if (event && event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
@@ -54,61 +66,115 @@ export default function NavBar() {
     setAppObj({ ...appObj, appActiveColorTheme: themeName })
   }
 
-  const ToggleThemeMode = () => {
-    if (appObj.appActiveColorTheme === "light") {
-      setAppObj({
-        ...appObj,
-        appActiveColorTheme: "dark",
-      })
-    } else {
-      setAppObj({
-        ...appObj,
-        appActiveColorTheme: "light",
-      })
-    }
-  }
+  // const ToggleThemeMode = () => {
+  //   if (appObj.appActiveColorTheme === "light") {
+  //     setAppObj({
+  //       ...appObj,
+  //       appActiveColorTheme: "dark",
+  //     })
+  //   } else {
+  //     setAppObj({
+  //       ...appObj,
+  //       appActiveColorTheme: "light",
+  //     })
+  //   }
+  // }
 
   return (
-    <AppBar>
-      <Stack direction="row" gap={4}>
-        <IconButton size="large" onClick={toggleDrawer("left", true)}>
-          <MenuIcon />
-        </IconButton>
-        <IconButton size="medium" onClick={toggleDrawer("left", true)}>
-          <MenuIcon />
-        </IconButton>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <SiteHeading>Crowsnest</SiteHeading>
-          <PageHeading>
-            {appObj.activeMode}, {appObj.activeVessel}
-          </PageHeading>
-        </Stack>
-      </Stack>
-      {/* Left app navigation menu */}
+    <>
+      <TopBar
+        appTitle="Crowsnest"
+        pageName="demo"
+        showDimmingButton
+        showAppsButton
+        onDimmingButtonClicked={e => setAnchorEl(e.currentTarget)}
+        onAppsButtonClicked={toggleDrawer("right", true)}
+        onMenuButtonClicked={toggleDrawer("left", true)}
+      />
+
       <SwipeableDrawer
         anchor={"left"}
         open={drawerState["left"]}
         onClose={toggleDrawer("left", false)}
         onOpen={toggleDrawer("left", true)}
       >
-        <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} />
+        {/* <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} /> */}
+        <NavigationMenu>
+          <NavigationItem slot="main" label="Home" href={ROUTES.home}>
+            {/* <HomeIcon slot="icon" /> */}
+            <HomeRoundedIcon slot="icon" />
+          </NavigationItem>
+          <NavigationItem slot="main" label="ECDIS" href={ROUTES.home}>
+            <MapRoundedIcon slot="icon" />
+          </NavigationItem>
+          <NavigationItem slot="main" label="Bearing Rate" href={ROUTES.BEARING_RATE}>
+            <MapRoundedIcon slot="icon" />
+          </NavigationItem>
+        </NavigationMenu>
       </SwipeableDrawer>
-      <Stack direction="row" spacing={2} alignItems="center">
-        <Button variant="text" onClick={setTheme("day")}>
-          Day
-        </Button>
-        <Button variant="text" onClick={setTheme("bright")}>
-          Bright
-        </Button>
-        <Button variant="text" onClick={setTheme("dusk")}>
-          Dusk
-        </Button>
-        <Button variant="text" onClick={setTheme("night")}>
-          Night
-        </Button>
-      </Stack>
-    </AppBar>
+
+      <Popover
+        // anchorReference="anchorPosition"
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: 360,
+        }}
+      >
+        <BrillianceMenu className="brilliance" onPaletteChanged={handleBrillianceChange} />
+      </Popover>
+    </>
   )
+
+  // return (
+  //   <>
+  //     <AppBar>
+  //       <Stack direction="row" gap={4}>
+  //         <IconButton size="large" onClick={toggleDrawer("left", true)}>
+  //           <MenuIcon />
+  //         </IconButton>
+  //         <IconButton size="medium" onClick={toggleDrawer("left", true)}>
+  //           <MenuIcon />
+  //         </IconButton>
+  //         <Stack direction="row" spacing={2} alignItems="center">
+  //           <SiteHeading>Crowsnest</SiteHeading>
+  //           <PageHeading>
+  //             {appObj.activeMode}, {appObj.activeVessel}
+  //           </PageHeading>
+  //         </Stack>
+  //       </Stack>
+  //       {/* Left app navigation menu */}
+  // <SwipeableDrawer
+  //   anchor={"left"}
+  //   open={drawerState["left"]}
+  //   onClose={toggleDrawer("left", false)}
+  //   onOpen={toggleDrawer("left", true)}
+  // >
+  //   <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} />
+  // </SwipeableDrawer>
+  //       <Stack direction="row" spacing={2} alignItems="center">
+  //         <Button variant="text" onClick={setTheme("day")}>
+  //           Day
+  //         </Button>
+  //         <Button variant="text" onClick={setTheme("bright")}>
+  //           Bright
+  //         </Button>
+  //         <Button variant="text" onClick={setTheme("dusk")}>
+  //           Dusk
+  //         </Button>
+  //         <Button variant="text" onClick={setTheme("night")}>
+  //           Night
+  //         </Button>
+  //       </Stack>
+  //     </AppBar>
+  //   </>
+  // )
   //   <AppBar position="static" sx={{ height: "40px", backgrounColor: "hotpink" }}>
   //     <Grid container direction="row" justifyContent="space-between" alignItems="center">
   //       {/* Left side */}

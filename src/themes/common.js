@@ -16,6 +16,7 @@ export const componentOverrides = {
           padding: size === "normal" ? "5px" : "0px",
           height: "48px",
           width: "48px",
+          backgroundColor: "var(--element-active-color)",
         }),
       },
     },
@@ -24,6 +25,13 @@ export const componentOverrides = {
         root: ({ theme }) => ({
           borderRadius: 0,
         }),
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "hotpink",
+        },
       },
     },
   },
