@@ -83,3 +83,8 @@ export const APP_CONFIG = [
     label: "APP Settings",
   },
 ]
+
+export const ROUTE_TO_LABEL = [...APPS, ...APP_CONFIG].reduce((acc, cur) => {
+  acc[cur.href] = cur.label
+  return acc
+}, {})

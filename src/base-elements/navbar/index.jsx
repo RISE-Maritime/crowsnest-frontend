@@ -25,6 +25,8 @@ import { SwipeableDrawer, Popover } from "@mui/material"
 // Icons & Images
 import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
 import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
+import { useLocation } from "react-router-dom"
+import { ROUTE_TO_LABEL } from "./apps"
 
 export default function NavBar() {
   const [appObj, setAppObj] = useRecoilState(appState)
@@ -33,6 +35,7 @@ export default function NavBar() {
     right: false,
   })
   const [anchorEl, setAnchorEl] = React.useState(null)
+  const { pathname } = useLocation()
 
   const handleBrillianceChange = e => {
     document.documentElement.setAttribute("data-obc-theme", e.detail.value)
@@ -51,11 +54,13 @@ export default function NavBar() {
     setAppObj({ ...appObj, appActiveColorTheme: themeName })
   }
 
+  const pageName = ROUTE_TO_LABEL[pathname]
+
   return (
     <>
       <TopBar
         appTitle="Crowsnest"
-        pageName="demo"
+        pageName={pageName}
         showDimmingButton
         showAppsButton
         onDimmingButtonClicked={e => setAnchorEl(e.currentTarget)}
