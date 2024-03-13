@@ -8,7 +8,7 @@ import PicJutlandica from "../resources/platforms/jutlandica.png"
 import PicGota from "../resources/platforms/farja_gota.jpg"
 
 const localStorageEffect =
-  key =>
+  (key, alwaysRemember) =>
   ({ setSelf, onSet }) => {
     const savedValue = localStorage.getItem(key)
     if (savedValue !== null) {
@@ -19,7 +19,7 @@ const localStorageEffect =
       if (isReset) {
         localStorage.removeItem(key)
       } else {
-        if (remember) {
+        if (remember || alwaysRemember) {
           localStorage.setItem(key, JSON.stringify(newValue))
         }
       }
@@ -35,6 +35,7 @@ export const appState = atom({
     activeVessel: "DEMO Vessel",
     appActiveColorTheme: "day",
   },
+  effects: [localStorageEffect("app_state", true)],
 })
 
 export const userState = atom({

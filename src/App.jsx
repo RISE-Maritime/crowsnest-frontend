@@ -6,8 +6,8 @@ import { appState } from "./recoil/atoms"
 // Styling
 import { responsiveFontSizes, Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles"
 import CssBaseline from "@mui/material/CssBaseline"
-// Pages
 import ROUTES from "./ROUTES.json"
+// Pages
 import BasePage from "./base-elements/BasePage"
 import PageHome from "./pages/home"
 import PageECDIS from "./pages/ECDIS"
@@ -26,7 +26,6 @@ import duskTheme from "./themes/dusk"
 import brightTheme from "./themes/bright"
 import nightTheme from "./themes/night"
 
-import DeviceConnection from "./base-elements/DeviceConnection"
 import Lookout360 from "./pages/lookout-360"
 import "@oicl/openbridge-webcomponents/src/palettes/variables.css"
 
@@ -48,6 +47,8 @@ export default function App() {
       usedTheme = nightTheme
       break
   }
+
+  document.documentElement.setAttribute("data-obc-theme", app_state.appActiveColorTheme)
   const theme = responsiveFontSizes(usedTheme)
 
   return (
