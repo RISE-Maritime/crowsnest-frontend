@@ -21,7 +21,7 @@ import { appState } from "../../recoil/atoms"
 // Components
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
-import { Typography, SwipeableDrawer, Popover } from "@mui/material"
+import { SwipeableDrawer, Popover } from "@mui/material"
 // Icons & Images
 import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
 import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
@@ -81,6 +81,7 @@ export default function NavBar() {
         <RightDrawer side={"right"} toggleDrawer={toggleDrawer} />
       </SwipeableDrawer>
 
+      {/* Theme picker */}
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
@@ -94,7 +95,7 @@ export default function NavBar() {
           horizontal: 360,
         }}
       >
-        <BrillianceMenu className="brilliance" onPaletteChanged={handleBrillianceChange} />
+        <BrillianceMenu className="brilliance" palette={appObj.appActiveColorTheme} onPaletteChanged={handleBrillianceChange} />
       </Popover>
     </>
   )
