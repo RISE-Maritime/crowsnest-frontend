@@ -5,13 +5,15 @@ import CamFrameKeelson from "./components/CamFrameKeelson"
 
 export default function CameraStreams() {
   return (
-    <>
-      <Stack justifyContent={"center"} alignItems={"center"}>
-        <Typography variant="h3">Camera Streams</Typography>
+    <div>
+      <Stack justifyContent="center" alignItems="center">
+        <Typography variant="h3" component="h1" p={4}>
+          Camera Streams
+        </Typography>
       </Stack>
 
-      <Grid container direction="row" justifyContent="center" alignItems="center" spacing={0}>
-        <Grid item xs={12} sx={{ marginBottom: "0.5rem" }}>
+      <Grid container direction="row" justifyContent="center" alignItems="center" spacing={1}>
+        <Grid item xs={12}>
           <Paper elevation={3}>
             <CamFrameKeelson />
           </Paper>
@@ -19,13 +21,13 @@ export default function CameraStreams() {
 
         <Grid item xs={12}>
           <Paper elevation={3}>
-            <Typography variant="h5" sx={{ padding: "0.8rem" }}>
+            <Typography variant="h5" p={2}>
               WebRTC
             </Typography>
             <CamStream ID={"axis1"} />
           </Paper>
         </Grid>
       </Grid>
-    </>
+    </div>
   )
 }

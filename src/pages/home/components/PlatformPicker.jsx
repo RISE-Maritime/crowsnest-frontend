@@ -54,11 +54,15 @@ const Input = styled("input")({
 })
 
 const BoxStyled = styled.div`
-  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-outline-color);
+  background-color: var(--container-section-color);
   border-radius: 0.5rem;
-  padding: 0.5rem;
-  margin: 0.5rem 0rem;
-  min-width: 98%;
+  padding: 1rem;
+  width: 100%;
+
+  &:not(:first-child) {
+    margin-top: 1rem;
+  }
 `
 
 export default function PlatformPicker() {
@@ -132,13 +136,14 @@ export default function PlatformPicker() {
   }
 
   return (
-    <Grid container direction="row" justifyContent="center" alignItems="center">
+    <Grid container direction="row" spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h4" sx={{ padding: "1rem" }}>
+        <Typography variant="h4" component="h2" sx={{ padding: "1rem 0" }}>
           Select own ship source
         </Typography>
       </Grid>
-      <Grid item xs={8} sx={{ display: "grid", placeItems: "center" }}>
+
+      <Grid item xs={8}>
         {/* PLATFORMS */}
         <BoxStyled>
           <Typography variant="h5">Platforms</Typography>
@@ -160,7 +165,7 @@ export default function PlatformPicker() {
 
         <BoxStyled>
           <Stack direction="row">
-            <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>{" "}
+            <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>
             <Button onClick={updateTargetList}>
               <AutorenewIcon /> Update AIS List
             </Button>
@@ -226,7 +231,7 @@ export default function PlatformPicker() {
       </Grid>
 
       {/* Preview of selected viewpoint */}
-      <Grid item xs={4} sx={{ display: "grid", placeItems: "center" }}>
+      <Grid item xs={4}>
         <BoxStyled>
           <PlatformQuickDescription />
         </BoxStyled>

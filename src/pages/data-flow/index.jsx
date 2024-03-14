@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, Stack } from "@mui/material"
+import { Grid, Stack, Typography } from "@mui/material"
 import { useTheme, styled } from "@mui/material/styles"
 // Components
 import DataConnectionState from "./components/ConnectionStatus"
@@ -20,15 +20,16 @@ import KeelsonGetLoop from "./components/KeelsonGetLoop"
 import DockerMonitoring from "./components/DockerMonitoring"
 import SimpleShipSim from "./components/SimpleShipSim"
 
-const GridCenter = styled(Grid)(({ theme }) => ({
+const GridCenter = styled(Grid)({
   display: "grid",
   placeItems: "center",
   borderStyle: "solid",
-  borderColor: theme.palette.primary.main,
+  backgroundColor: "var(--container-section-color)",
+  borderColor: "var(--border-outline-color)",
   borderRadius: "0.4rem",
   margin: "1rem",
   padding: "0.5rem",
-}))
+})
 
 export default function DataFlow() {
   const theme = useTheme()
@@ -43,14 +44,17 @@ export default function DataFlow() {
         sx={{
           display: "grid",
           placeItems: "center",
-          color: theme.palette.primary.contrastText,
         }}
       >
-        <h1>Data connectors & flow</h1>
+        <Typography variant="h3" component="h1">
+          Data connectors & flow
+        </Typography>
       </Grid>
 
       <GridCenter item xs={12}>
-        <h2>CONNECTORS</h2>
+        <Typography variant="h4" component="h2">
+          Connectors
+        </Typography>
         <ConnectorsSummaryCards />
       </GridCenter>
 
@@ -67,7 +71,7 @@ export default function DataFlow() {
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <DataConnectionMQTT connectionName={"MQTT Broker"} isConnected={mqttConnectionState} />
+        <DataConnectionMQTT connectionName="MQTT Broker" isConnected={mqttConnectionState} />
       </GridCenter>
 
       <GridCenter item xs={12}>
@@ -75,7 +79,7 @@ export default function DataFlow() {
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <DataConnectionState connectionName={"Own Device"} isConnected={true} delay={lidarSate.delaySec} />
+        <DataConnectionState connectionName="Own Device" isConnected={true} delay={lidarSate.delaySec} />
       </GridCenter>
 
       <GridCenter item xs={12}>

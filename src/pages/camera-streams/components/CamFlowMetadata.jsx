@@ -2,10 +2,9 @@ import React from "react"
 import { Grid, Paper, Typography } from "@mui/material"
 
 export default function CamFlowMetadata({ metadata }) {
-
   return (
     <Paper>
-      <Grid container>
+      <Grid container p={1}>
         <Grid item xs={12}>
           <Typography variant="h5">Metadata</Typography>
           <Typography variant="body1">
