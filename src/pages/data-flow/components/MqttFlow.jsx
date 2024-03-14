@@ -10,9 +10,9 @@ export default function MqttFlow() {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Typography variant="h3">MQTT flow</Typography>
-        <hr />
-
+        <Typography variant="h3" mb={2}>
+          MQTT flow
+        </Typography>
         <Typography variant="h4">Managed Topics</Typography>
         {Object.keys(mqtt_topics).length === 0 && <p>No managed Topics</p>}
 

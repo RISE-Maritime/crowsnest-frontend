@@ -209,12 +209,12 @@ export default function CamFrameKeelson() {
   }
 
   return (
-    <Grid container direction="row" justifyContent="center" alignItems="center" spacing={0}>
+    <Grid container direction="row" justifyContent="center" alignItems="center">
       <Grid item xs={12}>
         {/* Action bar  */}
 
         <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
-          <Typography variant="h5" sx={{ padding: "0.8rem" }}>
+          <Typography variant="h5" p={2}>
             Keelson
           </Typography>
           {/* <p>URL: {URLcam}</p> */}
@@ -299,7 +299,7 @@ export default function CamFrameKeelson() {
         <br />
         <CamCanvas jpegFrame={AAFrame} />
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={2} p={1}>
         <CamFlowMetadata metadata={metadata} />
       </Grid>
     </Grid>

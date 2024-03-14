@@ -33,5 +33,13 @@ export const componentOverrides = {
         }),
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          color: "var(--element-active-color)",
+          backgroundColor: "var(--container-background-color)",
+        },
+      },
+    },
   },
 }
