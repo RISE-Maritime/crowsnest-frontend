@@ -1,9 +1,10 @@
 import React from "react"
-import { Button } from "@mui/material"
 import "@tensorflow/tfjs"
 import axios from "axios"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
-export default function CamSelect({ refV, refA,  ID }) {
+export default function CamSelect({ refV, refA, ID }) {
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
@@ -106,7 +107,9 @@ export default function CamSelect({ refV, refA,  ID }) {
 
   return (
     <div>
-      <Button onClick={() => startCamera(ID)}>Start</Button>
+      <Button onClick={() => startCamera(ID)}>
+        <PlayArrowIcon slot="leading-icon" /> Start
+      </Button>
     </div>
   )
 }

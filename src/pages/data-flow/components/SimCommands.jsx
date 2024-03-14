@@ -1,5 +1,6 @@
 import React from "react"
-import { Typography, Button, Slider } from "@mui/material"
+import { Typography, Slider, Stack } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import { millisecondsToTime } from "../../../utils"
 import { useRecoilState } from "recoil"
 import { ATOM_SIM_STATE } from "../../../recoil/atoms"
@@ -7,7 +8,6 @@ import { ATOM_SIM_STATE } from "../../../recoil/atoms"
 // Icons
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import PauseIcon from "@mui/icons-material/Pause"
-import RestartAltIcon from "@mui/icons-material/RestartAlt"
 
 const marks = [
   {
@@ -67,18 +67,20 @@ export default function SimCommands({ simTimeMilSec, pauseSim, startSim }) {
         Time elapsed: {millisecondsToTime(simTimeMilSec)} ({simState.state})
       </Typography>
 
-      <Button variant="contained" color="primary" onClick={startSim} disabled={simState.state === "RUNNING"}>
-        <PlayArrowIcon />
-      </Button>
+      <Stack direction="row" spacing={1}>
+        <Button checked={simState.state === "RUNNING"} variant="check" onClick={startSim} disabled={simState.state === "RUNNING"}>
+          <PlayArrowIcon slot="leading-icon" /> Run
+        </Button>
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={pauseSim}
-        disabled={simState.state === "STOPPED" || simState.state === "PAUSED"}
-      >
-        <PauseIcon />
-      </Button>
+        <Button
+          checked={simState.state === "STOPPED" || simState.state === "PAUSED"}
+          variant="check"
+          onClick={pauseSim}
+          disabled={simState.state === "STOPPED" || simState.state === "PAUSED"}
+        >
+          <PauseIcon slot="leading-icon" /> Pause
+        </Button>
+      </Stack>
 
       <br />
       <Typography variant="subtitle1" sx={{ marginRight: "0.5rem" }}>

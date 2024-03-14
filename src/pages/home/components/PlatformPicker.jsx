@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { atomPlatforms, atomActivePlatform, appState, targetsAIS, OS_POSITION_SETTING } from "../../../recoil/atoms"
-import { Grid, TextField, Button, Stack, Typography, Autocomplete } from "@mui/material"
+import { Grid, TextField, Stack, Typography, Autocomplete } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import styled from "styled-components"
 import DefaultAisTargets from "./DefaultAisTargets"
 
@@ -151,8 +152,8 @@ export default function PlatformPicker() {
             {Object.values(platforms).map(platform => {
               return (
                 <Button
-                  color="secondary"
-                  variant={platform.mmsi == activePlatform.mmsi ? "contained" : "outlined"}
+                  variant="check"
+                  checked={platform.mmsi == activePlatform.mmsi}
                   key={platform.key}
                   onClick={() => selectedPlatform(platform)}
                 >
@@ -164,10 +165,10 @@ export default function PlatformPicker() {
         </BoxStyled>
 
         <BoxStyled>
-          <Stack direction="row">
+          <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>
             <Button onClick={updateTargetList}>
-              <AutorenewIcon /> Update AIS List
+              <AutorenewIcon slot="leading-icon" /> Update AIS List
             </Button>
           </Stack>
 
@@ -195,9 +196,7 @@ export default function PlatformPicker() {
               )}
             />
 
-            <Button color="secondary" variant="outlined" onClick={connectAISmmsi}>
-              Connect to MMSI
-            </Button>
+            <Button onClick={connectAISmmsi}>Connect to MMSI</Button>
           </Stack>
 
           {/* Saved AIS targets */}
@@ -209,11 +208,7 @@ export default function PlatformPicker() {
         <BoxStyled>
           <Typography variant="h5">Device</Typography>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
-            <Button
-              color="secondary"
-              variant={"DEVICE" === activePlatform.activePlatformType ? "contained" : "outlined"}
-              onClick={setDeviceAsOS}
-            >
+            <Button variant="check" checked={"DEVICE" === activePlatform.activePlatformType} onClick={setDeviceAsOS}>
               Use device sensors as source
             </Button>
           </Stack>

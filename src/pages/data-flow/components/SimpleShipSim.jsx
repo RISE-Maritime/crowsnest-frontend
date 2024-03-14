@@ -1,15 +1,16 @@
-import React, { useRef, useState } from "react"
-import { Button, Typography, Grid } from "@mui/material"
+import React, { useRef } from "react"
+import { Grid } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import {
-  OS_POSITIONS,
-  OS_HEADING,
-  OS_VELOCITY,
-  ATOM_OS_RUDDERS,
+  // OS_POSITIONS,
+  // OS_HEADING,
+  // OS_VELOCITY,
+  // ATOM_OS_RUDDERS,
+  // ATOM_OS_ENGINES,
   ATOM_SIM_STATE,
-  ATOM_OS_ENGINES,
   showMiniAppsObj,
 } from "../../../recoil/atoms"
-import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { updateSimState } from "../../../recoil/selectors"
 import SimMap from "./SimMap"
 import VideogameAssetOffIcon from "@mui/icons-material/VideogameAssetOff"
@@ -19,11 +20,11 @@ import SimStateSetup from "./SimStateSetup"
 import SimShipModelSelector from "./SimShipModelSelector"
 
 export default function SimpleShipSim() {
-  const osHeading = useRecoilValue(OS_HEADING)
-  const osVelocity = useRecoilValue(OS_VELOCITY)
-  const osRudder = useRecoilValue(ATOM_OS_RUDDERS)
-  const osEng = useRecoilValue(ATOM_OS_ENGINES)
-  const osPositions = useRecoilValue(OS_POSITIONS)
+  // const osHeading = useRecoilValue(OS_HEADING)
+  // const osVelocity = useRecoilValue(OS_VELOCITY)
+  // const osRudder = useRecoilValue(ATOM_OS_RUDDERS)
+  // const osEng = useRecoilValue(ATOM_OS_ENGINES)
+  // const osPositions = useRecoilValue(OS_POSITIONS)
   const setUpdateSimState = useSetRecoilState(updateSimState)
   const simInterval = useRef(null)
   const [simState, setSimState] = useRecoilState(ATOM_SIM_STATE)
@@ -75,8 +76,9 @@ export default function SimpleShipSim() {
           <SimCommands simTimeMilSec={simState.milSecElapsed} pauseSim={pauseSim} startSim={startSim} />
 
           <br />
-          <Button variant="contained" color="primary" onClick={() => ToggleMiniApp("controls")}>
-            {!showMiniApp.controls ? <VideogameAssetIcon /> : <VideogameAssetOffIcon />}
+          <Button checked={showMiniApp.controls} variant="check" onClick={() => ToggleMiniApp("controls")}>
+            {!showMiniApp.controls ? <VideogameAssetIcon slot="leading-icon" /> : <VideogameAssetOffIcon slot="leading-icon" />}{" "}
+            Controls
           </Button>
           <br />
           <SimShipModelSelector />
