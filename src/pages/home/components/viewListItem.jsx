@@ -1,40 +1,27 @@
-import React from "react";
-import { styled , useTheme} from "@mui/material/styles";
-import { Grid, Button } from "@mui/material";
-import { Link } from "react-router-dom";
+import React from "react"
+import { Grid } from "@mui/material"
+import { useNavigate } from "react-router-dom"
 
-const GridCenter = styled(Grid)(() => ({
-  display: "grid",
-  placeItems: "center",
-}));
+import { ObcRichButton as RichButton } from "@oicl/openbridge-webcomponents-react/components/rich-button/rich-button"
+import { Obi02ChevronRight as ChevronRightIcon } from "@oicl/openbridge-webcomponents-react/icons/icon-02-chevron-right"
 
 export default function viewListItem(props) {
-  const theme = useTheme();
+  const navigate = useNavigate()
+
   return (
-    <GridCenter item xs={6}>
-      <Button
-        component={Link}
-        to={props.routeLink}
-        variant="outlined"
-        sx={{
-          width: "95%",
-          maxWidth: "350px",
-          margin: "0.5rem",
-          color: theme.palette.info.main,
-          display: "flex",
-          justifyContent: "flex-start",
-          borderColor: theme.palette.info.main,
-        }}
+    <Grid item xs={6}>
+      <RichButton
+        position="regular"
+        size="multi-line"
+        has-leading-icon={true}
+        has-trailing-icon={true}
+        onClick={() => navigate(props.routeLink)}
       >
         {props.icon}
-        <h2
-          style={{
-            marginLeft: "2rem",
-          }}
-        >
-          {props.viewName}
-        </h2>
-      </Button>
-    </GridCenter>
-  );
+        <div slot="label">{props.viewName}</div>
+        {props.description && <div slot="description">{props.description}</div>}
+        <ChevronRightIcon slot="trailing-icon" />
+      </RichButton>
+    </Grid>
+  )
 }
