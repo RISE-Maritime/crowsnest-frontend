@@ -1,7 +1,7 @@
 import React from "react"
 import ROUTES from "../../../ROUTES.json"
 import { styled } from "@mui/material/styles"
-import { Grid } from "@mui/material"
+import { Grid, Typography } from "@mui/material"
 import ViewListItem from "./viewListItem"
 // Icons
 import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded"
@@ -21,10 +21,10 @@ const GridCenter = styled(Grid)(() => ({
 
 export default function viewList() {
   return (
-    <GridCenter item xs={12} margin={2}>
-      <Grid item padding={2}>
-        <h2>Applications list</h2>
-      </Grid>
+    <GridCenter>
+      <Typography variant="h4" component="h2" mt={4} mb={4}>
+        Applications list
+      </Typography>
       <Grid container spacing={2} alignContent="flex-start">
         <ViewListItem routeLink={ROUTES.ECDIS} viewName={" ECDIS"} icon={<MapRoundedIcon slot="leading-icon" />} />
 
