@@ -26,7 +26,7 @@ import { SwipeableDrawer, Popover } from "@mui/material"
 import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
 import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
 import { useLocation } from "react-router-dom"
-import { ROUTE_TO_LABEL } from "./apps"
+import { ROUTE_TO_LABEL } from "../../apps"
 
 export default function NavBar() {
   const [appObj, setAppObj] = useRecoilState(appState)

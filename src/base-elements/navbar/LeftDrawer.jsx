@@ -4,7 +4,7 @@ import { Box } from "@mui/material"
 // Icons
 import { ObcNavigationMenu as NavigationMenu } from "@oicl/openbridge-webcomponents-react/components/navigation-menu/navigation-menu"
 import { ObcNavigationItem as NavigationItem } from "@oicl/openbridge-webcomponents-react/components/navigation-item/navigation-item"
-import { APPS, APP_CONFIG } from "./apps"
+import { APPS, APP_CONFIG } from "../../apps"
 
 export default function LeftDrawer(props) {
   return (
