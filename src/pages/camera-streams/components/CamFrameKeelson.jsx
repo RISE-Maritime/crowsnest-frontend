@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react"
 import axios from "axios"
-import { Button, Autocomplete, TextField, Stack, Grid, Typography, Divider, Slider } from "@mui/material"
+import { Autocomplete, TextField, Stack, Grid, Typography, Divider, Slider } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import jpeg from "jpeg-js"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs/minimal.js"
@@ -241,7 +242,7 @@ export default function CamFrameKeelson() {
         {/* --- Data Getter --- */}
         <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={0}>
           {/* Get single frame */}
-          <Button variant="contained" color="primary" disabled={isActive !== ""} onClick={getFrame} size="small">
+          <Button disabled={isActive !== ""} onClick={getFrame}>
             Get Frame
           </Button>
 
@@ -270,12 +271,12 @@ export default function CamFrameKeelson() {
           </Typography>
 
           {isActive === "loopFps" ? (
-            <Button onClick={stopFpsLoop} variant="contained" color="error" size="small">
-              <StopIcon /> Loop
+            <Button onClick={stopFpsLoop}>
+              <StopIcon slot="leading-icon" /> Loop
             </Button>
           ) : (
-            <Button onClick={startFpsLoop} disabled={isActive !== ""} variant="contained" color="primary" size="small">
-              <PlayArrowIcon /> Loop
+            <Button onClick={startFpsLoop} disabled={isActive !== ""}>
+              <PlayArrowIcon slot="leading-icon" /> Loop
             </Button>
           )}
 
@@ -284,11 +285,9 @@ export default function CamFrameKeelson() {
           {/* --- Subscriber --- */}
 
           {isActive === "subscribing" ? (
-            <Button onClick={stopUnsubscribe} variant="contained" color="error" size="small">
-              Unsubscribe
-            </Button>
+            <Button onClick={stopUnsubscribe}>Unsubscribe</Button>
           ) : (
-            <Button onClick={startSubscribe} disabled={isActive !== ""} variant="contained" color="primary" size="small">
+            <Button onClick={startSubscribe} disabled={isActive !== ""}>
               Subscribe
             </Button>
           )}

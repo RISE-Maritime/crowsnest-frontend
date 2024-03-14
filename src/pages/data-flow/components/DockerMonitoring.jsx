@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
-import { Typography, Grid, Button, Autocomplete, TextField, Stack } from "@mui/material"
+import { Typography, Grid, Autocomplete, TextField, Stack } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import axios from "axios"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs"
@@ -106,18 +107,14 @@ export default function DockerMonitoring() {
               }}
               renderInput={params => <TextField {...params} label="URL" size="small" />}
             />
-            <Button variant="contained" onClick={getDockerState}>
-              Get Docker State
-            </Button>
-            { loopState === "STOPPED" ?
-            <Button variant="contained" onClick={startLoop}>
-              Start GET Loop (15 sec)
-            </Button>
-            :
-            <Button variant="contained" onClick={stopLoop} sx={{background: "red"}}>
-              Stop GET Loop
-            </Button>
-            }
+            <Button onClick={getDockerState}>Get Docker State</Button>
+            {loopState === "STOPPED" ? (
+              <Button onClick={startLoop}>Start GET Loop (15 sec)</Button>
+            ) : (
+              <Button onClick={stopLoop} sx={{ background: "red" }}>
+                Stop GET Loop
+              </Button>
+            )}
           </Stack>
         </Grid>
 

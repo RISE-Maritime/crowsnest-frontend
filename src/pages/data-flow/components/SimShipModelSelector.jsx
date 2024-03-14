@@ -1,7 +1,8 @@
 import React from "react"
 import { useRecoilState } from "recoil"
 import { ATOM_SIM_SHIP_MODELS, ATOM_SIM_ACTIVE_MODELS } from "../../../recoil/atoms"
-import { Grid, Button, Stack } from "@mui/material"
+import { Grid, Stack } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 export default function SimShipModelSelector() {
   const [simShipModels, setSimShipModels] = useRecoilState(ATOM_SIM_SHIP_MODELS)
@@ -32,8 +33,8 @@ export default function SimShipModelSelector() {
             return (
               <Button
                 key={index}
-                variant="contained"
-                color={simActiveModels === simShipModel.id ? "success" : "primary"}
+                checked={simActiveModels === simShipModel.id}
+                variant="check"
                 onClick={() => selectSimShipModel(simShipModel)}
               >
                 {simShipModel.name}

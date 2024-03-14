@@ -8,7 +8,7 @@ import ConnectorsSummaryCards from "./components/ConnectorsSummaryCards"
 // Recoil
 import { useRecoilValue } from "recoil"
 import { lidarStateAtom } from "../../recoil/atoms"
-import { atomMQTTconnectionState, atomKeelsonConnectionState } from "../../recoil/atoms"
+import { atomMQTTconnectionState } from "../../recoil/atoms"
 import MqttFlowIN from "./components/MqttFlow"
 import StatsAIS from "./components/StatsAIS"
 import StatsHW from "./components/StatsHW"
@@ -33,7 +33,6 @@ const GridCenter = styled(Grid)(({ theme }) => ({
 export default function DataFlow() {
   const theme = useTheme()
   const mqttConnectionState = useRecoilValue(atomMQTTconnectionState)
-  const keelsonConnectionState = useRecoilValue(atomKeelsonConnectionState)
   const lidarSate = useRecoilValue(lidarStateAtom)
 
   return (
@@ -56,9 +55,9 @@ export default function DataFlow() {
       </GridCenter>
 
       <GridCenter item xs={12}>
-        <Stack direction={"row"} alignItems="flex-start" justifyContent="space-between" spacing={2}>
+        <Stack direction={"row"} alignItems="stretch" justifyContent="space-between" spacing={2}>
           <KeelsonGetLoop />
-          <KeelsonSubscribe connectionName={"Keelson Subscriber"} isConnected={keelsonConnectionState} />
+          <KeelsonSubscribe />
           <KeelsonPush />
           <KeelsonQueryable />
         </Stack>
