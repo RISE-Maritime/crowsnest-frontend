@@ -48,7 +48,7 @@ export default function viewList() {
           icon={<SportsEsportsRoundedIcon slot="leading-icon" />}
         />
 
-        <ViewListItem routeLink={ROUTES.ROUTE_EDITOR} viewName={"Rout Editor"} icon={<RouteIcon slot="leading-icon" />} />
+        <ViewListItem routeLink={ROUTES.ROUTE_EDITOR} viewName={"Route Editor"} icon={<RouteIcon slot="leading-icon" />} />
 
         <ViewListItem routeLink={ROUTES.DATA_FLOW} viewName={"Data Flow"} icon={<InsightsRoundedIcon slot="leading-icon" />} />
 
