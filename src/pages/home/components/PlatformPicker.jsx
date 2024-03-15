@@ -172,7 +172,13 @@ export default function PlatformPicker() {
             </Button>
           </Stack>
 
-          <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+            sx={{ my: "1rem", pb: "1rem", borderBottom: "1px solid var(--border-outline-color)" }}
+          >
             <Autocomplete
               id="group"
               name="group"
@@ -200,7 +206,6 @@ export default function PlatformPicker() {
           </Stack>
 
           {/* Saved AIS targets */}
-          <hr />
           <Typography variant="subtitle1">Saved AIS targets</Typography>
           <DefaultAisTargets aisFiltered={AIStargets} />
         </BoxStyled>
