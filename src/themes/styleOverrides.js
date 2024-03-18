@@ -8,17 +8,9 @@ export const componentOverrides = {
         },
       },
     },
-    /*MuiButton: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "var(--enabled-background-color)",
-          color: "var(--on-enabled-background-color)",
-        },
-      },
-    },*/
     MuiIconButton: {
       styleOverrides: {
-        root: ({ theme, size }) => ({
+        root: ({ size }) => ({
           borderRadius: 0,
           padding: size === "normal" ? "5px" : "0px",
           height: "48px",
@@ -28,9 +20,9 @@ export const componentOverrides = {
     },
     MuiIcon: {
       styleOverrides: {
-        root: ({ theme }) => ({
+        root: {
           borderRadius: 0,
-        }),
+        },
       },
     },
     MuiPaper: {
