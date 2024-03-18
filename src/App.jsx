@@ -4,7 +4,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { appState } from "./recoil/atoms"
 // Styling
-import { responsiveFontSizes, Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles"
+import {
+  responsiveFontSizes,
+  Experimental_CssVarsProvider as CssVarsProvider,
+  experimental_extendTheme as extendTheme,
+} from "@mui/material/styles"
+import { componentOverrides } from "./themes/styleOverrides"
 import CssBaseline from "@mui/material/CssBaseline"
 import ROUTES from "./ROUTES.json"
 // Pages
@@ -21,32 +26,15 @@ import DeviceSensors from "./pages/device-sensors"
 import PageSettings from "./pages/settings"
 import PageConfiguration from "./pages/configuration"
 import RouteEditor from "./pages/route-editor"
-import dayTheme from "./themes/day"
-import duskTheme from "./themes/dusk"
-import brightTheme from "./themes/bright"
-import nightTheme from "./themes/night"
 
 import Lookout360 from "./pages/lookout-360"
 import "@oicl/openbridge-webcomponents/src/palettes/variables.css"
 
 export default function App() {
   const app_state = useRecoilValue(appState)
-
-  let usedTheme = dayTheme
-  switch (app_state.appActiveColorTheme) {
-    case "bright":
-      usedTheme = brightTheme
-      break
-    case "day":
-      usedTheme = dayTheme
-      break
-    case "dusk":
-      usedTheme = duskTheme
-      break
-    case "night":
-      usedTheme = nightTheme
-      break
-  }
+  const usedTheme = extendTheme({
+    ...componentOverrides,
+  })
 
   document.documentElement.setAttribute("data-obc-theme", app_state.appActiveColorTheme)
   const theme = responsiveFontSizes(usedTheme)
