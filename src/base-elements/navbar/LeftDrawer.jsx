@@ -11,12 +11,24 @@ export default function LeftDrawer(props) {
     <Box role="presentation" onClick={props.toggleDrawer(props.side, false)} onKeyDown={props.toggleDrawer(props.side, false)}>
       <NavigationMenu>
         {APPS.map(app => (
-          <NavigationItem slot="main" key={app.label} href={app.href} label={app.label}>
+          <NavigationItem
+            slot="main"
+            key={app.label}
+            href={app.href}
+            label={app.label}
+            checked={app.href === window.location.pathname}
+          >
             {app.icon}
           </NavigationItem>
         ))}
         {APP_CONFIG.map(cfg => (
-          <NavigationItem slot="footer" key={cfg.label} href={cfg.href} label={cfg.label}>
+          <NavigationItem
+            slot="footer"
+            key={cfg.label}
+            href={cfg.href}
+            label={cfg.label}
+            checked={cfg.href === window.location.pathname}
+          >
             {cfg.icon}
           </NavigationItem>
         ))}
