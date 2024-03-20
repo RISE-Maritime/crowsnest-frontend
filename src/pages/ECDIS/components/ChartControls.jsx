@@ -1,63 +1,67 @@
-import { Stack, Typography, ButtonGroup, Button, InputLabel, FormControl, Select, MenuItem, Container } from "@mui/material"
-
+import { Stack, InputLabel, FormControl, Select, MenuItem, Container } from "@mui/material"
 import basemaps from "./baseMaps.json"
 import React from "react"
-//import { useTheme } from "@mui/material/styles"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
 import ZoomInIcon from "@mui/icons-material/ZoomIn"
 import { atomChartSettings } from "./Chart"
 import { useRecoilState } from "recoil"
+import { ObcIconButton as IconButton } from "@oicl/openbridge-webcomponents-react/components/icon-button/icon-button"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 export default function ChartControls() {
   const [chartSettings, setChartSettings] = useRecoilState(atomChartSettings)
-
-  //const theme = useTheme()
 
   return (
     <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", padding: "10px" }}>
       <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
         {/* Zoom selector */}
-        <ButtonGroup size="small">
-          <Button
+        <Stack direction="row" px={1}>
+          <IconButton
             onClick={() => {
               setChartSettings({ ...chartSettings, zoom: chartSettings.zoom - 1 })
             }}
+            cornerLeft={true}
           >
             <ZoomOutIcon />
-          </Button>
-          <Button
+          </IconButton>
+          <IconButton
             onClick={() => {
               setChartSettings({ ...chartSettings, zoom: chartSettings.zoom + 1 })
             }}
+            cornerRight={true}
           >
             <ZoomInIcon />
-          </Button>
-        </ButtonGroup>
+          </IconButton>
+        </Stack>
 
         {/* Chart fix */}
-        <ButtonGroup size="small">
+        <Stack direction="row" px={1}>
           <Button
-            variant={chartSettings.centerFix == "free" ? "contained" : "outlined"}
+            variant="check"
+            checked={chartSettings.centerFix === "free" ? true : false}
             onClick={() => {
               setChartSettings({ ...chartSettings, centerFix: "free" })
             }}
           >
-            <Typography>FREE</Typography>
+            FREE
           </Button>
           <Button
-            variant={chartSettings.centerFix == "OS" ? "contained" : "outlined"}
+            variant="check"
+            checked={chartSettings.centerFix === "OS" ? true : false}
             onClick={() => {
               setChartSettings({ ...chartSettings, centerFix: "OS" })
             }}
+            cornerRight={true}
           >
-            <Typography>OS</Typography>
+            OS
           </Button>
-        </ButtonGroup>
+        </Stack>
 
         {/* Chart Orientation */}
-        <ButtonGroup size="small">
+        <Stack direction="row" px={1}>
           <Button
-            variant={chartSettings.visualisation == "2D" ? "contained" : "outlined"}
+            variant="check"
+            checked={chartSettings.visualisation === "2D" ? true : false}
             onClick={() => {
               setChartSettings({ ...chartSettings, visualisation: "2D" })
             }}
@@ -65,42 +69,48 @@ export default function ChartControls() {
             2D
           </Button>
           <Button
-            variant={chartSettings.visualisation == "3D" ? "contained" : "outlined"}
+            variant="check"
+            checked={chartSettings.visualisation === "3D" ? true : false}
             onClick={() => {
               setChartSettings({ ...chartSettings, visualisation: "3D" })
             }}
           >
             3D
           </Button>
-        </ButtonGroup>
+        </Stack>
 
         {/* Chart Orientation */}
-        <ButtonGroup size="small">
+        <Stack direction="row" px={1}>
           <Button
-            variant={chartSettings.verticalFix == "northUp" ? "contained" : "outlined"}
+            variant="check"
+            checked={chartSettings.verticalFix === "northUp" ? true : false}
             onClick={() => {
               setChartSettings({ ...chartSettings, verticalFix: "northUp" })
             }}
+            style={{ whiteSpace: "nowrap" }}
           >
             N-UP
           </Button>
           <Button
-            variant={chartSettings.verticalFix == "headingUp" ? "contained" : "outlined"}
+            variant="check"
+            checked={chartSettings.verticalFix === "headingUp" ? true : false}
             onClick={() => {
               setChartSettings({ ...chartSettings, verticalFix: "headingUp" })
             }}
+            style={{ whiteSpace: "nowrap" }}
           >
             H-UP
           </Button>
           <Button
-            variant={chartSettings.verticalFix == "free" ? "contained" : "outlined"}
+            variant="check"
+            checked={chartSettings.verticalFix === "free" ? true : false}
             onClick={() => {
               setChartSettings({ ...chartSettings, verticalFix: "free" })
             }}
           >
             FREE
           </Button>
-        </ButtonGroup>
+        </Stack>
 
         {/* BasemapSelector */}
         <FormControl sx={{ width: 300 }} size="small">

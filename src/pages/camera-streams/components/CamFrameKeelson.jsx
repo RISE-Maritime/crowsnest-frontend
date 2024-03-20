@@ -238,7 +238,7 @@ export default function CamFrameKeelson() {
           />
         </Stack>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} px={2}>
         {/* --- Data Getter --- */}
         <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={0}>
           {/* Get single frame */}

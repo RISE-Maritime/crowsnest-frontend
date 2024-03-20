@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import {
-  Button,
   TextField,
   MenuItem,
   Select,
@@ -11,7 +10,6 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  IconButton,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -19,12 +17,15 @@ import {
   List,
   ListItem,
   Paper,
+  Stack,
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import EditIcon from "@mui/icons-material/Edit"
-import SaveIcon from "@mui/icons-material/Save"
 import AddIcon from "@mui/icons-material/Add"
+
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
+import { ObcIconButton as IconButton } from "@oicl/openbridge-webcomponents-react/components/icon-button/icon-button"
 
 function MonitorManager() {
   const [vessels, setVessels] = useState(() => JSON.parse(localStorage.getItem("vessels")) || {})
@@ -121,7 +122,7 @@ function MonitorManager() {
 
   return (
     <div>
-      <Button onClick={handleMainDialogToggle} variant="contained" color="primary">
+      <Button onClick={handleMainDialogToggle} variant="normal">
         Manage Vessels
       </Button>
 
@@ -140,24 +141,22 @@ function MonitorManager() {
                     <Grid container spacing={2}>
                       {vessel.dataSources.map((dataSource, index) => (
                         <Grid item xs={12} key={index}>
-                          <Typography>
-                            Source: {dataSource.source}, Topic: {dataSource.topic}
-                          </Typography>
-                          <IconButton onClick={() => editDataSource(key, index)}>
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton onClick={() => removeDataSource(key, index)}>
-                            <DeleteIcon />
-                          </IconButton>
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <Typography>
+                              Source: {dataSource.source}, Topic: {dataSource.topic}
+                            </Typography>
+                            <IconButton onClick={() => editDataSource(key, index)}>
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton onClick={() => removeDataSource(key, index)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Stack>
                         </Grid>
                       ))}
                       <Grid item xs={12}>
-                        <Button
-                          onClick={() => startAddDataSource(key, null)}
-                          variant="contained"
-                          color="primary"
-                          startIcon={<AddIcon />}
-                        >
+                        <Button onClick={() => startAddDataSource(key, null)} variant="normal" hasIconLeading={true}>
+                          <AddIcon slot="leading-icon" />
                           Add Data Source
                         </Button>
                       </Grid>
@@ -173,17 +172,13 @@ function MonitorManager() {
               </ListItem>
             ))}
           </List>
-          <Button
-            onClick={() => handleEditVesselDialogToggle()}
-            variant="contained"
-            color="secondary"
-            style={{ marginTop: "10px" }}
-          >
+          <Button onClick={() => handleEditVesselDialogToggle()} variant="normal" hasIconLeading={true}>
+            <AddIcon slot="leading-icon" />
             Add Vessel
           </Button>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleMainDialogToggle} color="primary">
+          <Button onClick={handleMainDialogToggle} variant="flat">
             Close
           </Button>
         </DialogActions>
@@ -204,10 +199,10 @@ function MonitorManager() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleEditVesselDialogToggle} color="primary">
+          <Button onClick={handleEditVesselDialogToggle} variant="flat">
             Cancel
           </Button>
-          <Button onClick={addOrEditVessel} color="primary">
+          <Button onClick={addOrEditVessel} variant="normal">
             Save
           </Button>
         </DialogActions>
@@ -237,10 +232,10 @@ function MonitorManager() {
           </Paper>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDataSourceDialogToggle} color="primary">
+          <Button onClick={handleDataSourceDialogToggle} variant="flat">
             Cancel
           </Button>
-          <Button onClick={addOrEditDataSource} color="primary">
+          <Button onClick={addOrEditDataSource} variant="normal">
             Save
           </Button>
         </DialogActions>

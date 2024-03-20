@@ -3,7 +3,7 @@ export const componentOverrides = {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "var(--container-backdrop-color)",
+          backgroundColor: "var(--container-background-color)",
           color: "var(--element-active-color)",
         },
       },
@@ -29,7 +29,8 @@ export const componentOverrides = {
       styleOverrides: {
         root: {
           color: "var(--element-active-color)",
-          backgroundColor: "var(--container-background-color)",
+          backgroundColor: "var(--container-section-color)",
+          border: "1px solid var(--border-outline-color)",
         },
       },
     },

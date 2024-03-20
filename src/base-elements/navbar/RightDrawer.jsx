@@ -28,7 +28,12 @@ export default function RightDrawer(props) {
       onKeyDown={props.toggleDrawer(props.side, false)}
     >
       <AppMenu>
-        <AppButton checked={showMiniApp.windCurrent} label="Wind & Current" onClick={() => ToggleMiniApp("windCurrent")}>
+        <AppButton
+          style={{ whiteSpace: "nowrap" }}
+          checked={showMiniApp.windCurrent}
+          label="Wind & Current"
+          onClick={() => ToggleMiniApp("windCurrent")}
+        >
           <CurrentIcon size="24" slot="icon" />
         </AppButton>
 
