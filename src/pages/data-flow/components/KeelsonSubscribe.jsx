@@ -105,7 +105,7 @@ export default function KeelsonSubscribe() {
         </Stack>
 
         {!keelsonConState ? (
-          <Button variant="normal" onClick={formik.handleSubmit} fullWidth>
+          <Button onClick={formik.handleSubmit} fullWidth>
             Connect
           </Button>
         ) : (

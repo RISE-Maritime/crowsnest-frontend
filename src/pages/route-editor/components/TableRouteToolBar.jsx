@@ -111,20 +111,14 @@ export default function TableRouteToolBar(props) {
 
   return (
     <GridToolbarContainer>
-      <Button variant="normal" hasIconLeading={true} onClick={handleClickAddWP}>
+      <Button hasIconLeading={true} onClick={handleClickAddWP}>
         <AddIcon slot="leading-icon" />
         Add waypoint
       </Button>
 
-      <Button variant="normal" disabled={true}>
-        Generate XTE ZONE
-      </Button>
-      <Button variant="normal" disabled={true}>
-        Generate Available Water ZONE
-      </Button>
-      <Button variant="normal" onClick={calculateCourse}>
-        CALC
-      </Button>
+      <Button disabled={true}>Generate XTE ZONE</Button>
+      <Button disabled={true}>Generate Available Water ZONE</Button>
+      <Button onClick={calculateCourse}>CALC</Button>
 
       {/* Export route */}
       <GridToolbarExport

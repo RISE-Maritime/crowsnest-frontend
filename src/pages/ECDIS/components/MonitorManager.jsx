@@ -122,9 +122,7 @@ function MonitorManager() {
 
   return (
     <div>
-      <Button onClick={handleMainDialogToggle} variant="normal">
-        Manage Vessels
-      </Button>
+      <Button onClick={handleMainDialogToggle}>Manage Vessels</Button>
 
       {/* Main Dialog for Vessel Management */}
       <Dialog open={mainDialogOpen} onClose={handleMainDialogToggle} fullWidth maxWidth="md">
@@ -155,7 +153,7 @@ function MonitorManager() {
                         </Grid>
                       ))}
                       <Grid item xs={12}>
-                        <Button onClick={() => startAddDataSource(key, null)} variant="normal" hasIconLeading={true}>
+                        <Button onClick={() => startAddDataSource(key, null)} hasIconLeading={true}>
                           <AddIcon slot="leading-icon" />
                           Add Data Source
                         </Button>
@@ -172,7 +170,7 @@ function MonitorManager() {
               </ListItem>
             ))}
           </List>
-          <Button onClick={() => handleEditVesselDialogToggle()} variant="normal" hasIconLeading={true}>
+          <Button onClick={() => handleEditVesselDialogToggle()} hasIconLeading={true}>
             <AddIcon slot="leading-icon" />
             Add Vessel
           </Button>
@@ -202,9 +200,7 @@ function MonitorManager() {
           <Button onClick={handleEditVesselDialogToggle} variant="flat">
             Cancel
           </Button>
-          <Button onClick={addOrEditVessel} variant="normal">
-            Save
-          </Button>
+          <Button onClick={addOrEditVessel}>Save</Button>
         </DialogActions>
       </Dialog>
       {/* Dialog for Adding/Editing a Data Source */}
@@ -235,9 +231,7 @@ function MonitorManager() {
           <Button onClick={handleDataSourceDialogToggle} variant="flat">
             Cancel
           </Button>
-          <Button onClick={addOrEditDataSource} variant="normal">
-            Save
-          </Button>
+          <Button onClick={addOrEditDataSource}>Save</Button>
         </DialogActions>
       </Dialog>
     </div>

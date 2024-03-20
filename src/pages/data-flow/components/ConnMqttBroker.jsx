@@ -176,7 +176,7 @@ export default function MqttBrokerLogin() {
 
             <Grid item xs={12}>
               {!mqttConState ? (
-                <Button variant="normal" onClick={formik.handleSubmit} fullWidth>
+                <Button onClick={formik.handleSubmit} fullWidth>
                   Connect
                 </Button>
               ) : (
