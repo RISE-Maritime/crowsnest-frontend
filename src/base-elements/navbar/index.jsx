@@ -14,34 +14,33 @@
 
  */
 
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 // Recoil
 import { useRecoilState } from "recoil"
 import { appState } from "../../recoil/atoms"
 // Components
-import Clock from "react-live-clock"
-import GridCenter from "../components/GridCenter"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
-import { Grid, AppBar, IconButton, Typography, SwipeableDrawer, Stack, Avatar } from "@mui/material"
-import { useTheme } from "@mui/material/styles"
+import { SwipeableDrawer, Popover } from "@mui/material"
 // Icons & Images
-import LogoCrowsnest from "../../resources/crowsnest.png"
-import AppsRoundedIcon from "@mui/icons-material/AppsRounded"
-import MenuIcon from "@mui/icons-material/Menu"
-import LightModeIcon from "@mui/icons-material/LightMode"
-import DarkModeIcon from "@mui/icons-material/DarkMode"
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
+import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
+import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
+import { useLocation } from "react-router-dom"
+import { ROUTE_TO_LABEL } from "../../apps"
 
 export default function NavBar() {
-  const theme = useTheme()
   const [appObj, setAppObj] = useRecoilState(appState)
   const [drawerState, setDrawerState] = useState({
     left: false,
     right: false,
   })
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const { pathname } = useLocation()
 
-  useEffect(() => {}, [])
+  const handleBrillianceChange = e => {
+    document.documentElement.setAttribute("data-obc-theme", e.detail.value)
+    setTheme(e.detail.value)()
+  }
 
   const toggleDrawer = (anchor, open) => event => {
     if (event && event.type === "keydown" && (event.key === "Tab" || event.key === "Shift")) {
@@ -51,77 +50,24 @@ export default function NavBar() {
     setDrawerState({ ...drawerState, [anchor]: open })
   }
 
-  const ToggleThemeMode = () => {
-    if (appObj.appActiveColorTheme === "light") {
-      setAppObj({
-        ...appObj,
-        appActiveColorTheme: "dark",
-      })
-    } else {
-      setAppObj({
-        ...appObj,
-        appActiveColorTheme: "light",
-      })
-    }
+  const setTheme = themeName => () => {
+    setAppObj({ ...appObj, appActiveColorTheme: themeName })
   }
 
+  const pageName = ROUTE_TO_LABEL[pathname]
+
   return (
-    <AppBar position="static" sx={{ height: "40px" }}>
-      <Grid container direction="row" justifyContent="space-between" alignItems="center">
-        {/* Left side */}
-        <GridCenter item xs={4}>
-          <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
-            {/* App navigation button */}
-            <IconButton onClick={toggleDrawer("left", true)}>
-              <MenuIcon sx={{ color: theme.palette.primary.contrastText }} />
-            </IconButton>
-            {/* Active view status text */}
-            <Typography variant={"h6"}>Crowsnest</Typography>
-            {/* Active navigation mode */}
-            <Typography variant={"button"}>{appObj.activeMode}</Typography>
-          </Stack>
-        </GridCenter>
+    <>
+      <TopBar
+        appTitle="Crowsnest"
+        pageName={pageName}
+        showDimmingButton
+        showAppsButton
+        onDimmingButtonClicked={e => setAnchorEl(e.currentTarget)}
+        onAppsButtonClicked={toggleDrawer("right", true)}
+        onMenuButtonClicked={toggleDrawer("left", true)}
+      />
 
-        {/* Active vessel */}
-        <GridCenter item xs={3}>
-          <Typography variant={"subtitle1"}>{appObj.activeVessel}</Typography>
-        </GridCenter>
-
-        {/* Time */}
-        <GridCenter item xs={2}>
-          <Typography variant={"subtitle1"}>
-            <Clock format={"YYYY-MM-DD  HH:mm:ss"} ticking={true} timezone={"Europe/Stockholm"} />
-          </Typography>
-        </GridCenter>
-
-        <Grid item xs={3}>
-          <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
-            {/* Alarm management */}
-            <NotificationsNoneIcon />
-
-            {/* User profile */}
-            <Avatar src={LogoCrowsnest} sx={{ width: 24, height: 24 }}>
-              D
-            </Avatar>
-
-            {/* Day and night mode (App color theme) */}
-            <IconButton onClick={ToggleThemeMode}>
-              {appObj.appActiveColorTheme === "light" ? (
-                <DarkModeIcon sx={{ color: theme.palette.primary.contrastText }} />
-              ) : (
-                <LightModeIcon sx={{ color: theme.palette.primary.contrastText }} />
-              )}
-            </IconButton>
-
-            {/* Floating mini apps */}
-            <IconButton onClick={toggleDrawer("right", true)}>
-              <AppsRoundedIcon sx={{ color: theme.palette.primary.contrastText }} />
-            </IconButton>
-          </Stack>
-        </Grid>
-      </Grid>
-
-      {/* Left app navigation menu */}
       <SwipeableDrawer
         anchor={"left"}
         open={drawerState["left"]}
@@ -131,7 +77,6 @@ export default function NavBar() {
         <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} />
       </SwipeableDrawer>
 
-      {/* Right mini app selector */}
       <SwipeableDrawer
         anchor={"right"}
         open={drawerState["right"]}
@@ -140,6 +85,23 @@ export default function NavBar() {
       >
         <RightDrawer side={"right"} toggleDrawer={toggleDrawer} />
       </SwipeableDrawer>
-    </AppBar>
+
+      {/* Theme picker */}
+      <Popover
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: 360,
+        }}
+      >
+        <BrillianceMenu className="brilliance" palette={appObj.appActiveColorTheme} onPaletteChanged={handleBrillianceChange} />
+      </Popover>
+    </>
   )
 }

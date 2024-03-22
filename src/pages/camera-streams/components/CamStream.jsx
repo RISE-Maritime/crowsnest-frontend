@@ -2,14 +2,13 @@ import React, { useRef } from "react"
 import { Grid } from "@mui/material"
 import CamSelect from "./CamSelect"
 
-
 export default function CamStream({ ID }) {
   const refVideo = useRef()
   const refAudio = useRef()
 
   return (
     <Grid container>
-      <Grid item xs={12}>
+      <Grid item xs={12} px={2}>
         <CamSelect refV={refVideo} refA={refAudio} ID={ID} />
         {/* <CamSelectH2 refV={refVideo} refA={refAudio}/> */}
       </Grid>

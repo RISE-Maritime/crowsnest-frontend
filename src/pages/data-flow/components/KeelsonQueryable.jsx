@@ -2,9 +2,8 @@ import React from "react"
 import axios from "axios"
 import * as yup from "yup"
 import { useFormik } from "formik"
-import { Stack, TextField, Button, Typography } from "@mui/material"
-import { atomKeelsonConnectionState } from "../../../recoil/atoms"
-import { useRecoilValue } from "recoil"
+import { Stack, TextField, Typography } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 export default function KeelsonQueryable() {
   const validationSchema = yup.object({
@@ -32,43 +31,50 @@ export default function KeelsonQueryable() {
   const submitMsg = values => {
     console.log("Submitted Queryable to KEELSON: ", values)
 
-    axios.get(values.host + "/" + values.keyExprVar, { test: "body_msg" }).then(res => {
-      console.log("Queryable Response: ", res)
-    }).catch(err => {
-      console.log("Queryable Error: ", err)
-    })
+    axios
+      .get(values.host + "/" + values.keyExprVar, { test: "body_msg" })
+      .then(res => {
+        console.log("Queryable Response: ", res)
+      })
+      .catch(err => {
+        console.log("Queryable Error: ", err)
+      })
 
     // return values
   }
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Stack spacing={1} sx={{ minWidth: "25vw" }}>
-        <Typography variant="h5"> Keelson Queryable / GET </Typography>
-        <TextField
-          id="host"
-          label="Host URL"
-          fullWidth
-          variant="filled"
-          size="small"
-          defaultValue={formik.values.host}
-          onChange={formik.handleChange}
-          error={formik.touched.host && Boolean(formik.errors.host)}
-          helperText={formik.touched.host && formik.errors.host}
-        />
-        <TextField
-          id="keyExprVar"
-          label="Key Expression & Variables"
-          fullWidth
-          variant="filled"
-          size="small"
-          defaultValue={formik.values.keyExprVar}
-          onChange={formik.handleChange}
-          error={formik.touched.keyExprVar && Boolean(formik.errors.keyExprVar)}
-          helperText={formik.touched.keyExprVar && formik.errors.keyExprVar}
-        />
+      <Stack spacing={1} sx={{ minWidth: "20vw", height: "100%" }} justifyContent="space-between">
+        <Stack spacing={1}>
+          <Typography sx={{ paddingBottom: "0.5rem" }} variant="h5">
+            Keelson Queryable / GET
+          </Typography>
+          <TextField
+            id="host"
+            label="Host URL"
+            fullWidth
+            variant="filled"
+            size="small"
+            defaultValue={formik.values.host}
+            onChange={formik.handleChange}
+            error={formik.touched.host && Boolean(formik.errors.host)}
+            helperText={formik.touched.host && formik.errors.host}
+          />
+          <TextField
+            id="keyExprVar"
+            label="Key Expression & Variables"
+            fullWidth
+            variant="filled"
+            size="small"
+            defaultValue={formik.values.keyExprVar}
+            onChange={formik.handleChange}
+            error={formik.touched.keyExprVar && Boolean(formik.errors.keyExprVar)}
+            helperText={formik.touched.keyExprVar && formik.errors.keyExprVar}
+          />
+        </Stack>
 
-        <Button type="submit" variant="contained" color="info" fullWidth sx={{ marginTop: "0.4rem" }}>
+        <Button onClick={formik.handleSubmit} fullWidth>
           Request
         </Button>
       </Stack>

@@ -213,7 +213,6 @@ export default function SeaChart() {
       },
     }),
 
-
     // Open street map
     new TileLayer({
       id: "tail-layer-open-street-map",
@@ -582,21 +581,17 @@ export default function SeaChart() {
         getTooltip={getTooltip}
         getCursor={() => mapCursor}
         style={{ zIndex: 0 }}
-        mapStyle={'https://crowsnest.mo.ri.se/charts/styles/chart_4000.json'}
-      >
-        
-      </DeckGL>
+        mapStyle={"https://crowsnest.mo.ri.se/charts/styles/chart_4000.json"}
+      ></DeckGL>
 
       {routeEditorRightClickMenu.showMenu ? (
         <div
           style={{ position: "absolute", top: routeEditorRightClickMenu.yPos, left: routeEditorRightClickMenu.xPos, zIndex: 100 }}
         >
           {/* <div style={{ top: routeEditorRightClickMenu.yPos, left: routeEditorRightClickMenu.xPos }}> */}
-          <h3 style={{color: "red"}}>HELLO</h3>
+          <h3 style={{ color: "red" }}>HELLO</h3>
         </div>
       ) : null}
-
-  
     </>
   )
 }

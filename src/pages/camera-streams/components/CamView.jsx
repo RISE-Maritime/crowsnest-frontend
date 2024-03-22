@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Button } from "@mui/material"
+import { Grid } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
+import PlayArrowIcon from "@mui/icons-material/PlayArrow"
+import StopIcon from "@mui/icons-material/Stop"
 import mqtt from "precompiled-mqtt"
 
 /* eslint-disable */
@@ -96,7 +99,7 @@ export default function CamLookout() {
           }
         })
       })
-      .then(function () { 
+      .then(function () {
         var offer = pc.localDescription
         var payload = JSON.stringify({
           sdp: offer.sdp,
@@ -124,8 +127,12 @@ export default function CamLookout() {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Button onClick={pushedStart}>Start</Button>
-        <Button onClick={pushedStop}>Stop</Button>
+        <Button onClick={pushedStart}>
+          <PlayArrowIcon slot="leading-icon" /> Start
+        </Button>
+        <Button onClick={pushedStop}>
+          <StopIcon slot="leading-icon" /> Stop
+        </Button>
       </Grid>
       <Grid item xs={12} sx={{ border: "solid" }}>
         <audio id="audio" autoPlay={true}></audio>

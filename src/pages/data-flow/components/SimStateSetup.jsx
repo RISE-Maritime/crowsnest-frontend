@@ -1,7 +1,8 @@
 import React, { useEffect } from "react"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { Typography, Grid, TextField, Button } from "@mui/material"
+import { Typography, Grid, TextField } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import { useRecoilValue, useRecoilState } from "recoil"
 import { OS_POSITIONS, OS_HEADING, OS_VELOCITY, ATOM_OS_RUDDERS, ATOM_OS_ENGINES, ATOM_SIM_STATE } from "../../../recoil/atoms"
 import RestartAltIcon from "@mui/icons-material/RestartAlt"
@@ -163,7 +164,7 @@ export default function SimStateSetup({ restartSim }) {
   }, [osEng.ENGINE_0?.setPower])
 
   return (
-    <div style={{paddingRight: "1rem"}}> 
+    <div style={{ paddingRight: "1rem" }}>
       <form onSubmit={formik.handleSubmit}>
         <Grid container spacing={1} justifyContent="center" alignItems="flex-start">
           <Grid item xs={12}>
@@ -300,20 +301,14 @@ export default function SimStateSetup({ restartSim }) {
             />
           </Grid>
 
-          <Grid item xs={9}>
-            <Button variant="contained" color="primary" type="submit" disabled={simState.state === "RUNNING"} fullWidth={true}>
+          <Grid item xs={8}>
+            <Button onClick={formik.handleSubmit} disabled={simState.state === "RUNNING"} fullWidth={true}>
               Update Simulation State
             </Button>
           </Grid>
-          <Grid item xs={3}>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={formik.resetForm}
-              disabled={simState.state === "RUNNING"}
-              fullWidth={true}
-            >
-              <RestartAltIcon />
+          <Grid item xs={4}>
+            <Button onClick={formik.resetForm} disabled={simState.state === "RUNNING"} fullWidth={true}>
+              <RestartAltIcon slot="leading-icon" /> Reset
             </Button>
           </Grid>
         </Grid>

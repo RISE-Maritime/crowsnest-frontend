@@ -100,8 +100,8 @@ export default function Ecdis() {
 
     // Cleanup
     return () => {
-      aisWorker.terminate()
-      monitorWorker.terminate()
+      aisWorker?.terminate()
+      monitorWorker?.terminate()
     }
   }, [])
 

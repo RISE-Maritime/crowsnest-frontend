@@ -1,18 +1,5 @@
 import React from "react"
-import {
-  IconButton,
-  Stack,
-  Typography,
-  Box,
-  Chip,
-  ButtonGroup,
-  Button,
-  OutlinedInput,
-  InputLabel,
-  FormControl,
-  Select,
-  MenuItem,
-} from "@mui/material"
+import { Stack, Typography, Box, Chip, OutlinedInput, InputLabel, FormControl, Select, MenuItem } from "@mui/material"
 import { useTheme } from "@mui/material/styles"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
 import ZoomInIcon from "@mui/icons-material/ZoomIn"
@@ -20,6 +7,8 @@ import { atomMapState, atomLayersTaggable, atomLayersShowing } from "./SeaChart"
 import { useRecoilState, useRecoilValue } from "recoil"
 import Grid from "@mui/material/Unstable_Grid2"
 import TableRoute from "./TableRoute"
+import { ObcIconButton as IconButton } from "@oicl/openbridge-webcomponents-react/components/icon-button/icon-button"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -94,24 +83,18 @@ export default function RouteTableEditor() {
       {/* Map controls */}
       <Grid xs={12} md={6} lg={4} xl={3}>
         <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-          <IconButton onClick={zoomOut}>
+          <IconButton onClick={zoomOut} cornerLeft={true}>
             <ZoomOutIcon />
           </IconButton>
           <Typography variant="subtitle1"> {mapState.zoom.toFixed(1)} </Typography>
-          <IconButton onClick={zoomIn}>
+          <IconButton onClick={zoomIn} cornerRight={true}>
             <ZoomInIcon />
           </IconButton>
-
-          <ButtonGroup variant="outlined" aria-label="outlined button group" size="small">
-            <Button onClick={setNorthUp} sx={{ width: "4rem" }}>
-              N-UP
-            </Button>
-          </ButtonGroup>
-
-          <ButtonGroup variant="outlined" aria-label="outlined button group" size="small">
-            <Button onClick={set2D}>2D</Button>
-            <Button onClick={set3D}>3D</Button>
-          </ButtonGroup>
+          <Button onClick={setNorthUp} style={{ whiteSpace: "nowrap" }}>
+            N-UP
+          </Button>
+          <Button onClick={set2D}>2D</Button>
+          <Button onClick={set3D}>3D</Button>
 
           {/* MAP TILES SELECT */}
           <FormControl sx={{ minWidth: 250 }}>

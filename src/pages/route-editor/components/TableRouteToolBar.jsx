@@ -1,6 +1,5 @@
-import React, { useState } from "react"
+import React from "react"
 import { GridToolbarContainer, GridToolbarExport, GridRowModes } from "@mui/x-data-grid"
-import Button from "@mui/material/Button"
 import AddIcon from "@mui/icons-material/Add"
 import {
   atomRouteTurningRadius,
@@ -8,7 +7,6 @@ import {
   atomRouteTurningRadiusStart,
   atomRouteTurningRadiusEnd,
 } from "../../../recoil/atoms"
-
 import { Stack } from "@mui/material"
 import { useCSVReader } from "react-papaparse"
 import {
@@ -19,6 +17,7 @@ import {
   calc_turn_radius_circle,
 } from "../../../utils"
 import { useRecoilState } from "recoil"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 export default function TableRouteToolBar(props) {
   const { route_waypoints, set_route_waypoints, setRowModesModel } = props
@@ -112,19 +111,14 @@ export default function TableRouteToolBar(props) {
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClickAddWP}>
+      <Button hasIconLeading={true} onClick={handleClickAddWP}>
+        <AddIcon slot="leading-icon" />
         Add waypoint
       </Button>
 
-      <Button color="inherit" disabled={true}>
-        Generate XTE ZONE
-      </Button>
-      <Button color="inherit" disabled={true}>
-        Generate Available Water ZONE
-      </Button>
-      <Button color="inherit" onClick={calculateCourse}>
-        CALC
-      </Button>
+      <Button disabled={true}>Generate XTE ZONE</Button>
+      <Button disabled={true}>Generate Available Water ZONE</Button>
+      <Button onClick={calculateCourse}>CALC</Button>
 
       {/* Export route */}
       <GridToolbarExport
@@ -194,27 +188,24 @@ export default function TableRouteToolBar(props) {
       >
         {({ getRootProps, acceptedFile, ProgressBar, getRemoveFileProps }) => (
           <>
-            <Stack direction="row">
-              <Button variant="contained" {...getRootProps()} size="small" sx={{ width: "17rem" }}>
+            <Stack direction="row" alignItems="center" spacing={1} px={2}>
+              <Button variant="raised" style={{ whiteSpace: "nowrap" }} {...getRootProps()}>
                 Browse route file
               </Button>
-
               <div
                 style={{
                   border: "1px solid #ccc",
-
                   lineHeight: 2.5,
                   paddingLeft: 10,
-                  width: "60%",
+                  width: "200px",
                 }}
               >
                 {(acceptedFile && acceptedFile.name) || "No file selected"}
               </div>
-              <Button variant="contained" {...getRemoveFileProps()}>
+              <Button variant="flat" {...getRemoveFileProps()}>
                 Remove
               </Button>
             </Stack>
-
             <ProgressBar style={{ backgroundColor: "red" }} />
           </>
         )}

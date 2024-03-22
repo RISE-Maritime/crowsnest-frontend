@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { atomPlatforms, atomActivePlatform, appState, targetsAIS, OS_POSITION_SETTING } from "../../../recoil/atoms"
-import { Grid, TextField, Button, Stack, Typography, Autocomplete } from "@mui/material"
+import { Grid, TextField, Stack, Typography, Autocomplete } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import styled from "styled-components"
 import DefaultAisTargets from "./DefaultAisTargets"
 
@@ -54,11 +55,15 @@ const Input = styled("input")({
 })
 
 const BoxStyled = styled.div`
-  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-outline-color);
+  background-color: var(--container-section-color);
   border-radius: 0.5rem;
-  padding: 0.5rem;
-  margin: 0.5rem 0rem;
-  min-width: 98%;
+  padding: 1rem;
+  width: 100%;
+
+  &:not(:first-child) {
+    margin-top: 1rem;
+  }
 `
 
 export default function PlatformPicker() {
@@ -132,13 +137,14 @@ export default function PlatformPicker() {
   }
 
   return (
-    <Grid container direction="row" justifyContent="center" alignItems="center">
+    <Grid container direction="row" spacing={2}>
       <Grid item xs={12}>
-        <Typography variant="h4" sx={{ padding: "1rem" }}>
+        <Typography variant="h4" component="h2" sx={{ padding: "1rem 0" }}>
           Select own ship source
         </Typography>
       </Grid>
-      <Grid item xs={8} sx={{ display: "grid", placeItems: "center" }}>
+
+      <Grid item xs={8}>
         {/* PLATFORMS */}
         <BoxStyled>
           <Typography variant="h5">Platforms</Typography>
@@ -146,8 +152,8 @@ export default function PlatformPicker() {
             {Object.values(platforms).map(platform => {
               return (
                 <Button
-                  color="secondary"
-                  variant={platform.mmsi == activePlatform.mmsi ? "contained" : "outlined"}
+                  variant="check"
+                  checked={platform.mmsi == activePlatform.mmsi}
                   key={platform.key}
                   onClick={() => selectedPlatform(platform)}
                 >
@@ -159,14 +165,20 @@ export default function PlatformPicker() {
         </BoxStyled>
 
         <BoxStyled>
-          <Stack direction="row">
-            <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>{" "}
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>
             <Button onClick={updateTargetList}>
-              <AutorenewIcon /> Update AIS List
+              <AutorenewIcon slot="leading-icon" /> Update AIS List
             </Button>
           </Stack>
 
-          <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            spacing={2}
+            sx={{ my: "1rem", pb: "1rem", borderBottom: "1px solid var(--border-outline-color)" }}
+          >
             <Autocomplete
               id="group"
               name="group"
@@ -190,13 +202,10 @@ export default function PlatformPicker() {
               )}
             />
 
-            <Button color="secondary" variant="outlined" onClick={connectAISmmsi}>
-              Connect to MMSI
-            </Button>
+            <Button onClick={connectAISmmsi}>Connect to MMSI</Button>
           </Stack>
 
           {/* Saved AIS targets */}
-          <hr />
           <Typography variant="subtitle1">Saved AIS targets</Typography>
           <DefaultAisTargets aisFiltered={AIStargets} />
         </BoxStyled>
@@ -204,11 +213,7 @@ export default function PlatformPicker() {
         <BoxStyled>
           <Typography variant="h5">Device</Typography>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
-            <Button
-              color="secondary"
-              variant={"DEVICE" === activePlatform.activePlatformType ? "contained" : "outlined"}
-              onClick={setDeviceAsOS}
-            >
+            <Button variant="check" checked={"DEVICE" === activePlatform.activePlatformType} onClick={setDeviceAsOS}>
               Use device sensors as source
             </Button>
           </Stack>
@@ -226,7 +231,7 @@ export default function PlatformPicker() {
       </Grid>
 
       {/* Preview of selected viewpoint */}
-      <Grid item xs={4} sx={{ display: "grid", placeItems: "center" }}>
+      <Grid item xs={4}>
         <BoxStyled>
           <PlatformQuickDescription />
         </BoxStyled>

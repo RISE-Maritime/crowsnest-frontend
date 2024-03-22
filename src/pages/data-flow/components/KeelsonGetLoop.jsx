@@ -2,17 +2,17 @@ import React, { useState } from "react"
 import axios from "axios"
 import * as yup from "yup"
 import { useFormik } from "formik"
-import { Stack, TextField, Button, Typography } from "@mui/material"
+import { Stack, TextField, Typography } from "@mui/material"
 import { useSetRecoilState } from "recoil"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import StopIcon from "@mui/icons-material/Stop"
 import { protoParser } from "../../../recoil/selectors"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 export default function KeelsonGetLoop() {
   const [intervalVar, setIntervalVar] = useState(null)
   const [isStarted, setIsStarted] = useState(false)
   const protoDecoder = useSetRecoilState(protoParser)
-
 
   const validationSchema = yup.object({
     hostLoop: yup.string().required("Required"),
@@ -43,7 +43,6 @@ export default function KeelsonGetLoop() {
     const URL = values.hostLoop + "/" + values.keyExprLoop
 
     const interval = setInterval(() => {
-     
       axios.get(URL).then(res => {
         // let time = new Date()
         // console.log("Loop Response: ", time, res)
@@ -53,8 +52,6 @@ export default function KeelsonGetLoop() {
           protoDecoder(element)
         })
       })
-
-
     }, 1000)
 
     setIntervalVar(interval)
@@ -69,10 +66,12 @@ export default function KeelsonGetLoop() {
   }
 
   return (
-    <div>
-      <form onSubmit={formik.handleSubmit}>
-        <Stack spacing={1} sx={{ minWidth: "25vw" }}>
-          <Typography variant="h5"> Keelson GET Looper </Typography>
+    <form onSubmit={formik.handleSubmit}>
+      <Stack spacing={1} sx={{ minWidth: "20vw", height: "100%" }} justifyContent="space-between">
+        <Stack spacing={1}>
+          <Typography sx={{ paddingBottom: "0.5rem" }} variant="h5">
+            Keelson GET Looper
+          </Typography>
           <TextField
             id="hostLoop"
             label="Host URL"
@@ -95,22 +94,21 @@ export default function KeelsonGetLoop() {
             error={formik.touched.keyExprLoop && Boolean(formik.errors.keyExprLoop)}
             helperText={formik.touched.keyExprLoop && formik.errors.keyExprLoop}
           />
-
-          {isStarted ? null : (
-            <Button type="submit" variant="contained" color="info" fullWidth sx={{ marginTop: "0.4rem" }}>
-              <PlayArrowIcon sx={{ marginRight: "0.2rem" }} />
-              Start
-            </Button>
-          )}
         </Stack>
-      </form>
 
-      {isStarted ? (
-        <Button onClick={stopLoop} variant="contained" color="info" fullWidth sx={{ marginTop: "0.4rem" }}>
-          <StopIcon sx={{ marginRight: "0.2rem" }} />
-          Stop
-        </Button>
-      ) : null}
-    </div>
+        {isStarted ? null : (
+          <Button onClick={formik.handleSubmit} fullWidth>
+            <PlayArrowIcon slot="leading-icon" />
+            Start
+          </Button>
+        )}
+        {isStarted ? (
+          <Button onClick={stopLoop} fullWidth>
+            <StopIcon slot="leading-icon" />
+            Stop
+          </Button>
+        ) : null}
+      </Stack>
+    </form>
   )
 }

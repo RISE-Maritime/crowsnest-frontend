@@ -1,5 +1,6 @@
 import React from "react"
-import { Button, Stack } from "@mui/material"
+import { Stack } from "@mui/material"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { setPlatformAIS } from "../../../recoil/selectors"
 import { atomPlatformsAIS, atomActivePlatform } from "../../../recoil/atoms"
@@ -30,10 +31,9 @@ export default function DefaultAisTargets({ aisFiltered }) {
         return (
           <Button
             key={obj.id}
-            color="secondary"
             disabled={isFound(obj.mmsi)}
-            // variant="outlined"
-            variant={obj.mmsi == activePlatform.mmsi ? "contained" : "outlined"}
+            variant="check"
+            checked={obj.mmsi == activePlatform.mmsi}
             size="small"
             onClick={() => setPlatform(obj)}
           >

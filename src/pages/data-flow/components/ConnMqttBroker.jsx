@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react"
 import mqtt from "precompiled-mqtt"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { Grid, TextField, Button } from "@mui/material"
+import { Grid, TextField } from "@mui/material"
 import { messageParser } from "../../../recoil/selectors"
 import { atomMQTTconnectionState } from "../../../recoil/atoms"
 import { useRecoilState, useSetRecoilState } from "recoil"
+import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 const validationSchema = yup.object({
   username: yup.string().required("Required"),
@@ -34,7 +35,6 @@ export default function MqttBrokerLogin() {
   const parseWsMessage = useSetRecoilState(messageParser)
 
   useEffect(() => {
-
     if (client) {
       client.on("connect", () => {
         console.log("Connected to REMOTE MQTT broker!")
@@ -176,11 +176,11 @@ export default function MqttBrokerLogin() {
 
             <Grid item xs={12}>
               {!mqttConState ? (
-                <Button type="submit" variant="contained" color="success" fullWidth sx={{ marginTop: "0.4rem" }}>
+                <Button onClick={formik.handleSubmit} fullWidth>
                   Connect
                 </Button>
               ) : (
-                <Button variant="contained" color="error" fullWidth onClick={mqttDisconnect}>
+                <Button checked variant="check" fullWidth onClick={mqttDisconnect}>
                   Disconnect
                 </Button>
               )}
