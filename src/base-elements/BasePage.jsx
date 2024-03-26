@@ -8,7 +8,6 @@
 
 import React from "react"
 import NavigationBar from "./navbar"
-import { useTheme } from "@mui/material/styles"
 // Floating APPs
 import FloatAppWind from "./float_comp/FloatAppWind"
 import FloatAppPlayback from "./float_comp/FloatAppPlayback"
@@ -18,7 +17,7 @@ import { showMiniAppsObj } from "../recoil/atoms"
 import { useRecoilValue } from "recoil"
 
 export default function BasePage(props) {
-  const theme = useTheme()
+
   let showMiniApp = useRecoilValue(showMiniAppsObj)
   return (
     <>

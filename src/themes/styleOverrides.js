@@ -5,6 +5,7 @@ export const componentOverrides = {
         body: {
           backgroundColor: "var(--container-background-color)",
           color: "var(--element-active-color)",
+          fontFamily: "Open Sans",
         },
       },
     },
@@ -29,7 +30,8 @@ export const componentOverrides = {
       styleOverrides: {
         root: {
           color: "var(--element-active-color)",
-          backgroundColor: "var(--container-section-color)",
+          // backgroundColor: "var(--container-section-color)",
+          backgroundColor: "var(--container-background-color)",
           border: "1px solid var(--border-outline-color)",
         },
       },

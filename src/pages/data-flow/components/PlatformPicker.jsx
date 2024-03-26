@@ -5,7 +5,6 @@ import { Grid, TextField, Stack, Typography, Autocomplete } from "@mui/material"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import styled from "styled-components"
 import DefaultAisTargets from "./DefaultAisTargets"
-
 import AutorenewIcon from "@mui/icons-material/Autorenew"
 import PlatformQuickDescription from "./PlatformQuickDescription"
 

@@ -1,20 +1,9 @@
 /*
   Navigation bar 
   -----------------
-
-  List of planed components in top bar
-  - App navigation menu
-    - View Name 
-    - View state 
-  - Active vessel ID 
-  - Alerts 
-  - User/profile active
-  - Light / Dark Mode
-  - Apps
-
  */
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 // Recoil
 import { useRecoilState } from "recoil"
 import { appState } from "../../recoil/atoms"
@@ -22,9 +11,10 @@ import { appState } from "../../recoil/atoms"
 import LeftDrawer from "./LeftDrawer"
 import RightDrawer from "./RightDrawer"
 import { SwipeableDrawer, Popover } from "@mui/material"
-// Icons & Images
 import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
 import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
+import { ObcAlertTopbarElement as AlertTopbarElementElement } from "@oicl/openbridge-webcomponents-react/components/alert-topbar-element/alert-topbar-element"
+
 import { useLocation } from "react-router-dom"
 import { ROUTE_TO_LABEL } from "../../apps"
 
@@ -56,6 +46,16 @@ export default function NavBar() {
 
   const pageName = ROUTE_TO_LABEL[pathname]
 
+  // App Time and Date
+  const [currentTime, setCurrentTime] = useState(new Date())
+
+  useEffect(() => {
+    const interval = setInterval(() => setCurrentTime(Date()), 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [])
+
   return (
     <>
       <TopBar
@@ -63,10 +63,26 @@ export default function NavBar() {
         pageName={pageName}
         showDimmingButton
         showAppsButton
+        showClock
+        showDate
+        date={currentTime}
         onDimmingButtonClicked={e => setAnchorEl(e.currentTarget)}
         onAppsButtonClicked={toggleDrawer("right", true)}
         onMenuButtonClicked={toggleDrawer("left", true)}
-      />
+      >
+        <AlertTopbarElementElement
+          slot="alerts"
+          nAlerts={1}
+          blinkAlarmValue={false}
+          blinkWarningValue={false}
+          showAck={true}
+          minimized={false}
+          onMuteclick={() => console.log("onMuteclick")}
+          onAckclick={() => console.log("onAckclick")}
+          onAlertclick={() => console.log("onAlertclick")}
+          onMessageclick={() => console.log("onMessageclick")}
+        />
+      </TopBar>
 
       <SwipeableDrawer
         anchor={"left"}

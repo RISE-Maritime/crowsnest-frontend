@@ -7,7 +7,12 @@ import VrpanoIcon from "@mui/icons-material/Vrpano"
 import EdgesensorHighIcon from "@mui/icons-material/EdgesensorHigh"
 import SettingsIcon from "@mui/icons-material/Settings"
 import DirectionsBoatIcon from "@mui/icons-material/DirectionsBoat"
-
+import { Obi06Home as IconHome } from "@oicl/openbridge-webcomponents-react/icons/icon-06-home"
+import { Obi06Ecdis as IconEcdis } from "@oicl/openbridge-webcomponents-react/icons/icon-06-ecdis"
+import { Obi06Conning as IconConning } from "@oicl/openbridge-webcomponents-react/icons/icon-06-conning"
+import { Obi13CameraOn as IconCameraOn } from "@oicl/openbridge-webcomponents-react/icons/icon-13-camera-on"
+// 06-conning
+import { Obi07RelativemotionVariant as IconRelativemotionVariant } from "@oicl/openbridge-webcomponents-react/icons/icon-07-relativemotion-variant"
 import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded"
 import RouteIcon from "@mui/icons-material/Route"
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded"
@@ -16,31 +21,32 @@ import ROUTES from "./ROUTES.json"
 export const APPS = [
   {
     href: ROUTES.HOME,
-    icon: <HomeRoundedIcon slot="icon" />,
+
+    icon: <IconHome size="24" slot="icon"/>,
     leadingIcon: <HomeRoundedIcon slot="leading-icon" />,
     label: "Home",
   },
   {
     href: ROUTES.ECDIS,
-    icon: <MapRoundedIcon slot="icon" />,
+    icon: <IconEcdis size="24" slot="icon"/>,
     leadingIcon: <MapRoundedIcon slot="leading-icon" />,
     label: "ECDIS",
   },
   {
     href: ROUTES.BEARING_RATE,
-    icon: <TrackChangesIcon slot="icon" />,
+    icon: <IconRelativemotionVariant size="24" slot="icon"/>,
     leadingIcon: <TrackChangesIcon slot="leading-icon" />,
-    label: "Bearing Rate",
+    label: "BEARING",
   },
   {
     href: ROUTES.CONNING,
-    icon: <SpeedRoundedIcon slot="icon" />,
+    icon: <IconConning size="24" slot="icon"/>,
     leadingIcon: <SpeedRoundedIcon slot="leading-icon" />,
     label: "Conning",
   },
   {
     href: ROUTES.E_LOOKOUT,
-    icon: <VrpanoIcon slot="icon" />,
+    icon: <IconCameraOn size="24" slot="icon"/>,
     leadingIcon: <VrpanoIcon slot="leading-icon" />,
     label: "E-lookout (Seahorse)",
   },

@@ -19,6 +19,7 @@ import KeelsonFlow from "./components/KeelsonFlow"
 import KeelsonGetLoop from "./components/KeelsonGetLoop"
 import DockerMonitoring from "./components/DockerMonitoring"
 import SimpleShipSim from "./components/SimpleShipSim"
+import PlatformPicker from "../data-flow/components/PlatformPicker"
 
 const GridCenter = styled(Grid)({
   display: "grid",
@@ -49,6 +50,10 @@ export default function DataFlow() {
         <Typography variant="h3" component="h1">
           Data connectors & flow
         </Typography>
+      </Grid>
+
+      <Grid item xs={12}>
+        <PlatformPicker />
       </Grid>
 
       <GridCenter item xs={12}>

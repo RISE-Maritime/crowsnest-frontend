@@ -1,6 +1,6 @@
 import { Layer, project32, picking } from "@deck.gl/core"
-import GL from "@luma.gl/constants"
-import { Model, Geometry } from "@luma.gl/core"
+import {GL} from "@luma.gl/constants"
+import { Model, Geometry } from "@luma.gl/engine"
 
 import vs from "./ais-layer-vertex.glsl"
 import fs from "./ais-layer-fragment.glsl"

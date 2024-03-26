@@ -2,6 +2,6 @@ version: "3"
 services:
   web-app:
     build: .
-    # image
+    # image: ghcr.io/mo-rise/crowsnest-frontend:latest
     restart: unless-stopped
     network_mode: "host"
