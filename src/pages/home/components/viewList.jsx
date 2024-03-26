@@ -22,7 +22,7 @@ export default function viewList() {
 
       <Grid container spacing={2} alignContent="flex-start">
         {APPS.slice(1).map(app => (
-          <ViewListItem key={app.href} routeLink={app.href} viewName={app.label} icon={app.leadingIcon} />
+          <ViewListItem key={app.href} routeLink={app.href} viewName={app.label} icon={app.leadingIcon} description={app.description} />
         ))}
         {APP_CONFIG.map(app => (
           <ViewListItem key={app.href} routeLink={app.href} viewName={app.label} icon={app.leadingIcon} />

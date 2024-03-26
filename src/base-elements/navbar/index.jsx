@@ -9,8 +9,8 @@ import { useRecoilState } from "recoil"
 import { appState } from "../../recoil/atoms"
 // Components
 import LeftDrawer from "./LeftDrawer"
-import RightDrawer from "./RightDrawer"
-import { SwipeableDrawer, Popover } from "@mui/material"
+import RightPopOver from "./RightPopover"
+import { SwipeableDrawer, Drawer, Popover } from "@mui/material"
 import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
 import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
 import { ObcAlertTopbarElement as AlertTopbarElementElement } from "@oicl/openbridge-webcomponents-react/components/alert-topbar-element/alert-topbar-element"
@@ -25,6 +25,7 @@ export default function NavBar() {
     right: false,
   })
   const [anchorEl, setAnchorEl] = React.useState(null)
+
   const { pathname } = useLocation()
 
   const handleBrillianceChange = e => {
@@ -56,6 +57,12 @@ export default function NavBar() {
     }
   }, [])
 
+  // Right Popover
+  const [anchorRight, setAnchorRight] = React.useState(null)
+
+  const openRight = Boolean(anchorEl)
+  const idRight = openRight ? "right-popover" : undefined
+
   return (
     <>
       <TopBar
@@ -67,8 +74,9 @@ export default function NavBar() {
         showDate
         date={currentTime}
         onDimmingButtonClicked={e => setAnchorEl(e.currentTarget)}
-        onAppsButtonClicked={toggleDrawer("right", true)}
-        onMenuButtonClicked={toggleDrawer("left", true)}
+        onAppsButtonClicked={e => setAnchorRight(e.currentTarget)}
+        onMenuButtonClicked={toggleDrawer("left", !drawerState.left)}
+        style={{ position: "fixed", width: "100%", zIndex: 1000 }}
       >
         <AlertTopbarElementElement
           slot="alerts"
@@ -84,23 +92,40 @@ export default function NavBar() {
         />
       </TopBar>
 
-      <SwipeableDrawer
+      {/* Menu Left */}
+      {/* <Drawer
+        variant="permanent"
+        sx={{
+          zIndex: 1,
+          width: 240,
+      
+        }}
         anchor={"left"}
         open={drawerState["left"]}
         onClose={toggleDrawer("left", false)}
         onOpen={toggleDrawer("left", true)}
       >
-        <LeftDrawer side={"left"} toggleDrawer={toggleDrawer} />
-      </SwipeableDrawer>
+      </Drawer> */}
 
-      <SwipeableDrawer
-        anchor={"right"}
-        open={drawerState["right"]}
-        onClose={toggleDrawer("right", false)}
-        onOpen={toggleDrawer("right", true)}
+      {drawerState.left ? <LeftDrawer /> : <> </>}
+
+      {/* App Picker Right */}
+      <Popover
+        id={idRight}
+        open={!!anchorRight}
+        anchorEl={anchorRight}
+        onClose={() => setAnchorRight(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: 360,
+        }}
       >
-        <RightDrawer side={"right"} toggleDrawer={toggleDrawer} />
-      </SwipeableDrawer>
+        <RightPopOver />
+      </Popover>
 
       {/* Theme picker */}
       <Popover
