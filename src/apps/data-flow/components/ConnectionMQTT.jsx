@@ -1,21 +1,18 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Grid, Typography, Stack } from "@mui/material"
-// Icons
+import { Grid,  Stack } from "@mui/material"
 import CheckIcon from "@mui/icons-material/CheckCircle"
 import CloseIcon from "@mui/icons-material/Cancel"
 import MqttRemoteBrokerLogin from "./ConnMqttBroker"
 
-export default function ConnectionMQTT({  connectionName, isConnected }) {
+export default function ConnectionMQTT({   isConnected }) {
   return (
     <Grid container>
       {/* Connection state indicator and Broker Login */}
       <Grid item xs={12}>
         <Stack direction={"row"} alignItems="center" justifyContent="space-between" >
           <Stack direction={"row"} alignItems="center">
-            <Typography variant="h4" sx={{ marginRight: "1rem" }}>
-              {connectionName}
-            </Typography>
+            <h2 style={{marginRight: "0.5rem"}}>Connected </h2>
 
             {isConnected ? (
               <CheckIcon sx={{ fontSize: "2rem", color: "#2eb847" }} />

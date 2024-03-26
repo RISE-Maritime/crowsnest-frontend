@@ -10,7 +10,7 @@ function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
-export default function DeviceSensors() {
+export default function OwnDeviceFlow() {
   const [position, setPosition] = useState({
     latitude: 0,
     longitude: 0,
@@ -51,7 +51,6 @@ export default function DeviceSensors() {
 
   return (
     <div>
-      <h2>Device sensors TEST</h2>
       <h2>GNSS</h2>
       <p>
         Lat: {position.latitude}

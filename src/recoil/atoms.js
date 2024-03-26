@@ -114,6 +114,16 @@ export const atomPlatforms = atom({
       callsign: "SFHQ",
       picture: PicGota,
     },
+    mass_lab: {
+      name: "MASS LAB",
+      key: "masslab",
+      source_position: "GNSS_0",
+      MQTTpath: "",
+      mmsi: 265522230,
+      imo: 8311481,
+      callsign: "SFHQ",
+      picture: PicGota,
+    },
   },
 })
 

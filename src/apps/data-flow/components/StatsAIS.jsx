@@ -1,9 +1,7 @@
 import React from "react"
-// Components
-import { Typography, Grid, Paper, Stack } from "@mui/material"
+import {  Grid, Paper, Stack } from "@mui/material"
 import ChartTimeLineValues from "./ChartTimeLineValues"
 import MapAISsmallPlot from "./MapAISsmallPlot"
-// Atoms
 import { useRecoilValue } from "recoil"
 import { atomMQTTtopics, targetsAIS } from "../../../recoil/atoms"
 
@@ -14,30 +12,32 @@ export default function StatsAIS() {
   return (
     <div style={{ width: "100%" }}>
       <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h4">AIS External</Typography>
-          <br />
-        </Grid>
+     
         <Grid item xs={12}></Grid>
 
         <Grid container>
           <Grid item xs={6}>
             <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
               <Paper elevation={3} sx={{ width: "11rem", textAlign: "center" }}>
-                <Typography variant="h5"> {mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.count}</Typography>
-                <Typography variant="body1">Total Messages</Typography>
+                <h3>Total Messages
+                <br />
+                {mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.count ? mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.count : 0 }
+                </h3>
               </Paper>
 
               <Paper elevation={3} sx={{ width: "11rem", textAlign: "center" }}>
-                <Typography variant="h5"> {AISlist?.length}</Typography>
-                <Typography variant="body1">Total unique ships</Typography>
+              <h3>Total unique ships
+                <br />
+                {AISlist?.length ? AISlist?.length : 0 }
+                </h3>
               </Paper>
 
               <Paper elevation={3} sx={{ width: "11rem", textAlign: "center" }}>
-                <Typography variant="h5">
-                  {mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.time_received.toLocaleTimeString("sv-SV")}
-                </Typography>
-                <Typography variant="body1">Last update</Typography>
+              <h3>Last update
+                <br />
+                {mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.time_received.toLocaleTimeString("sv-SV") ? mqttTopics["CROWSNEST/EXTERNAL/AIS"]?.time_received.toLocaleTimeString("sv-SV") : "00:00" }
+                </h3>
+
               </Paper>
             </Stack>
             <br />
@@ -50,7 +50,7 @@ export default function StatsAIS() {
               position: "relative",
               // height: "calc(100vh - 95px)",
               padding: "0px",
-              height: "300px",
+              height: "350px",
               cursor: "crosshair",
             }}
           >

@@ -3,7 +3,7 @@ import { Paper } from "@mui/material"
 import { Rnd } from "react-rnd"
 import { useRecoilValue } from "recoil"
 // Component
-import AppWindCurrent from "../../pages/conning/components/AppWindCurrent"
+import AppWindCurrent from "../../apps/conning/components/AppWindCurrent"
 import { OS_HEADING_SETTING, OS_HEADING, OS_WIND_SETTING, OS_WIND, OS_VELOCITY, OS_VELOCITY_SETTING } from "../../recoil/atoms"
 import { calc_wind_speed_and_dir_true } from "../../utils"
 

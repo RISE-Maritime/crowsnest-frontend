@@ -5,12 +5,15 @@
   "CONNING": "/conning",
   "REMOTE_CONTROL": "/remote_CONTROL",
   "DATA_FLOW": "/data_flow",
-  "CONFIGURATION": "/configuration",
+  "CONFIGURATION": "/os_configuration",
   "SETTINGS": "/settings",
   "BEARING_RATE": "/bearing_rate",
+  
+  
   "E_LOOKOUT": "/e_lookout",
-  "CAMERA_STREAMS": "/camera_streams",
+  "CAMERA_STREAMS": "/e_lookout/camera_streams",
+  "LOOKOUT_360": "/e_lookout/lookout_360",
+
   "DEVICE_SENSORS": "/device_sensors",
-  "ROUTE_EDITOR": "/route_editor",
-  "LOOKOUT_360": "/lookout_360"
+  "ROUTE_EDITOR": "/route_editor"
 }

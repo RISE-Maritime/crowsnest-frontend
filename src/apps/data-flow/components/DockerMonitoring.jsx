@@ -81,9 +81,7 @@ export default function DockerMonitoring() {
   return (
     <div style={{ width: "100%" }}>
       <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h4">Docker Monitoring</Typography>
-        </Grid>
+ 
 
         <Grid item xs={12}>
           <Typography variant="caption">Last retrieved date at {timeMsg ? timeMsg : "-"}</Typography>

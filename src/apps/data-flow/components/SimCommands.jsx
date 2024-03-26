@@ -62,7 +62,7 @@ export default function SimCommands({ simTimeMilSec, pauseSim, startSim }) {
 
   return (
     <div>
-      <Typography variant="h4">Simple Simulator</Typography>
+      
       <Typography variant="body1">
         Time elapsed: {millisecondsToTime(simTimeMilSec)} ({simState.state})
       </Typography>

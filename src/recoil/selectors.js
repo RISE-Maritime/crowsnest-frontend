@@ -892,7 +892,7 @@ export const updateSimState = selector({
     // Getting current state
     const os_eng = get(ATOM_OS_ENGINES)
     const os_rud = get(ATOM_OS_RUDDERS)
-    const os_thr = get(ATOM_OS_THRUSTERS)
+    // const os_thr = get(ATOM_OS_THRUSTERS)
     const os_vel = get(OS_VELOCITY)
     const os_head = get(OS_HEADING)
     const os_pos = get(OS_POSITIONS)

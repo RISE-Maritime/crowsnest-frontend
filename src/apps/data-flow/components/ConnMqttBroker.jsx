@@ -176,11 +176,11 @@ export default function MqttBrokerLogin() {
 
             <Grid item xs={12}>
               {!mqttConState ? (
-                <Button onClick={formik.handleSubmit} fullWidth>
+                <Button onClick={formik.handleSubmit}  variant="normal" fullWidth={true} checked={true}>
                   Connect
                 </Button>
               ) : (
-                <Button checked variant="check" fullWidth onClick={mqttDisconnect}>
+                <Button onClick={mqttDisconnect} variant="normal" fullWidth={true} checked={true} >
                   Disconnect
                 </Button>
               )}

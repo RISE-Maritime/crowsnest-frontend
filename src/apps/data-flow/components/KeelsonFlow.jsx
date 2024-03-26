@@ -10,10 +10,8 @@ export default function KeelsonFlow() {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Typography variant="h3" mb={2}>
-          Keelson flow
-        </Typography>
-        <Typography variant="h4">Managed KeyExpressions</Typography>
+    
+        <h3>Managed KeyExpressions</h3>
 
         {Object.keys(keysExp_handled).length === 0 && <p>No managed KeyExpressions</p>}
 
@@ -31,7 +29,7 @@ export default function KeelsonFlow() {
           )
         })}
 
-        <Typography variant="h4">Unmanaged KeyExpressions</Typography>
+        <h3>Unmanaged KeyExpressions</h3>
 
         {Object.keys(keysExp_unhandled).length === 0 && <p>No unmanaged KeyExpressions</p>}
 

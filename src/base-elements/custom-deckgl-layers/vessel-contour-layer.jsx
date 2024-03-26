@@ -1,5 +1,5 @@
 import {Layer, project32, picking} from '@deck.gl/core';
-import {GL} from '@luma.gl/constants';
+import GL from '@luma.gl/constants';
 import {Model, Geometry} from '@luma.gl/engine';
 
 import vs from './vessel-contour-layer-vertex.glsl';

@@ -22,7 +22,7 @@ export default function BasePage(props) {
   return (
     <>
       <NavigationBar />
-
+        <div style={{height: "48px"}} />
       {/* Mini floating components */}
       {showMiniApp.windCurrent ? <FloatAppWind /> : null}
       {showMiniApp.playback ? <FloatAppPlayback /> : null}

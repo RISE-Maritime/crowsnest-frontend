@@ -1,5 +1,5 @@
 import React from "react"
-import { Grid, Typography } from "@mui/material"
+import { Grid } from "@mui/material"
 import { useRecoilValue } from "recoil"
 import { atomMQTTtopics, atomMQTTtopicsUnhandled } from "../../../recoil/atoms"
 
@@ -10,10 +10,8 @@ export default function MqttFlow() {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Typography variant="h3" mb={2}>
-          MQTT flow
-        </Typography>
-        <Typography variant="h4">Managed Topics</Typography>
+
+        <h3>Managed Topics</h3>
         {Object.keys(mqtt_topics).length === 0 && <p>No managed Topics</p>}
 
         {Object.keys(mqtt_topics).map(topic => {
@@ -30,7 +28,7 @@ export default function MqttFlow() {
           )
         })}
 
-        <Typography variant="h4">Unmanaged Topics</Typography>
+        <h3>Unmanaged Topics</h3>
         {Object.keys(mqtt_topics).length === 0 && <p>No managed Topics</p>}
 
         {Object.keys(mqtt_topics_unhandled).map(topic => {

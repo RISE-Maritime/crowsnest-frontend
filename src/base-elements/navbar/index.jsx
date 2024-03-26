@@ -10,7 +10,7 @@ import { appState } from "../../recoil/atoms"
 // Components
 import LeftDrawer from "./LeftDrawer"
 import RightPopOver from "./RightPopover"
-import { SwipeableDrawer, Drawer, Popover } from "@mui/material"
+import { Popover } from "@mui/material"
 import { ObcTopBar as TopBar } from "@oicl/openbridge-webcomponents-react/components/top-bar/top-bar"
 import { ObcBrillianceMenu as BrillianceMenu } from "@oicl/openbridge-webcomponents-react/components/brilliance-menu/brilliance-menu"
 import { ObcAlertTopbarElement as AlertTopbarElementElement } from "@oicl/openbridge-webcomponents-react/components/alert-topbar-element/alert-topbar-element"

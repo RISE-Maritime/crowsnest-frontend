@@ -21,11 +21,8 @@ export default function KeelsonGetLoop() {
 
   /* eslint-disable */
   const initFormValuesManual = {
-    // username: process.env.REACT_APP_MQTT_USERNAME ? process.env.REACT_APP_MQTT_USERNAME : "",
-    // password: process.env.REACT_APP_MQTT_PASSWORD ? process.env.REACT_APP_MQTT_PASSWORD : "",
-    hostLoop: "http://localhost:8000",
-    keyExprLoop: "rise/masslab/**",
-    // keyExprLoop: "**",
+    hostLoop: process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000",
+    keyExprLoop: process.env.REACT_APP_ZENOH_BASE_KEYEXP ? process.env.REACT_APP_ZENOH_BASE_KEYEXP : "rise/masslab/**",
   }
   /* eslint-enable */
 
@@ -38,17 +35,11 @@ export default function KeelsonGetLoop() {
   })
 
   const submitMsg = values => {
-    console.log("Submit", values)
-
     const URL = values.hostLoop + "/" + values.keyExprLoop
 
     const interval = setInterval(() => {
       axios.get(URL).then(res => {
-        // let time = new Date()
-        // console.log("Loop Response: ", time, res)
-
         res.data.forEach(element => {
-          // console.log("For Each : ", element)
           protoDecoder(element)
         })
       })
@@ -56,11 +47,9 @@ export default function KeelsonGetLoop() {
 
     setIntervalVar(interval)
     setIsStarted(true)
-    // return values
   }
 
   function stopLoop() {
-    console.log("Stopping loop")
     clearInterval(intervalVar)
     setIsStarted(false)
   }
@@ -69,9 +58,9 @@ export default function KeelsonGetLoop() {
     <form onSubmit={formik.handleSubmit}>
       <Stack spacing={1} sx={{ minWidth: "20vw", height: "100%" }} justifyContent="space-between">
         <Stack spacing={1}>
-          <Typography sx={{ paddingBottom: "0.5rem" }} variant="h5">
-            Keelson GET Looper
-          </Typography>
+          <h3 >
+            GET Looper
+          </h3>
           <TextField
             id="hostLoop"
             label="Host URL"

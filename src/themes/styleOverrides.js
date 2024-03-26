@@ -3,7 +3,7 @@ export const componentOverrides = {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "var(--container-background-color)",
+          backgroundColor: "var(--container-backdrop-color)",
           color: "var(--element-active-color)",
           fontFamily: "Open Sans",
         },
@@ -36,5 +36,53 @@ export const componentOverrides = {
         },
       },
     },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          color: "var(--element-active-color)",
+          backgroundColor: "var(--normal-enabled-background-color)",
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        
+        root: {
+          input: { color: 'var(--element-neutral-color)' },
+          helperText: { color: 'var(--element-active-color)' },
+          fontColor: "var(--element-active-color)",
+
+          backgroundColor: "var(--normal-enabled-background-color)",
+          
+          '&$selected': {
+            color: 'white'
+          },
+
+          '&$success': {
+            color: 'white'
+          },
+          '&$error': {
+            color: 'white'
+          },
+          error: {
+            color: 'white'
+          },
+          
+        },
+       
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+             
+   
+          color: "var(--element-active-color)",
+         
+        },
+      },
+    },
+
+    
   },
 }

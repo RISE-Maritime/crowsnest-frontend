@@ -4,10 +4,9 @@ import { atomPlatforms, atomActivePlatform, appState, targetsAIS, OS_POSITION_SE
 import { Grid, TextField, Stack, Typography, Autocomplete } from "@mui/material"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import styled from "styled-components"
-import DefaultAisTargets from "./DefaultAisTargets"
+import DefaultAisTargets from "../../data-flow/components/DefaultAisTargets"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
-import PlatformQuickDescription from "./PlatformQuickDescription"
-
+import PlatformQuickDescription from "../../data-flow/components/PlatformQuickDescription"
 import PicDevice from "../../../resources/platforms/devise.png"
 import PicAis from "../../../resources/platforms/ais.png"
 
@@ -71,7 +70,6 @@ export default function PlatformPicker() {
   const [activePlatform, setActivePlatform] = useRecoilState(atomActivePlatform)
   const [position_setting, set_position_setting] = useRecoilState(OS_POSITION_SETTING)
   const AIStargets = useRecoilValue(targetsAIS)
-
   const [aisFiltered, setAisFiltered] = useState([])
   const [AISmmsi, setAISmmsi] = useState({})
 
@@ -136,11 +134,9 @@ export default function PlatformPicker() {
   }
 
   return (
-    <Grid container direction="row" spacing={2}>
+    <Grid container spacing={2} sx={{padding: "0.5rem"}}>
       <Grid item xs={12}>
-        <Typography variant="h4" component="h2" sx={{ padding: "1rem 0" }}>
-          Select own ship source
-        </Typography>
+        <h2 style={{ paddingLeft: "1rem" }}>Quick selector</h2>
       </Grid>
 
       <Grid item xs={8}>
