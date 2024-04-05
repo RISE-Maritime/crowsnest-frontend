@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import axios from "axios"
 import * as yup from "yup"
 import { useFormik } from "formik"
-import { Stack, TextField, Typography } from "@mui/material"
+import { Stack, TextField } from "@mui/material"
 import { useSetRecoilState } from "recoil"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import StopIcon from "@mui/icons-material/Stop"
@@ -22,7 +22,7 @@ export default function KeelsonGetLoop() {
   /* eslint-disable */
   const initFormValuesManual = {
     hostLoop: process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000",
-    keyExprLoop: process.env.REACT_APP_ZENOH_BASE_KEYEXP ? process.env.REACT_APP_ZENOH_BASE_KEYEXP : "rise/masslab/**",
+    keyExprLoop: process.env.REACT_APP_ZENOH_BASE_KEYEXP ? process.env.REACT_APP_ZENOH_BASE_KEYEXP : "rise/v0/masslab/**",
   }
   /* eslint-enable */
 
@@ -30,6 +30,7 @@ export default function KeelsonGetLoop() {
     validationSchema: validationSchema,
     initialValues: initFormValuesManual,
     onSubmit: values => {
+      console.log("PRESSED SUBMIT")
       submitMsg(values)
     },
   })
@@ -39,9 +40,15 @@ export default function KeelsonGetLoop() {
 
     const interval = setInterval(() => {
       axios.get(URL).then(res => {
-        res.data.forEach(element => {
-          protoDecoder(element)
-        })
+
+
+
+    if (Array.isArray(res.data)) {
+          res.data.forEach(element => {
+              protoDecoder(element)
+            })
+        }
+
       })
     }, 1000)
 

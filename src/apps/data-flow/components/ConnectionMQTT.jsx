@@ -5,7 +5,7 @@ import CheckIcon from "@mui/icons-material/CheckCircle"
 import CloseIcon from "@mui/icons-material/Cancel"
 import MqttRemoteBrokerLogin from "./ConnMqttBroker"
 
-export default function ConnectionMQTT({   isConnected }) {
+export default function ConnectionMQTT({ connectionName,  isConnected }) {
   return (
     <Grid container>
       {/* Connection state indicator and Broker Login */}
@@ -30,6 +30,6 @@ export default function ConnectionMQTT({   isConnected }) {
 }
 
 ConnectionMQTT.propTypes = {
-  connectionName: PropTypes.string.isRequired,
+  connectionName: PropTypes.string,
   isConnected: PropTypes.bool,
 }

@@ -28,6 +28,6 @@ export default function ConnectionStatus({  isConnected }) {
 }
 
 ConnectionStatus.propTypes = {
-  connectionName: PropTypes.string.isRequired,
+  connectionName: PropTypes.string,
   isConnected: PropTypes.bool,
 }

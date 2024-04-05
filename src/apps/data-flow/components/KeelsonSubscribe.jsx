@@ -14,9 +14,8 @@ const validationSchema = yup.object({
 
 /* eslint-disable */
 const initFormValuesManual = {
-  // hostSub: "http://10.10.7.2:8000",
-  hostSub: "http://localhost:8000",
-  subscriptionKey: "**",
+  hostSub: process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000",
+  keyExp: process.env.REACT_APP_ZENOH_BASE_KEYEXP ? process.env.REACT_APP_ZENOH_BASE_KEYEXP : "rise/masslab/**",
 }
 /* eslint-enable */
 
@@ -36,7 +35,6 @@ export default function KeelsonSubscribe() {
   const disconnectKeelson = () => {
     console.log("Disconnecting from Keelson")
     if (router) {
-      // TODO: Why is it connecting back again?
       console.log("Trying to disconnect...")
       router.current.removeEventListener("PUT", parseMessage, false)
       console.log("DISCONNECTED")
@@ -48,8 +46,8 @@ export default function KeelsonSubscribe() {
     validationSchema: validationSchema,
     initialValues: initFormValuesManual,
     onSubmit: values => {
-      console.log("PRESSED SUBMIT")
-      submitAndConnect(values)
+      console.log("PRESSED Subscriber")
+      // submitAndConnect(values)
     },
   })
 
@@ -74,7 +72,7 @@ export default function KeelsonSubscribe() {
       <Stack spacing={1} sx={{ minWidth: "20vw", height: "100%" }} justifyContent="space-between">
         <Stack spacing={1}>
           <Typography sx={{ paddingBottom: "0.5rem" }} variant="h5">
-            Keelson Subscriber
+            Subscriber
           </Typography>
           <TextField
             id="hostSub"
@@ -97,10 +95,10 @@ export default function KeelsonSubscribe() {
             size="small"
             disabled={keelsonConState ? true : false}
             sx={{ paddingRight: "0.2rem" }}
-            defaultValue={formik.values.subscriptionKey}
+            defaultValue={formik.values.keyExp}
             onChange={formik.handleChange}
-            error={formik.touched.subscriptionKey && Boolean(formik.errors.subscriptionKey)}
-            helperText={formik.touched.subscriptionKey && formik.errors.subscriptionKey}
+            error={formik.touched.keyExp && Boolean(formik.errors.keyExp)}
+            helperText={formik.touched.keyExp && formik.errors.keyExp}
           />
         </Stack>
 

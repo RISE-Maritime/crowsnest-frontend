@@ -4,6 +4,9 @@ import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
 import { keepWithin360, calcPosFromBearingDistance } from "../utils"
 
+import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js/dist"
+// import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js"
+
 import {
   userState,
   observationsStateAtom,
@@ -32,7 +35,7 @@ import {
   ATOM_KEELSON_KEYEXP_UNMANAGED,
   ATOM_SIM_STATE,
   ATOM_SIM_ACTIVE_MODELS,
-  ATOM_SIM_SHIP_MODELS
+  ATOM_SIM_SHIP_MODELS,
 } from "./atoms"
 
 export const selectUser = selector({
@@ -67,6 +70,9 @@ export const setPlatformAIS = selector({
   },
 })
 
+/*
+Parsing incoming messages from the Keelson
+*/
 export const protoParser = selector({
   key: "proto_parser",
   get: () => {
@@ -77,36 +83,33 @@ export const protoParser = selector({
 
     const root = protobuf.Root.fromJSON(bundle)
     let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
+    let parsed = uncover(bytes)
+    let received_at = parsed[0]
+    let enclosed_at = parsed[1]
+    let payload = parsed[2]
+
     const Envelope = root.lookupType("Envelope")
     const decodedEnvelope = Envelope.decode(bytes)
     const seconds = decodedEnvelope.enclosedAt.seconds
     const nanos = decodedEnvelope.enclosedAt.nanos
-
     const envelopeEncodedAtDate = new Date(seconds * 1000 + nanos / 1000000)
 
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/vertical = degrees
 
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/right
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/horizontal
-    // rise/masslab/haddock/masslab-5/haddock/arduino/right
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/left
 
     switch (latestMsg.key) {
-      // RUDDER 0 (right)
-      case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)
-        ?.input: {
-        const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
-        const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
+      case latestMsg.key.match(/^rise\/v0\/masslab\/data\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)?.input: {
+        console.log("RUDDER 0:", payload)
+        let timeFloat = decodePayloadFromTypeName("keelson.primitives.TimestampedFloat", payload)
+        console.log("RUDDER 0:", timeFloat.value, timeFloat.timestamp)
 
-        console.log("RUDDER 0:", readable.value)
         let lastValue = get(ATOM_OS_RUDDERS)
 
-        if (lastValue["RUDDER_0"].setAngle !== readable.value) {
+        if (lastValue["RUDDER_0"].setAngle !== timeFloat.value) {
           set(ATOM_OS_RUDDERS, currentObj => ({
             ...currentObj,
             RUDDER_0: {
               ...currentObj["RUDDER_0"],
-              setAngle: readable.value,
+              setAngle: timeFloat.value,
             },
           }))
         }
@@ -905,7 +908,6 @@ export const updateSimState = selector({
     let new_cog = 0
     let new_heading = 0
 
-    
     const engNewton = ship_models[active_model].engine_newton // Newton
     let massa = ship_models[active_model].mass_kg // kg
     const resistance = ship_models[active_model].resistance // constant resistance
