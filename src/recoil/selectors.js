@@ -4,8 +4,8 @@ import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
 import { keepWithin360, calcPosFromBearingDistance } from "../utils"
 
-import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js/dist"
-// import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js"
+// import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js/dist"
+import { uncover, decodePayloadFromTypeName } from "keelson-js/dist"
 
 import {
   userState,

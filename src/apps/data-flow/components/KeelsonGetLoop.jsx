@@ -41,6 +41,7 @@ export default function KeelsonGetLoop() {
     const interval = setInterval(() => {
       axios.get(URL).then(res => {
 
+        console.log("GET LOOP RESPONSE", res.data);
 
 
     if (Array.isArray(res.data)) {
@@ -49,6 +50,8 @@ export default function KeelsonGetLoop() {
             })
         }
 
+      }).catch(error => {
+        console.error("Failed to get frame:", error)
       })
     }, 1000)
 

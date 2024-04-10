@@ -12,6 +12,7 @@ import StopIcon from "@mui/icons-material/Stop"
 import CamFlowMetadata from "./CamFlowMetadata"
 
 const URLcameras = [
+  "http://localhost:8000/rise/boatswain/mediamtx/purpose/compressed_image/axis-1", 
   "http://localhost:8000/rise/marie/mediamtx/sealog-4/compressed_image/axis",
   "http://localhost:8000/rise/marie/mediamtx/sealog-4/raw_image/axis",
   "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1",
@@ -109,7 +110,11 @@ export default function CamFrameKeelson() {
       }
 
       setMetadata(getMetadataFromEnvelope(decodedEnvelope))
+    }).catch(error => {
+      console.error("Failed to get frame:", error)
     })
+  
+    
   }
 
   function getMetadataFromEnvelope(decodedEnvelope) {

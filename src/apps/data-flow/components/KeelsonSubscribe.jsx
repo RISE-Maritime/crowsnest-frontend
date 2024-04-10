@@ -47,7 +47,7 @@ export default function KeelsonSubscribe() {
     initialValues: initFormValuesManual,
     onSubmit: values => {
       console.log("PRESSED Subscriber")
-      // submitAndConnect(values)
+      submitAndConnect(values)
     },
   })
 
