@@ -71,7 +71,9 @@ export default function Ecdis() {
       console.log("Cookie credentials.")
     } else {
       credentials = {
+        // eslint-disable-next-line no-undef
         username: process.env.REACT_APP_MQTT_USERNAME,
+        // eslint-disable-next-line no-undef
         password: process.env.REACT_APP_MQTT_PASSWORD,
       }
       console.log("Env var credentials.")
