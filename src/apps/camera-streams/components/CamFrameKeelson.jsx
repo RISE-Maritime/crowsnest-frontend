@@ -11,19 +11,28 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import StopIcon from "@mui/icons-material/Stop"
 import CamFlowMetadata from "./CamFlowMetadata"
 
+ /* eslint-disable */
+
+let baseURL = (  process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000" )
+
+   /* eslint-enable */
+
 const URLcameras = [
-  "http://localhost:8000/rise/boatswain/mediamtx/purpose/compressed_image/axis-1", 
-  "http://localhost:8000/rise/marie/mediamtx/sealog-4/compressed_image/axis",
-  "http://localhost:8000/rise/marie/mediamtx/sealog-4/raw_image/axis",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-2",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-3",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-4",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-5",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-6",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-7",
-  "http://localhost:8000/rise/seahorse/mediamtx/sh-2/compressed_image/axis-8",
+
+  baseURL+ "/rise/v0/boatswain/pubsub/compressed_image/axis-2",
+  baseURL+ "/rise/boatswain/mediamtx/purpose/compressed_image/axis-1", 
+  baseURL+ "/rise/marie/mediamtx/sealog-4/compressed_image/axis",
+  baseURL+ "/rise/marie/mediamtx/sealog-4/raw_image/axis",
+  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1",
+  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-2",
+  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-3",
+  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-4",
+  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-5",
+  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-6",
+  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-7",
+  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-8",
 ]
+
 
 const marks = [
   {
@@ -78,7 +87,7 @@ let frameCount = 0
 
 export default function CamFrameKeelson() {
   let router = useRef()
-  const [URLcam, setURLcam] = useState("http://localhost:8000/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1")
+  const [URLcam, setURLcam] = useState("")
   const [intervalFps, setIntervalFps] = useState(null)
   const [loopFps, setLoopFps] = useState(1)
   const [isActive, setIsActive] = useState("")
@@ -91,6 +100,7 @@ export default function CamFrameKeelson() {
   })
 
   const getFrame = () => {
+    
     axios.get(URLcam).then(res => {
       console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ axios.get ~ res:", res)
 

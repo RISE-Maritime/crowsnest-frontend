@@ -5,7 +5,7 @@ import ByteBuffer from "bytebuffer"
 import { keepWithin360, calcPosFromBearingDistance } from "../utils"
 
 // import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js/dist"
-import { uncover, decodePayloadFromTypeName } from "keelson-js/dist"
+import { uncover, decodePayloadFromTypeName ,getSubjectSchema, get_subject_from_pub_sub_key} from "keelson-js/dist"
 
 import {
   userState,
@@ -97,10 +97,14 @@ export const protoParser = selector({
 
 
     switch (latestMsg.key) {
-      case latestMsg.key.match(/^rise\/v0\/masslab\/data\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)?.input: {
-        console.log("RUDDER 0:", payload)
-        let timeFloat = decodePayloadFromTypeName("keelson.primitives.TimestampedFloat", payload)
-        console.log("RUDDER 0:", timeFloat.value, timeFloat.timestamp)
+      case latestMsg.key.match(/^rise\/v0\/masslab\/pubsub\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)?.input: {
+
+        let subj = get_subject_from_pub_sub_key(latestMsg.key)
+        let schemaProtoMsg = getSubjectSchema(subj)
+
+        console.log("RUDDER 0 RAW:", payload)
+        let timeFloat = decodePayloadFromTypeName(schemaProtoMsg, payload)
+        console.log("RUDDER 0 PARSED: ", timeFloat.value, timeFloat.timestamp)
 
         let lastValue = get(ATOM_OS_RUDDERS)
 

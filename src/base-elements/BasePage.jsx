@@ -28,6 +28,13 @@ export default function BasePage(props) {
       {showMiniApp.playback ? <FloatAppPlayback /> : null}
       {showMiniApp.controls ? <FloatBoxControls /> : null}
 
+
+      {/* Main EXternal incoming data 
+
+        Component sublist <-- comp  
+
+      */}
+
       <div
         style={{
           minHeight: "95vh",
