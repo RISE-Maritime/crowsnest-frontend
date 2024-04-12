@@ -37,7 +37,7 @@ export const useKeelsonData = (realm, keyExpr, type, onMessage) => {
           console.log("New record!")
           message.data.data.forEach(record => {
             if (matchKeyWithKeyExpression(record.key, keyExpr)) {
-              onMessage(record.value)
+              onMessage(record)
             }
           }) 
           break;
