@@ -3,7 +3,8 @@ import { Grid } from "@mui/material"
 import StatusSideBar from "./components/StatusSideBarNEW"
 import Chart from "./components/Chart"
 import ChartControls from "./components/ChartControls"
-
+import { useKeelsonWorker
+ } from "../../hooks/useKeelsonData"
 const identifier = 265810550
 
 function getCookieValue(cookieName) {
@@ -24,7 +25,8 @@ export default function Ecdis() {
   const [monitorData, setMonitorData] = useState({})
   const [aisWorker, setAisWorker] = useState(null)
   const [monitorWorker, setMonitorWorker] = useState(null)
-  console.log(monitorData)
+
+
   useEffect(() => {
     // AIS WORKER
     const tmpAisWorker = new SharedWorker(new URL("../../workers/workerAis.js", import.meta.url))
@@ -60,6 +62,20 @@ export default function Ecdis() {
       }
     }
     tmpMonitorWorker.port.start()
+
+    // Keelson Worker
+    
+    // const tmpKeelsonWorker = new SharedWorker(new URL("../../workers/keelsonWorker.js", import.meta.url))
+    // tmpKeelsonWorker.port.onmessage = e => {
+    //   console.log("KEEEEEEEEELSOOON")
+    //   console.log(e)
+    // }
+    // tmpKeelsonWorker.port.postMessage({
+    //   type:"subscribe",
+    //   payload: "http://localhost:8000/rise/v0/masslab/**"
+    // })
+
+
 
     // Send the workers the MQTT credentials
     let credentials
