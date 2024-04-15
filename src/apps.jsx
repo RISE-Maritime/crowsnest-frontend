@@ -120,6 +120,13 @@ export const PAGES_E_LOOKOUT = [
     buttonIcon: <IconInfo />,
     label: "Lookout 360",
   },
+  {
+    href: ROUTES.CAMERA_ARRAY,
+    icon: <IconInfo slot="icon" />,
+    leadingIcon: <IconInfo slot="leading-icon" />,
+    buttonIcon: <IconInfo />,
+    label: "Camera Array",
+  },
  
 ]
 

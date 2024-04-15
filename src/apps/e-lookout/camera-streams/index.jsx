@@ -8,7 +8,7 @@ export default function CameraStreams() {
     <div>
       <Stack justifyContent="center" alignItems="center">
         <Typography variant="h3" component="h1" p={4}>
-          Camera Streams
+          Camera Streams Tester
         </Typography>
       </Stack>
 

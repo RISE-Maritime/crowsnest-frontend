@@ -17,7 +17,7 @@ function matchKeyWithKeyExpression(key, keyExpr) {
 }
 
 
-export const useKeelsonData = (realm, keyExpr, type, onMessage) => {
+export const useKeelsonData = (routerURL , keyExpr, type, onMessage) => {
   useEffect(() => {
 
     // Ensure SharedWorker is supported
@@ -59,7 +59,7 @@ export const useKeelsonData = (realm, keyExpr, type, onMessage) => {
     // Start the worker port
     keelsonWorker.port.start();
 
-    const url = `${realm}/${keyExpr}`
+    const url = `${routerURL}/${keyExpr}`
 
     // Post a message to subscribe using the provided key
     keelsonWorker.port.postMessage({
@@ -76,5 +76,5 @@ export const useKeelsonData = (realm, keyExpr, type, onMessage) => {
       })
       keelsonWorker.port.close();
     };
-  }, [realm, keyExpr, type, onMessage]); 
+  }, [routerURL, keyExpr, type, onMessage]); 
 };

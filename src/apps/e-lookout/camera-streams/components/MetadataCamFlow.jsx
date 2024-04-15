@@ -3,7 +3,7 @@ import { Grid, Paper, Typography } from "@mui/material"
 
 export default function CamFlowMetadata({ metadata }) {
   return (
-    <Paper>
+    <Paper sx={{width: "100%"}} >
       <Grid container p={1}>
         <Grid item xs={12}>
           <Typography variant="h5">Metadata</Typography>

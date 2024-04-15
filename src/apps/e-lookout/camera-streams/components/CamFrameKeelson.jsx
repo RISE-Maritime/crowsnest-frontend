@@ -1,38 +1,40 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useCallback , useEffect} from "react"
 import axios from "axios"
 import { Autocomplete, TextField, Stack, Grid, Typography, Divider, Slider } from "@mui/material"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import jpeg from "jpeg-js"
 import ByteBuffer from "bytebuffer"
 import protobuf from "protobufjs/minimal.js"
-import bundle from "../../../proto/bundle.json"
+import bundle from "../../../../proto/bundle.json"
 import CamCanvas from "./CamCanvas"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import StopIcon from "@mui/icons-material/Stop"
-import CamFlowMetadata from "./CamFlowMetadata"
+import CamFlowMetadata from "./MetadataCamFlow"
+import MetadataTelemetry from "./MetadataTelemetry"
+import { useKeelsonData } from "../../../../hooks/useKeelsonData"
 
- /* eslint-disable */
+/* eslint-disable */
 
-let baseURL = (  process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000" )
+let baseURL = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  : "http://localhost:8000"
 
-   /* eslint-enable */
+/* eslint-enable */
 
 const URLcameras = [
-
-  baseURL+ "/rise/v0/boatswain/pubsub/compressed_image/axis-2",
-  baseURL+ "/rise/boatswain/mediamtx/purpose/compressed_image/axis-1", 
-  baseURL+ "/rise/marie/mediamtx/sealog-4/compressed_image/axis",
-  baseURL+ "/rise/marie/mediamtx/sealog-4/raw_image/axis",
-  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1",
-  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-2",
-  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-3",
-  baseURL+ "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-4",
-  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-5",
-  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-6",
-  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-7",
-  baseURL+ "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-8",
+  baseURL + "/rise/v0/boatswain/pubsub/compressed_image/axis-2",
+  baseURL + "/rise/boatswain/mediamtx/purpose/compressed_image/axis-1",
+  baseURL + "/rise/marie/mediamtx/sealog-4/compressed_image/axis",
+  baseURL + "/rise/marie/mediamtx/sealog-4/raw_image/axis",
+  baseURL + "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-1",
+  baseURL + "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-2",
+  baseURL + "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-3",
+  baseURL + "/rise/seahorse/mediamtx/sh-1/compressed_image/axis-4",
+  baseURL + "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-5",
+  baseURL + "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-6",
+  baseURL + "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-7",
+  baseURL + "/rise/seahorse/mediamtx/sh-2/compressed_image/axis-8",
 ]
-
 
 const marks = [
   {
@@ -100,31 +102,31 @@ export default function CamFrameKeelson() {
   })
 
   const getFrame = () => {
-    
-    axios.get(URLcam).then(res => {
-      console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ axios.get ~ res:", res)
+    axios
+      .get(URLcam)
+      .then(res => {
+        console.log("🚀 ~ file: CamFrameKeelson.jsx:88 ~ axios.get ~ res:", res)
 
-      let msgValue = res.data[0].value // Base64 encoded JPEG
-      const root = protobuf.Root.fromJSON(bundle)
-      let bytes = new Uint8Array(ByteBuffer.fromBase64(msgValue).toArrayBuffer())
-      const Envelope = root.lookupType("Envelope")
-      const CompressedVideo = root.lookupType("CompressedImage")
-      const decodedEnvelope = Envelope.decode(bytes)
-      const readable = CompressedVideo.decode(decodedEnvelope.payload)
+        let msgValue = res.data[0].value // Base64 encoded JPEG
+        const root = protobuf.Root.fromJSON(bundle)
+        let bytes = new Uint8Array(ByteBuffer.fromBase64(msgValue).toArrayBuffer())
+        const Envelope = root.lookupType("Envelope")
+        const CompressedVideo = root.lookupType("CompressedImage")
+        const decodedEnvelope = Envelope.decode(bytes)
+        const readable = CompressedVideo.decode(decodedEnvelope.payload)
 
-      try {
-        const { data, width, height } = jpeg.decode(readable.data, { useTArray: true })
-        setAAFrame({ height: height, width: width, data: new Uint8ClampedArray(data), hasData: true })
-      } catch (error) {
-        console.error("Failed to decode JPEG frame:", error)
-      }
+        try {
+          const { data, width, height } = jpeg.decode(readable.data, { useTArray: true })
+          setAAFrame({ height: height, width: width, data: new Uint8ClampedArray(data), hasData: true })
+        } catch (error) {
+          console.error("Failed to decode JPEG frame:", error)
+        }
 
-      setMetadata(getMetadataFromEnvelope(decodedEnvelope))
-    }).catch(error => {
-      console.error("Failed to get frame:", error)
-    })
-  
-    
+        setMetadata(getMetadataFromEnvelope(decodedEnvelope))
+      })
+      .catch(error => {
+        console.error("Failed to get frame:", error)
+      })
   }
 
   function getMetadataFromEnvelope(decodedEnvelope) {
@@ -224,6 +226,22 @@ export default function CamFrameKeelson() {
     setIsActive("")
   }
 
+
+
+
+
+  // const onMessage = useCallback(e => {
+  //   console.log(e)
+  // }, [])
+
+
+  // const newGet = () => {
+  //     console.log("NewGet");
+  // }
+
+
+  // const some = useKeelsonData("http://localhost:8888", "rise/v0/masslab/pubsub/lever_position_pct/**", "get_loop", onMessage);
+
   return (
     <Grid container direction="row" justifyContent="center" alignItems="center">
       <Grid item xs={12}>
@@ -306,6 +324,11 @@ export default function CamFrameKeelson() {
               Subscribe
             </Button>
           )}
+
+          <Divider orientation="vertical" flexItem sx={{ margin: "0.5rem" }} />
+
+         
+
         </Stack>
       </Grid>
 
@@ -314,7 +337,10 @@ export default function CamFrameKeelson() {
         <CamCanvas jpegFrame={AAFrame} />
       </Grid>
       <Grid item xs={2} p={1}>
-        <CamFlowMetadata metadata={metadata} />
+        <Stack direction="column" justifyContent="flex-start" alignItems="center" spacing={0}>
+          <CamFlowMetadata metadata={metadata} />
+          <MetadataTelemetry />
+        </Stack>
       </Grid>
     </Grid>
   )
