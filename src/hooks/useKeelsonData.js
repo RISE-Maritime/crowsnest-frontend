@@ -74,7 +74,10 @@ export const useKeelsonData = (routerURL , keyExpr, type, onMessage) => {
         type: `remove_${type}`,
         data: url
       })
-      keelsonWorker.port.close();
+      keelsonWorker.port.postMessage({type: 'disconnect', data: ''})
+      setTimeout(() => {
+        keelsonWorker.port.close();
+      }, 500); 
     };
   }, [routerURL, keyExpr, type, onMessage]); 
 };

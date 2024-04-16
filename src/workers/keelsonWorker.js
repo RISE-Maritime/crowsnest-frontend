@@ -5,9 +5,11 @@ var get_loops = {}
 var ports = []
 
 function postMessage(type, data) {
-  ports.forEach(port => {
-    port.postMessage({ type: type, data: data })
-  })
+  if (ports.length > 0) {
+        ports.forEach(port => {
+            port.postMessage({ type: type, data: data })
+        })
+    }
 }
 
 function postKeelsonMessage(e) {
@@ -100,11 +102,9 @@ function CreateKeelsonSubscription(url) {
 self.onconnect = e => {
   const port = e.ports[0]
   ports.push(port)
-  postMessage("info", "Number of ports" + ports.length)
+  postMessage("info", "Number of connections (ports) to keelsonWorker: " + ports.length)
 
   port.onmessage = message => {
-    postMessage("info", message)
-
     switch (message.data.type) {
       case "subscribe":
         // CreateKeelsonSubscription()
@@ -125,18 +125,13 @@ self.onconnect = e => {
       case "remove_subscribe":
         delete subscriptions[message.data.data]
         break
+      case "disconnect":
+        ports = ports.filter(p => p !== port)
+        postMessage("info", "Number of connections (ports) to keelsonWorker: " + ports.length)
+        break
       default:
-        postMessage("error", `KeelsonWorker does not recognise messagre of type ${message.data.type}!`)
+        postMessage("error", `KeelsonWorker does not recognise message of type ${message.data.type}!`)
     }
   }
-
-  // Listen for close event on the port
-//   port.onclose = function () {
-//     console.log("Port disconnected")
-//     postMessage("info", "Port disconnected" + port)
-//     ports = ports.filter(p => p !== port)
-//     postMessage("info",  ports)
-//   }
-
   port.start()
 }
