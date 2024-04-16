@@ -10,10 +10,15 @@ import { useKeelsonData } from "../../../hooks/useKeelsonData"
 export default function StatusSideBar({ data, identifier }) {
   // useCallback is necessary to prevent useKeelsonData to be re-creation of useKeelsonData
   // every time the component re-renders.
+
   const onMessage = useCallback(e => {
+    console.log("🚀 ~ onMessage ~ rise/v0/masslab/pubsub/lever_position_pct/**", e)
     console.log(e)
+    // erg
+    // wF
   }, [])
-  useKeelsonData("http://localhost:8888", "rise/v0/masslab/pubsub/lever_position_pct/**", "get_loop", onMessage)
+
+  useKeelsonData("http://localhost:8000", "rise/v0/masslab/pubsub/lever_position_pct/**", "get_loop", onMessage)
 
   return (
     <Grid container sx={{ height: "100%" }}>

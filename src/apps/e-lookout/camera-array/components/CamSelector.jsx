@@ -5,12 +5,17 @@ import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/compon
 import { Obi13CameraOn as IconCameraOn } from "@oicl/openbridge-webcomponents-react/icons/icon-13-camera-on"
 
 export default function CamSelector({ defaultSelected }) {
+
   const [selectedCameraId, setSelectedCameraId] = useState(defaultSelected)
 
   const handleCameraChange = cameraId => {
     console.log("🚀 ~ handleCameraChange ~ cameraId:", cameraId)
     setSelectedCameraId(cameraId)
   }
+
+
+
+
 
   return (
     <Grid container>
@@ -42,7 +47,7 @@ export default function CamSelector({ defaultSelected }) {
           <Button
             variant="check"
             checked={selectedCameraId == "axis-4" ? true : false}
-            onClick={() => handleCameraChange("axis-")}
+            onClick={() => handleCameraChange("axis-4")}
           >
             <IconCameraOn slot={"leading-icon"} size="24" />4
           </Button>

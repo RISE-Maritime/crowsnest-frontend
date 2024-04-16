@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useState } from "react"
+import React, { useRef, useCallback, useState, useEffect } from "react"
 import { useKeelsonData } from "../../../../hooks/useKeelsonData"
 import protobuf from "protobufjs/minimal.js"
 import bundle from "../../../../proto/bundle.json"
@@ -7,10 +7,11 @@ import jpeg from "jpeg-js"
 
 export default function CamCanvasV2({ keyExpression }) {
   let canvasRef = useRef()
+
   const [AAFrame, setAAFrame] = useState({ height: 1080, width: 1920, data: null, hasData: false })
 
   const onMessage = useCallback(envelope => {
-    console.log(envelope)
+    // console.log(envelope)
 
     let msgValue = envelope.value // Base64 encoded JPEG
     const root = protobuf.Root.fromJSON(bundle)
@@ -26,21 +27,19 @@ export default function CamCanvasV2({ keyExpression }) {
       if (width !== AAFrame.width || height !== AAFrame.height) {
         setAAFrame({ height: height, width: width, data: new Uint8ClampedArray(data), hasData: true })
       }
-   
-        const imageData = new ImageData(new Uint8ClampedArray(data), width, height)
-        const ctx = canvasRef.current.getContext("2d")
-        ctx.putImageData(imageData, 0, 0)
-  
 
+      const imageData = new ImageData(new Uint8ClampedArray(data), width, height)
+      const ctx = canvasRef.current.getContext("2d")
+      ctx.putImageData(imageData, 0, 0)
     } catch (error) {
       console.error("Failed to decode JPEG frame:", error)
     }
   }, [])
+  
+  
+  useKeelsonData("http://localhost:8000", keyExpression, "get_loop", onMessage)
 
-  useKeelsonData("http://localhost:8888", keyExpression, "get_loop", onMessage)
-
-
-
+  
   return (
     <canvas
       id="efwepr"

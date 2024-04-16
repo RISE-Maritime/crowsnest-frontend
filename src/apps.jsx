@@ -104,7 +104,7 @@ export const PAGES_E_LOOKOUT = [
     icon: <IconCameraOn slot="icon" />,
     leadingIcon: <IconCameraOn slot="leading-icon" />,
     buttonIcon: <IconCameraOn />,
-    label: "Camera Streams",
+    label: "Camera Lookout",
   },
   {
     href: ROUTES.CAMERA_STREAMS,
