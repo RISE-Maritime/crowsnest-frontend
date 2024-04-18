@@ -6,7 +6,7 @@ export default function ControlMetadataTelemetry() {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <h3>Control Metadata Telemetry</h3>
+        <h3>Telemetry</h3>
         <MetadataTelemetry keyExpression={"rise/v0/boatswain/pubsub/flight_controller_telemetry/speedybee/vfr"} />
       </Grid>
     </Grid>

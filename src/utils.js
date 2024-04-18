@@ -1,4 +1,6 @@
 const EARTH_RADIUS = 6378.1
+import { get_subject_from_pub_sub_key, decodePayloadFromTypeName, uncover, getSubjectSchema } from "keelson-js/dist"
+import ByteBuffer from "bytebuffer"
 
 export function formatTime(s) {
   const dtFormat = new Intl.DateTimeFormat("en-GB", {
@@ -173,14 +175,14 @@ export function calcPosFromBearingDistance(latitude, longitude, bearing, distanc
     (180 / Math.PI) *
     Math.asin(
       Math.sin(init_lat) * Math.cos(distance / EARTH_RADIUS) +
-        Math.cos(init_lat) * Math.sin(distance / EARTH_RADIUS) * Math.cos(bearing_rad)
+        Math.cos(init_lat) * Math.sin(distance / EARTH_RADIUS) * Math.cos(bearing_rad),
     )
   const final_lon =
     (180 / Math.PI) *
     (init_lon +
       Math.atan2(
         Math.sin(bearing_rad) * Math.sin(distance / EARTH_RADIUS) * Math.cos(init_lat),
-        Math.cos(distance / EARTH_RADIUS) - Math.sin(init_lat) * Math.sin(final_lat)
+        Math.cos(distance / EARTH_RADIUS) - Math.sin(init_lat) * Math.sin(final_lat),
       ))
 
   return [final_lon, final_lat]
@@ -203,10 +205,10 @@ export function calc_wind_speed_and_dir_true(heading, sog, wind_speed_rel, wind_
     sog_ms = sog / KNOTS_TO_METERS_PER_SECOND_FACTOR
   }
   let true_wind_speed = Math.sqrt(
-    sog_ms ** 2 + wind_speed_rel ** 2 - 2 * sog_ms * wind_speed_rel * Math.cos(toRadians(wind_dir_rel))
+    sog_ms ** 2 + wind_speed_rel ** 2 - 2 * sog_ms * wind_speed_rel * Math.cos(toRadians(wind_dir_rel)),
   )
   let true_wind_dir = toDegrees(
-    Math.acos((wind_speed_rel ** 2 - true_wind_speed ** 2 - sog_ms ** 2) / (2 * true_wind_speed * sog_ms))
+    Math.acos((wind_speed_rel ** 2 - true_wind_speed ** 2 - sog_ms ** 2) / (2 * true_wind_speed * sog_ms)),
   )
   true_wind_dir = heading + wind_dir_rel
 
@@ -227,7 +229,7 @@ export function calc_wind_direction_true(sog, wind_speed_rel, wind_dir_rel) {
   let KNOTS_TO_METERS_PER_SECOND_FACTOR = 1.944
   let sog_ms = sog / KNOTS_TO_METERS_PER_SECOND_FACTOR
   let true_wind_speed = Math.sqrt(
-    sog_ms ** 2 + wind_speed_rel ** 2 - 2 * sog_ms * wind_speed_rel * Math.cos(toRadians(wind_dir_rel))
+    sog_ms ** 2 + wind_speed_rel ** 2 - 2 * sog_ms * wind_speed_rel * Math.cos(toRadians(wind_dir_rel)),
   )
   return true_wind_speed
 }
@@ -288,7 +290,7 @@ export function calc_turn_radius_circle(radius, course_in, course_out, wp_latitu
     wp_longitude,
     bearing_to_circle_center,
     distance_to_turning_center,
-    "nm"
+    "nm",
   )
   // --- Get start & end coordinates ---
   // Distance to start and stop of turn
@@ -300,7 +302,7 @@ export function calc_turn_radius_circle(radius, course_in, course_out, wp_latitu
     wp_longitude,
     reversed_course_in,
     turn_start_end_distance_from_wp,
-    "nm"
+    "nm",
   )
   let pos_turn_end = calcPosFromBearingDistance(wp_latitude, wp_longitude, course_out, turn_start_end_distance_from_wp, "nm")
   // Get turn line coordinates
@@ -323,7 +325,7 @@ export function calc_turn_radius_circle(radius, course_in, course_out, wp_latitu
         pos_circle_center[0],
         bearing_incremental,
         radius,
-        "nm"
+        "nm",
       )
       turn_wps.push([pos_turn_point[0], pos_turn_point[1]])
     }
@@ -335,7 +337,7 @@ export function calc_turn_radius_circle(radius, course_in, course_out, wp_latitu
         pos_circle_center[0],
         bearing_incremental,
         radius,
-        "nm"
+        "nm",
       )
       turn_wps.push([pos_turn_point[0], pos_turn_point[1]])
     }
@@ -397,4 +399,26 @@ export function millisecondsToTime(milliseconds) {
     hours = "0" + hours
   }
   return `${hours}:${minutes}:${seconds}`
+}
+
+/**
+ * Parses a Keelson message envelope.
+ * @param {Object} envelope - The Keelson message envelope.
+ * @returns {Object} An object containing the parsed message data.
+ *    - received_at (timestamp)
+ *    - enclosed_at (timestamp)
+ *    - payload (object or value)
+ */
+export function parseKeelsonMessage(envelope) {
+  let bytes = new Uint8Array(ByteBuffer.fromBase64(envelope.value).toArrayBuffer())
+  let parsed = uncover(bytes)
+  let received_at = parsed[0]
+  let enclosed_at = parsed[1]
+  let proto_payload = parsed[2]
+
+  const subject = get_subject_from_pub_sub_key(envelope.key)
+  let schemaProtoMsg = getSubjectSchema(subject)
+  let payload = decodePayloadFromTypeName(schemaProtoMsg, proto_payload)
+
+  return { received_at, enclosed_at, payload }
 }

@@ -14,7 +14,7 @@
     "@mui/styled-engine-sc": "^5.14.12",
     "@mui/x-data-grid": "^7.0.0",
     "@mui/x-data-grid-generator": "^7.0.0",
-    "@oicl/openbridge-webcomponents": "^0.0.9",
+    "@oicl/openbridge-webcomponents": "^0.0.12",
     "@oicl/openbridge-webcomponents-react": "^0.0.12",
     "@tensorflow/tfjs": "^4.17.0",
     "@turf/turf": "^6.5.0",
@@ -27,7 +27,7 @@
     "framer-motion": "^11.0.20",
     "google-protobuf": "^3.21.2",
     "jpeg-js": "^0.4.4",
-    "keelson-js": "^0.3.1",
+    "keelson-js": "^0.3.1-pre.8",
     "mapbox-gl": "^2.15.0",
     "maplibre-gl": "^3.6.2",
     "moment-timezone": "^0.5.45",
@@ -83,6 +83,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.34.1",
     "prettier": "^3.2.5"

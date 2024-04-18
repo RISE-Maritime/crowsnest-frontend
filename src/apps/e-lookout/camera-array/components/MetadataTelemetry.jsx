@@ -1,28 +1,43 @@
-import React from 'react'
-import { useKeelsonData } from '../../../../hooks/useKeelsonData'
-import { get_subject_from_pub_sub_key, decodePayloadFromTypeName, getSubjectSchema } from 'keelson-js/dist'
+import React, { useState } from "react"
+import { useKeelsonData } from "../../../../hooks/useKeelsonData"
 
-// eslint-disable-next-line 
-const routerURL =  process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000"
-   
+import { parseKeelsonMessage } from "../../../../utils"
+import { Stack } from "@mui/material"
+import TelemetryCard from "./TelemetryCard"
 
-export default function MetadataTelemetry({keyExpression}) {
+/* eslint-disable */
+const routerURL = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  : "http://localhost:8000"
+/* eslint-enable */
 
-  const onMessage = (envelope) => {
+export default function MetadataTelemetry({ keyExpression }) {
+  const [heading, setHeading] = useState({ value: 0, received_at: null, enclosed_at: null })
+
+  const onMessage = envelope => {
     console.log("🚀 ~ onMessage ~ envelope:", envelope)
-    
-    const subject = get_subject_from_pub_sub_key(envelope.key)
-    let schemaProtoMsg = getSubjectSchema(subject)
-    let msgData = decodePayloadFromTypeName(schemaProtoMsg, envelope.value)
+    let msg = parseKeelsonMessage(envelope)
 
-     console.log("🚀 ~ onMessage ~ msgData:", msgData)   
-  
+    console.log("🚀 ~ onMessage ~ msgData:", msg)
+    setHeading({
+      ...heading,
+      value: msg.payload.heading,
+      received_at: msg.received_at,
+      enclosed_at: msg.enclosed_at,
+    })
   }
 
-  useKeelsonData("http://localhost:8888", keyExpression, "get_loop", onMessage)
-
+  useKeelsonData(routerURL, keyExpression, "get_loop", onMessage)
 
   return (
-    <div>ControlMetadataTelemetry</div>
+    <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
+      <TelemetryCard
+        telemetryName={"Heading"}
+        value={heading.value}
+        received_at={heading.received_at}
+        enclosed_at={heading.enclosed_at}
+      />
+      <TelemetryCard telemetryName={"Heading"} value={heading.value} />
+    </Stack>
   )
 }

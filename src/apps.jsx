@@ -47,7 +47,7 @@ export const APPS = [
     description: "Conning display for navigation",
   },
   {
-    href: ROUTES.E_LOOKOUT,
+    href: ROUTES.CAMERA_ARRAY,
     icon: <IconCameraOn size="24" slot="icon" />,
     leadingIcon: <IconCameraOn slot="leading-icon" />,
     buttonIcon: <IconCameraOn />,
