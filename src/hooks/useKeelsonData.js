@@ -1,63 +1,70 @@
-import { useEffect } from 'react';
-
+import { useEffect } from "react"
 
 function matchKeyWithKeyExpression(key, keyExpr) {
+  // Escape all regex characters except the wildcard '**'
+  let regexKeyExpr = keyExpr
+    .replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&")
+    .replace(/\\\*\\\*/g, ".*") // convert '**' to '.*' for regex
+    .replace(/\\\*/g, ".*") // convert '**' to '.*' for regex
 
-    // Escape all regex characters except the wildcard '**'
-    let regexKeyExpr = keyExpr
-        .replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&')
-        .replace(/\\\*\\\*/g, '.*') // convert '**' to '.*' for regex
-        .replace(/\\\*/g, '.*'); // convert '**' to '.*' for regex
+  // Create a new RegExp object with start and end anchors
+  let regex = new RegExp("^" + regexKeyExpr + "$")
 
-    // Create a new RegExp object with start and end anchors
-    let regex = new RegExp('^' + regexKeyExpr + '$');
-
-    // Test the target string against the regex
-    return regex.test(key);
+  // Test the target string against the regex
+  return regex.test(key)
 }
 
-
-export const useKeelsonData = (routerURL , keyExpr, type, onMessage) => {
+export const useKeelsonData = (routerURL, keyExpr, type, onMessage) => {
   useEffect(() => {
-
     // Ensure SharedWorker is supported
     if (!window.SharedWorker) {
-      console.error('SharedWorker is not supported in this browser.');
-      return;
+      console.error("SharedWorker is not supported in this browser.")
+      return
     }
 
     // Initialize the SharedWorker
-    const keelsonWorker = new SharedWorker(new URL("../workers/keelsonWorker.js", import.meta.url), { name: "keelsonWorker" });
+    const keelsonWorker = new SharedWorker(new URL("../workers/keelsonWorker.js", import.meta.url), {
+      name: "keelsonWorker",
+    })
 
     // Listener for incoming messages from the worker
     keelsonWorker.port.onmessage = message => {
       switch (message.data.type) {
-        case 'get_loop':
+        case "get_loop":
           // The data of a get_loop type of message is an array with records.
-          console.log("New record!")
+          // console.log("New record!")
+          // console.log("DATA", message.data)
+
+          if (message.data.data.length === 0) {
+            console.log("No data received.")
+            break
+          }
+
           message.data.data.forEach(record => {
-            if (matchKeyWithKeyExpression(record.key, keyExpr)) {
+            if (record.key === "ERROR") {
+              console.log(record.key, record.value)
+            } else if (matchKeyWithKeyExpression(record.key, keyExpr)) {
               onMessage(record)
-            }
-          }) 
-          break;
-        case 'subscribe':
+            } 
+          })
+          break
+        case "subscribe":
           console.error("Functionality not implemented in useKeelsonData.")
-          break;
-        case 'error':
+          break
+        case "error":
           console.error(message.data.data)
-          break;
-        case 'info':
+          break
+        case "info":
           console.info(message.data.data)
-          break;
+          break
         default:
           console.error(`Unrecognized message type '${message.data.type}' in useKeelsonData.`)
           console.log(message.data.data)
-      }  
-    };
+      }
+    }
 
     // Start the worker port
-    keelsonWorker.port.start();
+    keelsonWorker.port.start()
 
     const url = `${routerURL}/${keyExpr}`
 
@@ -65,19 +72,19 @@ export const useKeelsonData = (routerURL , keyExpr, type, onMessage) => {
     keelsonWorker.port.postMessage({
       type: type,
       data: url,
-    });
+    })
 
     // Cleanup on component unmount
     return () => {
       console.log("Cleaning")
       keelsonWorker.port.postMessage({
         type: `remove_${type}`,
-        data: url
+        data: url,
       })
-      keelsonWorker.port.postMessage({type: 'disconnect', data: ''})
+      keelsonWorker.port.postMessage({ type: "disconnect", data: "" })
       setTimeout(() => {
-        keelsonWorker.port.close();
-      }, 500); 
-    };
-  }, [routerURL, keyExpr, type, onMessage]); 
-};
+        keelsonWorker.port.close()
+      }, 500)
+    }
+  }, [routerURL, keyExpr, type, onMessage])
+}

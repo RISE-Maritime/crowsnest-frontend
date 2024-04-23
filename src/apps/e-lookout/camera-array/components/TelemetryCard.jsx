@@ -1,14 +1,14 @@
 import { Paper } from "@mui/material"
 import React from "react"
 
-export default function TelemetryCard({ telemetryName, value, received_at, enclosed_at }) {
+export default function TelemetryCard({ telemetryName, value, received_at, enclosed_at, unit }) {
   const localReceivedAt = received_at ? received_at.toLocaleTimeString("sv-SE") : "-"
   const localEnclosedAt = enclosed_at ? enclosed_at.toLocaleTimeString("sv-SE") : "-"
 
   return (
     <Paper sx={{ width: "9rem", padding: "0.5rem", textAlign: "center" }}>
       <h4 style={{ margin: "0" }}>{telemetryName}</h4>
-      <h3>{value}°</h3>
+      <h3>{value ? value.toFixed(1) : "0"}{unit}</h3>
 
       <p style={{ fontSize: "0.8rem" }}>
         Rec At: {localReceivedAt}
