@@ -22,7 +22,7 @@ export default function LidarChart({ keyExpression }) {
     zoom: 20,
     pitch: 0,
     bearing: 0,
-    maxZoom: 25,
+    maxZoom: 40,
   })
 
   const layers = [
@@ -33,10 +33,8 @@ export default function LidarChart({ keyExpression }) {
       getColor: d => [15, 149, 75, 255],
       // getNormal: d => d.normal,
       getPosition: d => {
-        
         // console.log("🚀 ~ getPosition ~ d:", d)
-        return [d.coordinates[0], -d.coordinates[1], d.coordinates[2]]
-
+        return [d[0], -d[1], d[2]]
       },
       pointSize: 2,
       coordinateOrigin: [11.976048877985928, 57.68867744534118],
@@ -57,38 +55,31 @@ export default function LidarChart({ keyExpression }) {
     // })
   ]
 
+  function parseUint8ArrayToPointArray(uint8Array, pointStride) {
+    const numPoints = uint8Array.length / pointStride
+    const pointArray = []
+    for (let i = 0; i < numPoints; i++) {
+      const point = []
+      point.push(new Float64Array(uint8Array.buffer, i * pointStride + 0, 1)[0])
+      point.push(new Float64Array(uint8Array.buffer, i * pointStride + 8, 1)[0])
+      point.push(new Float64Array(uint8Array.buffer, i * pointStride + 16, 1)[0])
+      pointArray.push(point)
+    }
+    return pointArray
+  }
+
   const onMessage = envelope => {
     // console.log("🚀 ~ onMessage ~ envelope:", envelope)
     let msg = parseKeelsonMessage(envelope)
-    setPointcloud(msg.payload.pointPositions)
+    // console.log("🚀 ~ LIDAR PAYLOAD:", msg)
 
-    // TODO: Foxglove BINARY parser for LIDAR  
-    // console.log("🚀 ~ onMessage ~ LIDAR:", msg)
-    // console.log("🚀 ~ LIDAR PARSED:", msg.payload.pointPositions)
-    // let binary_distances = msg.payload.data // Assuming this is your binary data
-    // let buffer = new ArrayBuffer(binary_distances.length)
-    // let dataview = new DataView(buffer)
-    // // Assuming binary_distances is an array of bytes
-    // for (let i = 0; i < binary_distances.length; i++) {
-    //   dataview.setUint8(i, binary_distances[i])
-    // }
-    // let distances = {
-    //   x: [],
-    //   y: [],
-    //   z: [],
-    // }
-    // let toBepointcloud = []
-    // for (let i = 0; i < dataview.byteLength; i += 24) {
-    //   let x = dataview.getFloat64(i, false)
-    //   let y = dataview.getFloat64(i + 8, false)
-    //   let z = dataview.getFloat64(i + 16, false)
-    //   distances.x.push(x)
-    //   distances.y.push(y)
-    //   distances.z.push(z)
-    //   toBepointcloud.push([x, y, z])
-    // }
-    // // console.log("🚀 ~ onMessage ~ BUFFER:", distances)
-    // console.log("🚀 ~ onMessage ~ toBepointcloud:", toBepointcloud)
+    let pointStride = msg.payload.pointStride
+    let binary_positions = new Uint8Array(msg.payload.data) // Assuming this is your binary data
+    let pointCloudParsed = parseUint8ArrayToPointArray(binary_positions, pointStride)
+
+    // console.log("🚀 ~ onMessage ~ pointCloudParsed:", pointCloudParsed)
+
+    setPointcloud(pointCloudParsed)
   }
 
   useKeelsonData(routerURL, keyExpression, "get_loop", onMessage)
@@ -101,7 +92,7 @@ export default function LidarChart({ keyExpression }) {
         onViewStateChange={e => setViewState(e.viewState)}
         controller={{ dragPan: "dragging" }}
       >
-      {/*  <ReactMapGl mapStyle={basemaps["eniroSeaChart"]} />*/}
+        {/*  <ReactMapGl mapStyle={basemaps["eniroSeaChart"]} />*/}
       </DeckGL>
     </div>
   )
