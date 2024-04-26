@@ -1,4 +1,4 @@
-import React, {useCallback} from "react"
+import React from "react"
 import { Grid } from "@mui/material"
 import PositionStatusSmall from "./PositionStatusSmall"
 import MapCursorInfo from "./MapCursorInfo"
@@ -8,17 +8,16 @@ import MonitorManager from "./MonitorManager"
 import { useKeelsonData } from "../../../hooks/useKeelsonData"
 
 export default function StatusSideBar({ data, identifier }) {
+  
   // useCallback is necessary to prevent useKeelsonData to be re-creation of useKeelsonData
   // every time the component re-renders.
-
-  const onMessage = useCallback(e => {
-    console.log("🚀 ~ onMessage ~ rise/v0/masslab/pubsub/lever_position_pct/**", e)
+  const onMessage = React.useCallback((e) => {
     console.log(e)
-    // erg
-    // wF
-  }, [])
-
-  useKeelsonData("http://localhost:8000", "rise/v0/masslab/pubsub/lever_position_pct/**", "get_loop", onMessage)
+  }, []);
+  useKeelsonData(
+    "rise/v0/masslab/pubsub/lever_position_pct/**",
+    'get_loop',
+    onMessage)
 
   return (
     <Grid container sx={{ height: "100%" }}>

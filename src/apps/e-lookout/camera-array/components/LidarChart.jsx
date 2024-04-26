@@ -71,8 +71,8 @@ export default function LidarChart({ keyExpression }) {
   const onMessage = envelope => {
     // console.log("🚀 ~ onMessage ~ envelope:", envelope)
     let msg = parseKeelsonMessage(envelope)
-    // console.log("🚀 ~ LIDAR PAYLOAD:", msg)
-
+    console.log("🚀 ~ LIDAR PAYLOAD:", msg)
+    console.log(msg)
     let pointStride = msg.payload.pointStride
     let binary_positions = new Uint8Array(msg.payload.data) // Assuming this is your binary data
     let pointCloudParsed = parseUint8ArrayToPointArray(binary_positions, pointStride)
@@ -82,7 +82,7 @@ export default function LidarChart({ keyExpression }) {
     setPointcloud(pointCloudParsed)
   }
 
-  useKeelsonData(routerURL, keyExpression, "get_loop", onMessage)
+  useKeelsonData(keyExpression, "get_loop", onMessage)
 
   return (
     <div style={{ height: "30rem", position: "relative", overflow: "hidden" }}>

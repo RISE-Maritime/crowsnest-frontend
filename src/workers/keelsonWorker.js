@@ -67,12 +67,12 @@ function manageKeyValueStore(store, key, createValue, deleteValue) {
   specificKeysToRemove.forEach(keyToRemove => {
     deleteValue(store[keyToRemove])
     delete store[keyToRemove]
-    postMessage("info", `Key removed from store: ${keyToRemove}`)
+    //postMessage("info", `Key removed from store: ${keyToRemove}`)
   })
 
   // Add the new key to the store
   store[key] = createValue()
-  postMessage("info", `New key added to store: ${key}`)
+  //postMessage("info", `New key added to store: ${key}`)
   return true
 }
 
@@ -81,7 +81,9 @@ function CreateGetDataLoop(url, delay) {
     axios
       .get(url)
       .then(res => {
-        postMessage("get_loop", res.data)
+        if (!(Array.isArray(res) && res.length === 0)) {
+          postMessage("get_loop", res.data)        
+        } 
       })
       .catch(err => {
         postMessage("error", err)
@@ -93,7 +95,6 @@ function CreateKeelsonSubscription(url) {
   try {
     subscriptions[url] = new EventSource(url)
     subscriptions[url].addEventListener("PUT", postKeelsonMessage, false)
-    postMessage("info", "Successfully created Keelson subscription.")
   } catch (err) {
     postMessage("error", err.data)
   }
@@ -102,12 +103,12 @@ function CreateKeelsonSubscription(url) {
 self.onconnect = e => {
   const port = e.ports[0]
   ports.push(port)
-  postMessage("info", "Number of connections (ports) to keelsonWorker: " + ports.length)
+  postMessage("info", "KeelsonWorker - Port connection. Total number of ports: " + ports.length)
 
   port.onmessage = message => {
     switch (message.data.type) {
       case "subscribe":
-        // CreateKeelsonSubscription()
+        CreateKeelsonSubscription()
         postMessage("error", "Subscribe is not yet implemented.")
         break
       case "get_loop":
@@ -118,19 +119,21 @@ self.onconnect = e => {
           CreateGetDataLoop.bind(null, message.data.data, 5000),
           clearInterval,
         )
+        postMessage("info", `KeelsonWorker - Created get_loop for ${message.data.data} . Total number of 'get_loops': ${Object.keys(get_loops).length}`)
         break
       case "remove_get_loop":
         delete get_loops[message.data.data]
+        postMessage("info", `KeelsonWorker - Removed get_loop for ${message.data.data} . Total number of 'get_loops': ${Object.keys(get_loops).length}`)
         break
       case "remove_subscribe":
         delete subscriptions[message.data.data]
         break
       case "disconnect":
         ports = ports.filter(p => p !== port)
-        postMessage("info", "Number of connections (ports) to keelsonWorker: " + ports.length)
+        postMessage("info", "KeelsonWorker - Port disconnection. Total number of ports: " + ports.length)
         break
       default:
-        postMessage("error", `KeelsonWorker does not recognise message of type ${message.data.type}!`)
+        postMessage("error", `KeelsonWorker - Unrecognized message of type ${message.data.type}!`)
     }
   }
   port.start()

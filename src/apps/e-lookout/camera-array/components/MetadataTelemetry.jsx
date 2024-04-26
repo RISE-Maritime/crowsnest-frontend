@@ -5,9 +5,9 @@ import { Stack } from "@mui/material"
 import TelemetryCard from "./TelemetryCard"
 
 /* eslint-disable */
-const routerURL = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
-  ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
-  : "http://localhost:8000"
+// const routerURL = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+//   ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+//   : "http://localhost:8000"
 /* eslint-enable */
 
 export default function MetadataTelemetry({ keyExpression }) {
@@ -16,31 +16,30 @@ export default function MetadataTelemetry({ keyExpression }) {
   const [throttle, setThrottle] = useState({ value: 0, received_at: null, enclosed_at: null })
 
   const onMessage = envelope => {
-    // console.log("🚀 ~ onMessage ~ envelope:", envelope)
     let msg = parseKeelsonMessage(envelope)
-
-    // console.log("🚀 ~ onMessage ~ msgData:", msg)
-    setHeading({
-      ...heading,
-      value: msg.payload.heading,
-      received_at: msg.received_at,
-      enclosed_at: msg.enclosed_at,
-    })
-    setGroundSpeed({
-      ...groundSpeed,
-      value: msg.payload.groundspeed,
-      received_at: msg.received_at,
-      enclosed_at: msg.enclosed_at,
-    })
-    setThrottle({
-      ...throttle,
-      value: msg.payload.throttle,
-      received_at: msg.received_at,
-      enclosed_at: msg.enclosed_at,
-    })
+    if (msg.payload) {
+      setHeading({
+        ...heading,
+        value: msg.payload.heading,
+        received_at: msg.received_at,
+        enclosed_at: msg.enclosed_at,
+      })
+      setGroundSpeed({
+        ...groundSpeed,
+        value: msg.payload.groundspeed,
+        received_at: msg.received_at,
+        enclosed_at: msg.enclosed_at,
+      })
+      setThrottle({
+        ...throttle,
+        value: msg.payload.throttle,
+        received_at: msg.received_at,
+        enclosed_at: msg.enclosed_at,
+      })
+    }
   }
 
-  useKeelsonData(routerURL, keyExpression, "get_loop", onMessage)
+  useKeelsonData(keyExpression, "get_loop", onMessage)
 
   return (
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>

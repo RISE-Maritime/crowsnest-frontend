@@ -37,7 +37,7 @@ export default function CamCanvasV2({ keyExpression }) {
   }, [])
   
   
-  useKeelsonData("http://localhost:8000", keyExpression, "get_loop", onMessage)
+  useKeelsonData(keyExpression, "get_loop", onMessage)
 
   
   return (
