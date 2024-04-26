@@ -5,6 +5,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 export default function CamSelect({ refV, refA, ID }) {
+  
   const startCamera = camID => {
     refV.onplay = () => {
       console.log("playing")
@@ -79,15 +80,18 @@ export default function CamSelect({ refV, refA, ID }) {
         console.log("SENDING TO: ", { sdp: offer.sdp, mediamtx_path: "example" })
 
         console.log("send sdp:", offer.sdp)
+
         axios
-          .post("http://localhost:8001/rise/marie/mediamtx/sealog-4/rpc/whep", {
-            path: "axis",
+        .post("http://localhost:8000/rise/v0/boatswain/rpc/mediamtx/whep", {
+          // .post("http://10.10.7.2:8000/rise/v0/boatswain/rpc/mediamtx/whep", {
+            path: "example",
             sdp: offer.sdp,
           })
           .then(response => {
-            console.log("response", response.data)
+            console.log("response ONE", response)
+            console.log("response DATA", response.data)
 
-            let sdpNew = response.data[0][1]
+            let sdpNew = response.data[0].value
 
             console.log("res:", sdpNew)
 
