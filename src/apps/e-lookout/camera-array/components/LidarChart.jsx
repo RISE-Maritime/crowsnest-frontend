@@ -9,9 +9,9 @@ import { parseKeelsonMessage } from "../../../../utils"
 import { max } from "moment-timezone"
 
 /* eslint-disable */
-const routerURL = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
-  ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
-  : "http://localhost:8000"
+// const routerURL = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+//   ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+//   : "http://localhost:8000"
 /* eslint-enable */
 
 export default function LidarChart({ keyExpression }) {

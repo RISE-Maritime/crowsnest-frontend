@@ -12,10 +12,10 @@ function postMessage(type, data) {
     }
 }
 
-function postKeelsonMessage(e) {
+function postSubscribeMessage(e) {
   try {
     const payload = JSON.parse(e.data)
-    postMessage("keelson", payload)
+    postMessage("subscribe", payload)
   } catch (err) {
     postMessage("error", err)
   }
@@ -67,12 +67,10 @@ function manageKeyValueStore(store, key, createValue, deleteValue) {
   specificKeysToRemove.forEach(keyToRemove => {
     deleteValue(store[keyToRemove])
     delete store[keyToRemove]
-    //postMessage("info", `Key removed from store: ${keyToRemove}`)
   })
 
   // Add the new key to the store
   store[key] = createValue()
-  //postMessage("info", `New key added to store: ${key}`)
   return true
 }
 
@@ -91,13 +89,19 @@ function CreateGetDataLoop(url, delay) {
   }, delay)
 }
 
-function CreateKeelsonSubscription(url) {
+function CreateSubscription(url) {
+  let subscription
   try {
-    subscriptions[url] = new EventSource(url)
-    subscriptions[url].addEventListener("PUT", postKeelsonMessage, false)
+    subscription = new EventSource(url)
+    subscription.addEventListener("PUT", postSubscribeMessage, false)
   } catch (err) {
     postMessage("error", err.data)
   }
+  return subscription
+}
+
+function RemoveSubscription(eventSource) {
+  eventSource.close()
 }
 
 self.onconnect = e => {
@@ -108,8 +112,13 @@ self.onconnect = e => {
   port.onmessage = message => {
     switch (message.data.type) {
       case "subscribe":
-        CreateKeelsonSubscription()
-        postMessage("error", "Subscribe is not yet implemented.")
+        manageKeyValueStore(
+          subscriptions,
+          message.data.data,
+          CreateSubscription.bind(null, message.data.data),
+          RemoveSubscription
+        )
+        postMessage("info", `KeelsonWorker - Created subscription for ${message.data.data} . Total number of 'subscriptions': ${Object.keys(subscriptions).length}`)
         break
       case "get_loop":
         manageKeyValueStore(
@@ -117,7 +126,7 @@ self.onconnect = e => {
           message.data.data,
           // TODO: How to set from component delay?
           CreateGetDataLoop.bind(null, message.data.data, 5000),
-          clearInterval,
+          clearInterval
         )
         postMessage("info", `KeelsonWorker - Created get_loop for ${message.data.data} . Total number of 'get_loops': ${Object.keys(get_loops).length}`)
         break

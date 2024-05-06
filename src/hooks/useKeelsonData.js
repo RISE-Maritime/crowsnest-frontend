@@ -77,7 +77,7 @@ export const useKeelsonData = (keyExpr, type, onMessage) => {
             })
             break
           case "subscribe":
-            console.error("Functionality not implemented in useKeelsonData.")
+            onMessage(message.data.data)
             break
           case "error":
             console.error(message.data.data)

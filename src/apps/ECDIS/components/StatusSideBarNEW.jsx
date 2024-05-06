@@ -12,11 +12,12 @@ export default function StatusSideBar({ data, identifier }) {
   // useCallback is necessary to prevent useKeelsonData to be re-creation of useKeelsonData
   // every time the component re-renders.
   const onMessage = React.useCallback((e) => {
+    console.log(`Message form useKeelsonData: `)
     console.log(e)
   }, []);
   useKeelsonData(
-    "rise/v0/masslab/pubsub/lever_position_pct/**",
-    'get_loop',
+    "rise/v0/boatswain/pubsub/flight_controller_telemetry_vfrhud/speedybee",
+    'subscribe',
     onMessage)
 
   return (
