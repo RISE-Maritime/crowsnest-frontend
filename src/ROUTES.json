@@ -3,6 +3,7 @@
   "PAGE1": "/page1",
   "ECDIS": "/ecdis",
   "CONNING": "/conning",
+  "WIND_POWER": "/wind-power",
   "REMOTE_CONTROL": "/remote_CONTROL",
   "DATA_FLOW": "/data_flow",
   "CONFIGURATION": "/os_configuration",

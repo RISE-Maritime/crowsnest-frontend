@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import AppBearingRate from "./AppBearingRate";
+import AppBearingRate from "./components/AppBearingRate";
 
 const targetList = [
   {

@@ -13,10 +13,10 @@ export default function CamStream({ ID }) {
         {/* <CamSelectH2 refV={refVideo} refA={refAudio}/> */}
       </Grid>
       <Grid item xs={12} sx={{ border: "solid" }}>
-        <audio ref={refAudio} autoPlay={true} />
-        <video id={"video" + ID} ref={refVideo} autoPlay={true} playsInline={true} width="100%">
-          <p>Your browser doest support HTML5 video.</p>
-        </video>
+          <audio ref={refAudio} autoPlay={true} />
+          <video id={"video" + ID} ref={refVideo} autoPlay={true} playsInline={true} width="100%">
+            <p>Your browser doest support HTML5 video.</p>
+          </video>
       </Grid>
     </Grid>
   )

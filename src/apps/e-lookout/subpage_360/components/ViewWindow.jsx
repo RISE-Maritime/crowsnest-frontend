@@ -49,6 +49,8 @@ export default function ViewWindow({ URLcam }) {
       }
 
       setMetadata(getMetadataFromEnvelope(decodedEnvelope))
+    }).catch(err => {
+      console.error("Failed to fetch frame from camera:", err)
     })
   }
 

@@ -71,6 +71,14 @@ export const APPS = [
     label: "PLANNER",
     description: "Route and mission planning for navigation",
   },
+  {
+    href: ROUTES.WIND_POWER,
+    icon: <IconRoutePlanning size="24" slot="icon" />,
+    leadingIcon: <IconRoutePlanning slot="leading-icon" />,
+    buttonIcon: <IconRoutePlanning />,
+    label: "WIND POWER",
+    description: "Wind power ships control and monitoring",
+  },
 ]
 
 export const APP_CONFIG = [

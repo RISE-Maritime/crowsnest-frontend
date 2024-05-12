@@ -1,45 +1,60 @@
 import React from "react"
 
-import CamSelector from "./components/CamContriller"
-import { Grid, Paper, Stack } from "@mui/material"
+import CamControllerFrame from "./components/CamControllerFrame"
+import CamControllerWebRTC from "./components/CamControllerWebRTC"
+import { Grid, Paper, Stack, Tab, Box, Tabs } from "@mui/material"
 import ControlMetadataTelemetry from "./components/TelemetryController"
 import LidarController from "./components/LidarController"
 
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  )
+}
+
 export default function CameraArray() {
+  const [tabValue, setTabValue] = React.useState("webrtc")
 
-  function parseUint8ArrayToFloat64Array(uint8Array) {
-    // const float64ArrayLength = uint8Array.length / 8;
-    const numPoints = uint8Array.length / 16
-
-    const points = []
-    for (let i = 0; i < numPoints; i++) {
-      const point = []
-      point.push(new Float64Array(uint8Array.buffer, 0, 1)[0])
-      point.push(new Float64Array(uint8Array.buffer, 8, 1)[0])
-
-      points.push(point)
-    }
-    return points
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue)
   }
-
-  // Example usage:
-  const uint8Array = new Uint8Array([
-    150, 69, 34, 127, 32, 23, 0, 64, 150, 69, 34, 127, 32, 23, 20, 64, 150, 69, 34, 127, 32, 23, 0, 64, 150, 69, 34,
-    127, 32, 23, 20, 64,
-  ]) // Example bytes representing two float64 values
-  const float64Array = parseUint8ArrayToFloat64Array(uint8Array)
-  console.log("HERE: ",float64Array) // Output: Float64Array [ 1, 2 ]
 
   return (
     <Grid container>
       <Grid item xs={12}>
         <Paper sx={{ padding: "0.5rem", margin: "0.5rem" }}>
-          <Stack direction="row">
-            <CamSelector defaultSelected={"axis-1"} />
-            <CamSelector defaultSelected={"axis-3"} />
-            <CamSelector defaultSelected={"axis-4"} />
-            <CamSelector defaultSelected={"axis-2"} />
-          </Stack>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs value={tabValue} onChange={handleTabChange} aria-label="lab API tabs example">
+              <Tab label="WebRTC" value="webrtc" />
+              <Tab label="Frames" value="frames" />
+            </Tabs>
+          </Box>
+          <CustomTabPanel value={tabValue} index={"webrtc"}>
+            <Stack direction="row">
+              <CamControllerWebRTC defaultSelected={"axis-1"} />
+              <CamControllerWebRTC defaultSelected={"axis-3"} />
+              <CamControllerWebRTC defaultSelected={"axis-4"} />
+              <CamControllerWebRTC defaultSelected={"axis-2"} />
+            </Stack>
+          </CustomTabPanel>
+          <CustomTabPanel value={tabValue} index={"frames"}>
+            <Stack direction="row">
+              <CamControllerFrame defaultSelected={"axis-1"} />
+              <CamControllerFrame defaultSelected={"axis-3"} />
+              <CamControllerFrame defaultSelected={"axis-4"} />
+              <CamControllerFrame defaultSelected={"axis-2"} />
+            </Stack>
+          </CustomTabPanel>
         </Paper>
       </Grid>
       <Grid item xs={6}>

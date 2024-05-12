@@ -72,7 +72,6 @@ export default function LidarChart({ keyExpression }) {
     // console.log("🚀 ~ onMessage ~ envelope:", envelope)
     let msg = parseKeelsonMessage(envelope)
     console.log("🚀 ~ LIDAR PAYLOAD:", msg)
-    console.log(msg)
     let pointStride = msg.payload.pointStride
     let binary_positions = new Uint8Array(msg.payload.data) // Assuming this is your binary data
     let pointCloudParsed = parseUint8ArrayToPointArray(binary_positions, pointStride)

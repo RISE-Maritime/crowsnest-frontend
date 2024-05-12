@@ -38,10 +38,10 @@ export default function RightPopOver(props) {
           {app.icon}
         </AppButton>
       ))}
-      <div />
+      
       <h4>Mini APPs</h4>
       {/* Spaces */}
-      <div /> <div /> <div />
+      <div /> <div /> <div /> 
       <AppButton checked={showMiniApp.windCurrent} label="Anometer" onClick={() => ToggleMiniApp("windCurrent")}>
         <CurrentIcon size="24" slot="icon" />
       </AppButton>

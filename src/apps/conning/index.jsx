@@ -8,8 +8,6 @@ import {
   OS_HEADING_SETTING,
   OS_HEADING
 } from "../../recoil/atoms";
-// import { mqttSubscribe } from "../../base-elements/MqttConnection";
-// Components
 import { Grid, Stack } from "@mui/material";
 import AppWindCurrent from "./components/AppWindCurrent";
 import AppHeadingRotDrift from "./components/AppHeadingRotDrift";
@@ -30,8 +28,7 @@ export default function Conning() {
   const osHeadingSetting = useRecoilValue(OS_HEADING_SETTING)
 
   useEffect(() => {
-    // Start MQTT subscription
-    // mqttSubscribe("/NTpro/#");
+    // TODO: Start subscription
 
     setAppObj({
       ...appObj,

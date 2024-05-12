@@ -5,7 +5,7 @@ import bundle from "../../../../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
 import jpeg from "jpeg-js"
 
-export default function CamCanvasV2({ keyExpression }) {
+export default function CamCanvasFrame({ keyExpression }) {
   let canvasRef = useRef()
 
   const [AAFrame, setAAFrame] = useState({ height: 1080, width: 1920, data: null, hasData: false })
@@ -35,11 +35,9 @@ export default function CamCanvasV2({ keyExpression }) {
       console.error("Failed to decode JPEG frame:", error)
     }
   }, [])
-  
-  
+
   useKeelsonData(keyExpression, "get_loop", onMessage)
 
-  
   return (
     <canvas
       id="efwepr"

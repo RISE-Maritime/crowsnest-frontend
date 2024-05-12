@@ -1,21 +1,26 @@
 import React, { useState } from "react"
-import CamCanvasV2 from "./CamCanvasV2"
+import CamCanvasFrame from "./CamCanvasFrame"
 import { Grid, Stack } from "@mui/material"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import { Obi13CameraOn as IconCameraOn } from "@oicl/openbridge-webcomponents-react/icons/icon-13-camera-on"
 
-export default function CamSelector({ defaultSelected }) {
+/**
+ * Camera controller for single JPEG frame sent over Keelson 
+ * 
+ * Component: CamCanvasFrame drawing the frame
+ */
+export default function CamControllerFrame({ defaultSelected }) {
 
   const [selectedCameraId, setSelectedCameraId] = useState(defaultSelected)
 
+  /**
+   * Handles the change of the selected camera.
+   * @param {string} cameraId - The ID of the selected camera.
+   */
   const handleCameraChange = cameraId => {
     console.log("🚀 ~ handleCameraChange ~ cameraId:", cameraId)
     setSelectedCameraId(cameraId)
   }
-
-
-
-
 
   return (
     <Grid container>
@@ -54,7 +59,7 @@ export default function CamSelector({ defaultSelected }) {
         </Stack>
       </Grid>
       <Grid item xs={12}>
-        <CamCanvasV2 keyExpression={"rise/v0/boatswain/pubsub/compressed_image/" + selectedCameraId} />
+        <CamCanvasFrame keyExpression={"rise/v0/boatswain/pubsub/compressed_image/" + selectedCameraId} />
       </Grid>
     </Grid>
   )

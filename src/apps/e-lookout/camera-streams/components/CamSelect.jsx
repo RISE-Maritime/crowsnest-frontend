@@ -1,5 +1,4 @@
 import React from "react"
-import "@tensorflow/tfjs"
 import axios from "axios"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
@@ -13,17 +12,6 @@ export default function CamSelect({ refV, refA, ID }) {
 
     console.log("(1) start camera: " + camID)
 
-    /* eslint-disable */
-    const options = {
-      // Clean session
-      connectTimeout: 30000,
-      // Auth
-      clientId: "muppetA" + Math.random(),
-      username: process.env.REACT_APP_MQTT_USERNAME,
-      password: process.env.REACT_APP_MQTT_PASSWORD,
-      protocolVersion: 5,
-    }
-    /* eslint-enable */
 
     let pc = null
 
@@ -32,8 +20,7 @@ export default function CamSelect({ refV, refA, ID }) {
       iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }], // Always use a STUN server for ICE
     }
 
-    // MQTT
-    // let client = mqtt.connect("wss://crowsnest.mo.ri.se:443/mqtt", options)
+
     pc = new RTCPeerConnection(config)
 
     // connect audio / video
@@ -83,24 +70,29 @@ export default function CamSelect({ refV, refA, ID }) {
 
         axios
         .post("http://localhost:8000/rise/v0/boatswain/rpc/mediamtx/whep", {
-          // .post("http://10.10.7.2:8000/rise/v0/boatswain/rpc/mediamtx/whep", {
-            path: "example",
+            path: "cam-axis-1",
             sdp: offer.sdp,
           })
           .then(response => {
             console.log("response ONE", response)
             console.log("response DATA", response.data)
 
-            let sdpNew = response.data[0].value
+            if (response.data.length > 0) {
+              let sdpNew = response.data[0].value
 
-            console.log("res:", sdpNew)
+              console.log("res:", sdpNew)
 
-            pc.setRemoteDescription(
-              new RTCSessionDescription({
-                type: "answer",
-                sdp: sdpNew,
-              })
-            )
+              pc.setRemoteDescription(
+                new RTCSessionDescription({
+                  type: "answer",
+                  sdp: sdpNew,
+                })
+              )
+
+              
+            } else {
+              console.log("Empty response data")
+            }
           })
       })
 

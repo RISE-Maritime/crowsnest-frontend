@@ -5,7 +5,19 @@ import ByteBuffer from "bytebuffer"
 import { keepWithin360, calcPosFromBearingDistance } from "../utils"
 
 // import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js/dist"
-import { uncover, decodePayloadFromTypeName ,getSubjectSchema, get_subject_from_pub_sub_key} from "keelson-js/dist"
+import {
+  uncover,
+  decodePayloadFromTypeName,
+  getSubjectSchema,
+  get_subject_from_pub_sub_key,
+  enclose,
+  encodePayloadFromTypeName,
+  encloseFromTypeName,
+  constructReqRepKey,
+  isSubjectWellKnown,
+  getProtobufClassFromTypeName
+} from "keelson-js/dist"
+import { SailControlState } from "keelson-js/dist/payloads/SailControlState"
 
 import {
   userState,
@@ -37,6 +49,9 @@ import {
   ATOM_SIM_ACTIVE_MODELS,
   ATOM_SIM_SHIP_MODELS,
 } from "./atoms"
+
+
+// import { keelson.compound } from "keelson-js/dist/payloads"
 
 export const selectUser = selector({
   key: "selectUser",
@@ -94,11 +109,8 @@ export const protoParser = selector({
     const nanos = decodedEnvelope.enclosedAt.nanos
     const envelopeEncodedAtDate = new Date(seconds * 1000 + nanos / 1000000)
 
-
-
     switch (latestMsg.key) {
       case latestMsg.key.match(/^rise\/v0\/masslab\/pubsub\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)?.input: {
-
         let subj = get_subject_from_pub_sub_key(latestMsg.key)
         let schemaProtoMsg = getSubjectSchema(subj)
 
@@ -790,6 +802,76 @@ export const selSetRudder = selector({
   },
 })
 
+export const sailAction = selector({
+  key: "sail_action",
+  get: () => {
+    return null
+  },
+  set: ({ set }, input) => {
+    console.log("🚀 ~ sailAction:", input)
+
+    let realm = "rise"
+    let entityId = "seaman"
+    let responderId = "sheeting_mode"
+    let procedure = "toggle"
+
+    let keyExp = constructReqRepKey(realm, entityId, responderId, procedure)
+
+    console.log("🚀 ~ keyExp:", keyExp)
+
+    //  /** (1= manual, 2= automatic) */
+    //  sheetingMode: number;
+    //  /** (0=actvivated, 1=deactivated) */
+    //  coupledSteeringMode: number;
+    //  /** (0=actvivated, 1=deactivated) */
+    //  variabelThrustMode: number;
+    //  /** (0.0 - 1.0 = 0% - 100%) */
+    //  variabelThrustSet: number;
+    //  /** (0.0 - 1.0 = 0% - 100%) */
+    //  variabelThrustActual: number;
+
+ 
+    let SaStatt = SailControlState.create({ sheetingMode: 1, coupledSteeringMode: 0, variabelThrustMode: 0.5, variabelThrustSet: 0.5 })
+    console.log("🚀 ~ SaStatt:", SaStatt)
+
+    let res = encodePayloadFromTypeName("keelson.compound.SailControlState", SaStatt)
+    console.log("🚀 ~ res:", res)
+
+ 
+    let enve = enclose(res)
+    console.log("🚀 ~ enve:", enve)
+
+    const root = protobuf.Root.fromJSON(bundle)
+    const Envelope = root.lookupType("Envelope")
+    const messStart = Envelope.create({
+      enclosed_at: new Date(),
+      payload: res,
+    })
+    const message = Envelope.encode(messStart).finish()
+
+    let unEnve = uncover(message)
+
+    console.log("🚀 ~ unEnve:", unEnve)
+    // const res = encloseFromTypeName(she, SaStat);
+
+    // console.log("🚀 ~ sailAction ~ res", enve)
+
+ 
+    var Http = new XMLHttpRequest()
+    Http.open("POST", "http://localhost:8001/rise/v0/seaman/rpc/sheeting_mode/toggle", true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(message)
+
+    // set(ATOM_OS_RUDDERS, currentObj => ({
+    //   ...currentObj,
+    //   [newRudderVal.id]: {
+    //     ...currentObj[newRudderVal.id],
+    //     setAngle: newRudderVal.setAngle,
+    //   },
+    // }))
+  },
+})
+
 export const selSetEngine = selector({
   key: "sel_set_engine",
   get: () => {
@@ -823,7 +905,7 @@ export const selSetEngine = selector({
     const message = Envelope.encode(messStart).finish()
 
     var Http = new XMLHttpRequest()
-    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.open("POST", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
     Http.setRequestHeader("Content-Type", "application/octet-stream")
     Http.send(message)
 
@@ -870,7 +952,7 @@ export const selSetThruster = selector({
     const message = Envelope.encode(messStart).finish()
 
     var Http = new XMLHttpRequest()
-    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.open("POST", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
     Http.setRequestHeader("Content-Type", "application/octet-stream")
     Http.send(message)
 
