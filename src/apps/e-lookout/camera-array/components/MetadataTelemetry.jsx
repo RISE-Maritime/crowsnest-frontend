@@ -16,6 +16,7 @@ export default function MetadataTelemetry({ keyExpression }) {
   const [throttle, setThrottle] = useState({ value: 0, received_at: null, enclosed_at: null })
 
   const onMessage = envelope => {
+    // console.log(envelope);
     let msg = parseKeelsonMessage(envelope)
     if (msg.payload) {
       setHeading({

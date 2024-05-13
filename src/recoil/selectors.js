@@ -15,9 +15,11 @@ import {
   encloseFromTypeName,
   constructReqRepKey,
   isSubjectWellKnown,
-  getProtobufClassFromTypeName
+  getProtobufClassFromTypeName,
 } from "keelson-js/dist"
 import { SailControlState } from "keelson-js/dist/payloads/SailControlState"
+import { SailState } from "keelson-js/dist/payloads/SailState"
+import { Envelope } from "keelson-js/dist/Envelope"
 
 import {
   userState,
@@ -50,8 +52,13 @@ import {
   ATOM_SIM_SHIP_MODELS,
 } from "./atoms"
 
-
 // import { keelson.compound } from "keelson-js/dist/payloads"
+
+/* eslint-disable */
+let URL_BASE = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  : "http://localhost:8000"
+/* eslint-enable */
 
 export const selectUser = selector({
   key: "selectUser",
@@ -802,6 +809,60 @@ export const selSetRudder = selector({
   },
 })
 
+export const sailControlAction = selector({
+  key: "sail_control_action",
+  get: () => {
+    return null
+  },
+  set: ({ set }, input) => {
+    console.log("🚀 ~ sail control:", input)
+
+    let realm = "rise"
+    let entityId = "seaman"
+    let responderId = "wind_power"
+    let procedure = "sail_control"
+
+    let keyExp = constructReqRepKey(realm, entityId, responderId, procedure)
+
+    console.log("🚀 ~ keyExp:", keyExp)
+
+    let SailConState = SailControlState.encode({
+      sheetingMode: input.sheetingMode,
+      coupledSteeringMode: input.coupledSteeringMode,
+      variableThrustMode: input.variableThrustMode,
+      variableThrustSetPct: input.variableThrustSetPct,
+    }).finish()
+
+    console.log("🚀 ~ SaStatt:", SailConState)
+
+    let encodedEnvelope = Envelope.encode({
+      enclosedAt: new Date(),
+      payload: SailConState,
+    }).finish()
+
+    let finalURL  = URL_BASE +"/"+ keyExp
+    console.log("🚀 ~ finalURL:", finalURL)
+    // SEND REQUEST 
+    var Http = new XMLHttpRequest()
+    Http.open("POST", finalURL, true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(encodedEnvelope)
+    Http.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        console.log(this.responseText)
+      }
+    }
+
+    // set(ATOM_OS_RUDDERS, currentObj => ({
+    //   ...currentObj,
+    //   [newRudderVal.id]: {
+    //     ...currentObj[newRudderVal.id],
+    //     setAngle: newRudderVal.setAngle,
+    //   },
+    // }))
+  },
+})
+
 export const sailAction = selector({
   key: "sail_action",
   get: () => {
@@ -812,55 +873,37 @@ export const sailAction = selector({
 
     let realm = "rise"
     let entityId = "seaman"
-    let responderId = "sheeting_mode"
-    let procedure = "toggle"
+    let responderId = "wind_power"
+    let procedure = "sail/"+input.sailId
 
     let keyExp = constructReqRepKey(realm, entityId, responderId, procedure)
 
     console.log("🚀 ~ keyExp:", keyExp)
 
-    //  /** (1= manual, 2= automatic) */
-    //  sheetingMode: number;
-    //  /** (0=actvivated, 1=deactivated) */
-    //  coupledSteeringMode: number;
-    //  /** (0=actvivated, 1=deactivated) */
-    //  variabelThrustMode: number;
-    //  /** (0.0 - 1.0 = 0% - 100%) */
-    //  variabelThrustSet: number;
-    //  /** (0.0 - 1.0 = 0% - 100%) */
-    //  variabelThrustActual: number;
+    let SailStateProto = SailState.encode({
+      isActiveMode: input.isActiveMode,
+      sheetingAngleSetDeg: input.sheetingAngleSetDeg,
+    }).finish()
 
- 
-    let SaStatt = SailControlState.create({ sheetingMode: 1, coupledSteeringMode: 0, variabelThrustMode: 0.5, variabelThrustSet: 0.5 })
-    console.log("🚀 ~ SaStatt:", SaStatt)
+    console.log("🚀 ~ SaStatt:", SailStateProto)
 
-    let res = encodePayloadFromTypeName("keelson.compound.SailControlState", SaStatt)
-    console.log("🚀 ~ res:", res)
+    let encodedEnvelope = Envelope.encode({
+      enclosedAt: new Date(),
+      payload: SailStateProto,
+    }).finish()
 
- 
-    let enve = enclose(res)
-    console.log("🚀 ~ enve:", enve)
-
-    const root = protobuf.Root.fromJSON(bundle)
-    const Envelope = root.lookupType("Envelope")
-    const messStart = Envelope.create({
-      enclosed_at: new Date(),
-      payload: res,
-    })
-    const message = Envelope.encode(messStart).finish()
-
-    let unEnve = uncover(message)
-
-    console.log("🚀 ~ unEnve:", unEnve)
-    // const res = encloseFromTypeName(she, SaStat);
-
-    // console.log("🚀 ~ sailAction ~ res", enve)
-
- 
+    let finalURL  = URL_BASE +"/"+ keyExp
+    console.log("🚀 ~ finalURL:", finalURL)
+    // SEND REQUEST 
     var Http = new XMLHttpRequest()
-    Http.open("POST", "http://localhost:8001/rise/v0/seaman/rpc/sheeting_mode/toggle", true)
+    Http.open("POST", finalURL, true)
     Http.setRequestHeader("Content-Type", "application/octet-stream")
-    Http.send(message)
+    Http.send(encodedEnvelope)
+    Http.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        console.log(this.responseText)
+      }
+    }
 
     // set(ATOM_OS_RUDDERS, currentObj => ({
     //   ...currentObj,
