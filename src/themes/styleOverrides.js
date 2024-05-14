@@ -3,8 +3,9 @@ export const componentOverrides = {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "var(--container-background-color)",
+          backgroundColor: "var(--container-backdrop-color)",
           color: "var(--element-active-color)",
+          fontFamily: "Open Sans",
         },
       },
     },
@@ -29,10 +30,59 @@ export const componentOverrides = {
       styleOverrides: {
         root: {
           color: "var(--element-active-color)",
-          backgroundColor: "var(--container-section-color)",
+          // backgroundColor: "var(--container-section-color)",
+          backgroundColor: "var(--container-background-color)",
           border: "1px solid var(--border-outline-color)",
         },
       },
     },
+    MuiList: {
+      styleOverrides: {
+        root: {
+          color: "var(--element-active-color)",
+          backgroundColor: "var(--normal-enabled-background-color)",
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        
+        root: {
+          input: { color: 'var(--element-neutral-color)' },
+          helperText: { color: 'var(--element-active-color)' },
+          fontColor: "var(--element-active-color)",
+
+          backgroundColor: "var(--normal-enabled-background-color)",
+          
+          '&$selected': {
+            color: 'white'
+          },
+
+          '&$success': {
+            color: 'white'
+          },
+          '&$error': {
+            color: 'white'
+          },
+          error: {
+            color: 'white'
+          },
+          
+        },
+       
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+             
+   
+          color: "var(--element-active-color)",
+         
+        },
+      },
+    },
+
+    
   },
 }

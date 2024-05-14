@@ -4,6 +4,23 @@ import bundle from "../proto/bundle.json"
 import ByteBuffer from "bytebuffer"
 import { keepWithin360, calcPosFromBearingDistance } from "../utils"
 
+// import { uncover, decodePayloadFromTypeName } from "@MO-RISE/keelson-js/dist"
+import {
+  uncover,
+  decodePayloadFromTypeName,
+  getSubjectSchema,
+  get_subject_from_pub_sub_key,
+  enclose,
+  encodePayloadFromTypeName,
+  encloseFromTypeName,
+  constructReqRepKey,
+  isSubjectWellKnown,
+  getProtobufClassFromTypeName,
+} from "keelson-js/dist"
+import { SailControlState } from "keelson-js/dist/payloads/SailControlState"
+import { SailState } from "keelson-js/dist/payloads/SailState"
+import { Envelope } from "keelson-js/dist/Envelope"
+
 import {
   userState,
   observationsStateAtom,
@@ -32,8 +49,16 @@ import {
   ATOM_KEELSON_KEYEXP_UNMANAGED,
   ATOM_SIM_STATE,
   ATOM_SIM_ACTIVE_MODELS,
-  ATOM_SIM_SHIP_MODELS
+  ATOM_SIM_SHIP_MODELS,
 } from "./atoms"
+
+// import { keelson.compound } from "keelson-js/dist/payloads"
+
+/* eslint-disable */
+let URL_BASE = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
+  : "http://localhost:8000"
+/* eslint-enable */
 
 export const selectUser = selector({
   key: "selectUser",
@@ -67,6 +92,9 @@ export const setPlatformAIS = selector({
   },
 })
 
+/*
+Parsing incoming messages from the Keelson
+*/
 export const protoParser = selector({
   key: "proto_parser",
   get: () => {
@@ -77,36 +105,34 @@ export const protoParser = selector({
 
     const root = protobuf.Root.fromJSON(bundle)
     let bytes = new Uint8Array(ByteBuffer.fromBase64(latestMsg.value).toArrayBuffer())
+    let parsed = uncover(bytes)
+    let received_at = parsed[0]
+    let enclosed_at = parsed[1]
+    let payload = parsed[2]
+
     const Envelope = root.lookupType("Envelope")
     const decodedEnvelope = Envelope.decode(bytes)
     const seconds = decodedEnvelope.enclosedAt.seconds
     const nanos = decodedEnvelope.enclosedAt.nanos
-
     const envelopeEncodedAtDate = new Date(seconds * 1000 + nanos / 1000000)
 
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/vertical = degrees
-
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/right
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/horizontal
-    // rise/masslab/haddock/masslab-5/haddock/arduino/right
-    // rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/left
-
     switch (latestMsg.key) {
-      // RUDDER 0 (right)
-      case latestMsg.key.match(/^rise\/masslab\/haddock\/masslab-5\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)
-        ?.input: {
-        const PrimitivesTimeFloat = root.lookupType("TimestampedFloat")
-        const readable = PrimitivesTimeFloat.decode(decodedEnvelope.payload)
+      case latestMsg.key.match(/^rise\/v0\/masslab\/pubsub\/lever_position_pct\/arduino\/right\/azimuth\/vertical/)?.input: {
+        let subj = get_subject_from_pub_sub_key(latestMsg.key)
+        let schemaProtoMsg = getSubjectSchema(subj)
 
-        console.log("RUDDER 0:", readable.value)
+        console.log("RUDDER 0 RAW:", payload)
+        let timeFloat = decodePayloadFromTypeName(schemaProtoMsg, payload)
+        console.log("RUDDER 0 PARSED: ", timeFloat.value, timeFloat.timestamp)
+
         let lastValue = get(ATOM_OS_RUDDERS)
 
-        if (lastValue["RUDDER_0"].setAngle !== readable.value) {
+        if (lastValue["RUDDER_0"].setAngle !== timeFloat.value) {
           set(ATOM_OS_RUDDERS, currentObj => ({
             ...currentObj,
             RUDDER_0: {
               ...currentObj["RUDDER_0"],
-              setAngle: readable.value,
+              setAngle: timeFloat.value,
             },
           }))
         }
@@ -783,6 +809,112 @@ export const selSetRudder = selector({
   },
 })
 
+export const sailControlAction = selector({
+  key: "sail_control_action",
+  get: () => {
+    return null
+  },
+  set: ({ set }, input) => {
+    console.log("🚀 ~ sail control:", input)
+
+    let realm = "rise"
+    let entityId = "seaman"
+    let responderId = "wind_power"
+    let procedure = "sail_control"
+
+    let keyExp = constructReqRepKey(realm, entityId, responderId, procedure)
+
+    console.log("🚀 ~ keyExp:", keyExp)
+
+    let SailConState = SailControlState.encode({
+      sheetingMode: input.sheetingMode,
+      coupledSteeringMode: input.coupledSteeringMode,
+      variableThrustMode: input.variableThrustMode,
+      variableThrustSetPct: input.variableThrustSetPct,
+    }).finish()
+
+    console.log("🚀 ~ SaStatt:", SailConState)
+
+    let encodedEnvelope = Envelope.encode({
+      enclosedAt: new Date(),
+      payload: SailConState,
+    }).finish()
+
+    let finalURL  = URL_BASE +"/"+ keyExp
+    console.log("🚀 ~ finalURL:", finalURL)
+    // SEND REQUEST 
+    var Http = new XMLHttpRequest()
+    Http.open("POST", finalURL, true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(encodedEnvelope)
+    Http.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        console.log(this.responseText)
+      }
+    }
+
+    // set(ATOM_OS_RUDDERS, currentObj => ({
+    //   ...currentObj,
+    //   [newRudderVal.id]: {
+    //     ...currentObj[newRudderVal.id],
+    //     setAngle: newRudderVal.setAngle,
+    //   },
+    // }))
+  },
+})
+
+export const sailAction = selector({
+  key: "sail_action",
+  get: () => {
+    return null
+  },
+  set: ({ set }, input) => {
+    console.log("🚀 ~ sailAction:", input)
+
+    let realm = "rise"
+    let entityId = "seaman"
+    let responderId = "wind_power"
+    let procedure = "sail/"+input.sailId
+
+    let keyExp = constructReqRepKey(realm, entityId, responderId, procedure)
+
+    console.log("🚀 ~ keyExp:", keyExp)
+
+    let SailStateProto = SailState.encode({
+      isActiveMode: input.isActiveMode,
+      sheetingAngleSetDeg: input.sheetingAngleSetDeg,
+    }).finish()
+
+    console.log("🚀 ~ SaStatt:", SailStateProto)
+
+    let encodedEnvelope = Envelope.encode({
+      enclosedAt: new Date(),
+      payload: SailStateProto,
+    }).finish()
+
+    let finalURL  = URL_BASE +"/"+ keyExp
+    console.log("🚀 ~ finalURL:", finalURL)
+    // SEND REQUEST 
+    var Http = new XMLHttpRequest()
+    Http.open("POST", finalURL, true)
+    Http.setRequestHeader("Content-Type", "application/octet-stream")
+    Http.send(encodedEnvelope)
+    Http.onreadystatechange = function() {
+      if (this.readyState === 4 && this.status === 200) {
+        console.log(this.responseText)
+      }
+    }
+
+    // set(ATOM_OS_RUDDERS, currentObj => ({
+    //   ...currentObj,
+    //   [newRudderVal.id]: {
+    //     ...currentObj[newRudderVal.id],
+    //     setAngle: newRudderVal.setAngle,
+    //   },
+    // }))
+  },
+})
+
 export const selSetEngine = selector({
   key: "sel_set_engine",
   get: () => {
@@ -816,7 +948,7 @@ export const selSetEngine = selector({
     const message = Envelope.encode(messStart).finish()
 
     var Http = new XMLHttpRequest()
-    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.open("POST", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
     Http.setRequestHeader("Content-Type", "application/octet-stream")
     Http.send(message)
 
@@ -863,7 +995,7 @@ export const selSetThruster = selector({
     const message = Envelope.encode(messStart).finish()
 
     var Http = new XMLHttpRequest()
-    Http.open("PUT", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
+    Http.open("POST", "http://localhost:8000/rise/crowsnest/gui/demo-user/engine_power_set/engine_0", true)
     Http.setRequestHeader("Content-Type", "application/octet-stream")
     Http.send(message)
 
@@ -892,7 +1024,7 @@ export const updateSimState = selector({
     // Getting current state
     const os_eng = get(ATOM_OS_ENGINES)
     const os_rud = get(ATOM_OS_RUDDERS)
-    const os_thr = get(ATOM_OS_THRUSTERS)
+    // const os_thr = get(ATOM_OS_THRUSTERS)
     const os_vel = get(OS_VELOCITY)
     const os_head = get(OS_HEADING)
     const os_pos = get(OS_POSITIONS)
@@ -905,7 +1037,6 @@ export const updateSimState = selector({
     let new_cog = 0
     let new_heading = 0
 
-    
     const engNewton = ship_models[active_model].engine_newton // Newton
     let massa = ship_models[active_model].mass_kg // kg
     const resistance = ship_models[active_model].resistance // constant resistance
