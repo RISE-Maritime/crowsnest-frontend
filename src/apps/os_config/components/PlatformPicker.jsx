@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import { atom, useRecoilState, useRecoilValue } from "recoil"
 import { atomPlatforms, atomActivePlatform, appState, targetsAIS, OS_POSITION_SETTING } from "../../../recoil/atoms"
-import { Grid, TextField, Stack, Typography, Autocomplete } from "@mui/material"
+import { Grid, TextField, Stack, Typography, Autocomplete, Box } from "@mui/material"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
-import styled from "styled-components"
 import DefaultAisTargets from "../../data-flow/components/DefaultAisTargets"
 import AutorenewIcon from "@mui/icons-material/Autorenew"
 import PlatformQuickDescription from "../../data-flow/components/PlatformQuickDescription"
@@ -47,22 +46,19 @@ export const atomOwnShipData = atom({
   },
 })
 
-// Component styling
-const Input = styled("input")({
-  display: "none",
-})
 
-const BoxStyled = styled.div`
-  border: 1px solid var(--border-outline-color);
-  background-color: var(--container-section-color);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  width: 100%;
 
-  &:not(:first-child) {
-    margin-top: 1rem;
-  }
-`
+// const BoxStyled = styled.div`
+//   border: 1px solid var(--border-outline-color);
+//   background-color: var(--container-section-color);
+//   border-radius: 0.5rem;
+//   padding: 1rem;
+//   width: 100%;
+
+//   &:not(:first-child) {
+//     margin-top: 1rem;
+//   }
+// `
 
 export default function PlatformPicker() {
   const platforms = useRecoilValue(atomPlatforms)
@@ -141,7 +137,15 @@ export default function PlatformPicker() {
 
       <Grid item xs={8}>
         {/* PLATFORMS */}
-        <BoxStyled>
+        <Box sx={{
+          border: "1px solid var(--border-outline-color)",
+          backgroundColor: "var(--container-section-color)",
+          borderRadius: "0.5rem",
+          padding: "1rem",
+          width: "100%",
+          "&:not(:first-of-type)": {
+            marginTop: "1rem"
+          }}}>
           <Typography variant="h5">Platforms</Typography>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "0.5rem" }}>
             {Object.values(platforms).map(platform => {
@@ -157,9 +161,17 @@ export default function PlatformPicker() {
               )
             })}
           </Stack>
-        </BoxStyled>
+        </Box>
 
-        <BoxStyled>
+        <Box sx={{
+          border: "1px solid var(--border-outline-color)",
+          backgroundColor: "var(--container-section-color)",
+          borderRadius: "0.5rem",
+          padding: "1rem",
+          width: "100%",
+          "&:not(:first-of-type)": {
+            marginTop: "1rem"
+          }}}>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Typography variant="h5">AIS ({aisFiltered.length} targets)</Typography>
             <Button onClick={updateTargetList}>
@@ -203,33 +215,49 @@ export default function PlatformPicker() {
           {/* Saved AIS targets */}
           <Typography variant="subtitle1">Saved AIS targets</Typography>
           <DefaultAisTargets aisFiltered={AIStargets} />
-        </BoxStyled>
+        </Box>
 
-        <BoxStyled>
+        <Box sx={{
+          border: "1px solid var(--border-outline-color)",
+          backgroundColor: "var(--container-section-color)",
+          borderRadius: "0.5rem",
+          padding: "1rem",
+          width: "100%",
+          "&:not(:first-of-type)": {
+            marginTop: "1rem"
+          }}}>
           <Typography variant="h5">Device</Typography>
           <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ margin: "1rem" }}>
             <Button variant="check" checked={"DEVICE" === activePlatform.activePlatformType} onClick={setDeviceAsOS}>
               Use device sensors as source
             </Button>
           </Stack>
-        </BoxStyled>
+        </Box>
 
-        <BoxStyled>
+        <Box sx={{
+          border: "1px solid var(--border-outline-color)",
+          backgroundColor: "var(--container-section-color)",
+          borderRadius: "0.5rem",
+          padding: "1rem",
+          width: "100%",
+          "&:not(:first-of-type)": {
+            marginTop: "1rem"
+          }}}>
           <Typography variant="h5">Replay log (Coming soon)</Typography>
           <label htmlFor="contained-button-file">
-            <Input accept="image/*" id="contained-button-file" multiple type="file" />
+            <input style={{display: "none"}} accept="image/*" id="contained-button-file" multiple type="file" />
             <Button variant="outlined" disabled={true} component="span" color="secondary">
               Upload file
             </Button>
           </label>
-        </BoxStyled>
+        </Box>
       </Grid>
 
       {/* Preview of selected viewpoint */}
       <Grid item xs={4}>
-        <BoxStyled>
+        <Box>
           <PlatformQuickDescription />
-        </BoxStyled>
+        </Box>
       </Grid>
     </Grid>
   )
