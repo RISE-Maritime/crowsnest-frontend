@@ -1,17 +1,26 @@
-# Crow's Nest - Frontend
+# Crowsnest
 
-A React web-application working as Crow's Nest frontend.
+Crowsnest, a testing and demonstration application base developed by RISE Maritime. This platform is designed to serve as a launchpad for swift prototyping, offering an opportunity to experience future Human-Machine Interfaces (HMI) for use in marine operations, remote operation centers and more.
 
-## Development in VSCode
+It is a [React](https://react.dev/) web-application aimed to use [Open Bridge](https://www.openbridge.no/) design guidelines as fare as reasonable e posable.  
 
-1. Clone the `crowsnest-frontend` repository.
-2. Open the `crowsnest-frontend` directory in VSCode.
-3. Install the dependencies with:
-   `npm install`
-4. Open a terminal window and start the frontend development server:
-   `npm start` (accessible at `localhost:3000`).
-5. Start the crowsnest-gis and crowsnest-tiles services:
-   `docker-compose -f docker-compose.dev.yml up -d`
+## Connectors
+
+- Keelson (Zenoh)
+- MQTT
+- Devise sensors (GNSS & IMU)
+
+## Quick getting stated with a local copy on your computer
+
+1. Clone the repository `git clone git@github.com:MO-RISE/crowsnest-frontend.git` 
+2. Go in to the folder `cd crowsnest-frontend`
+3. The application needs first to install dependencies to run, you need [Node.js](https://nodejs.org/en/download/current) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed on your computer. To install dependencies run: `npm install`
+4. Start the frontend development server:
+   `npm start` it will open webpage to `localhost:3000` or go enter the URL manual into your browser.
+
+## Navigation charts setup
+
+1. Start the crowsnest-gis and crowsnest-tiles services: `docker-compose -f docker-compose.dev.yml up -d`
 
 ## Production
 
@@ -28,13 +37,13 @@ To build the image yourself:
 
 2. Cd into the main directory (i.e. where the `Dockerfile` file is) and run the following command:
 
-```
+```bash
 docker build . -t crowsnest-frontend .
 ```
 
 Afterwards, the production container can be run with a command similar to this one:
 
-```
+```bash
 docker run --rm -p 8888:80 crowsnest-frontend
 ```
 
@@ -44,14 +53,14 @@ The application will then be available at the URL `http://localhost:9999`. Note 
 
 Install comandline tool on locally:
 
-```
+```bash
 npm install -g protobufjs
 npm install -g protobufjs-cli
 ```
 
 Bundel all `.proto`
 
-```
+```bash
 pbjs -t json file1.proto file2.proto > bundle.json
 
 
@@ -73,60 +82,7 @@ Example of export options in figma
 
 Plotting maps does not work in _Firefox_ because it is not compatible with `OffscreenCanvas`.
 
-## Connectors frontend
 
-- Keelson (Zenoh) -->
-  - Input (json): data (str) --> JSON (obj)
-  - Input (proto): data (str) --> JSON (obj) - [key, value] -> Vale -> Base64ToBytes --> Envelope --> payload_type
-- MQTT -->
-  - Input (json): data (str) --> JSON (obj)
-  - Input (proto): data (str) --> JSON (obj) --> Base64ToBytes --> Envelope --> payload_type
-
-OUT: KEY & VALUE --> parsed to recoil state
-
-rise/crowsnest/gui/<user_name>/<tag>/<react_component>
-
-rise/crowsnest/<internal_app_name>/<user_name>/<tag>/<react_component>
-
-[
-{
-"key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/azimuth/horizontal",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/raw_bytes/arduino/left",
-"value": "CgwIgKHuqQYQjIv5kgESGAoMCICh7qkGEPa85ZIBEggCAwAAZAAAAA==",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/knob/right",
-"value": "CgwIgKHuqQYQqP/mkwESDgoMCICh7qkGEPa85ZIB",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/raw_bytes/arduino/right",
-"value": "CgwIgKHuqQYQhrbSlwESHAoMCICh7qkGEKK9vpcBEgwDBQIAGABhAGMAIwA=",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/horizontal",
-"value": "CgwIgKHuqQYQhIX9iAESEwoMCICh7qkGEIKovIgBFQAAAEA=",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/azimuth/vertical",
-"value": "CgwIgKHuqQYQltWaiQESEwoMCICh7qkGEIKovIgBFQAAwEE=",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/left",
-"value": "CgwIgKHuqQYQ+snTiQESEwoMCICh7qkGEIKovIgBFQAAxkI=",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/left/azimuth/vertical",
-"value": "CgwIgKHuqQYQ5uPMkwESEwoMCICh7qkGEPa85ZIBFQAAyEI=",
-},
-{
-"key": "rise/masslab/haddock/masslab-5/lever_position_pct/arduino/right/knob/right",
-"value": "CgwIgKHuqQYQ5+C4iQESEwoMCICh7qkGEIKovIgBFQAAwkI=",
-}
-]
-
-https://github.com/react-grid-layout/react-draggable
 
 ## Example .env development setup
 
