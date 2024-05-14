@@ -6,6 +6,7 @@ import { useKeelsonData } from "../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../utils"
 
 export default function index() {
+  
   const onMessage = envelope => {
     let msg = parseKeelsonMessage(envelope)
     console.log("Control msg", msg)
@@ -15,11 +16,11 @@ export default function index() {
 
   return (
     <div>
-      <Grid container>
+      <Grid container sx={{ padding: "0.25rem" }} spacing={0.5}>
         <Grid item xs={4}>
           <ThrustPanel />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={8}>
           <SailPanel />
         </Grid>
       </Grid>

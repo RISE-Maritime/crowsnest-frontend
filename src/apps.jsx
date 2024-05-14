@@ -9,6 +9,7 @@ import { Obi10Autonomous as IconAutonomous } from "@oicl/openbridge-webcomponent
 import { Obi07RoutePlanning as IconRoutePlanning } from "@oicl/openbridge-webcomponents-react/icons/icon-07-route-planning"
 import { Obi07Erbl as IconErbl } from "@oicl/openbridge-webcomponents-react/icons/icon-07-erbl"
 import { Obi03Info as IconInfo } from "@oicl/openbridge-webcomponents-react/icons/icon-03-info"
+import { Obi17ShipSailship as IconSailShip } from "@oicl/openbridge-webcomponents-react/icons/icon-17-ship-sailship"
 import InsightsRoundedIcon from "@mui/icons-material/InsightsRounded"
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded"
 import ROUTES from "./ROUTES.json"
@@ -73,11 +74,11 @@ export const APPS = [
   },
   {
     href: ROUTES.WIND_POWER,
-    icon: <IconRoutePlanning size="24" slot="icon" />,
-    leadingIcon: <IconRoutePlanning slot="leading-icon" />,
-    buttonIcon: <IconRoutePlanning />,
-    label: "WIND POWER",
-    description: "Wind power ships control and monitoring",
+    icon: <IconSailShip size="24" slot="icon" />,
+    leadingIcon: <IconSailShip slot="leading-icon" />,
+    buttonIcon: <IconSailShip />,
+    label: "SAIL",
+    description: "Controls and coning for Wind powered ships",
   },
 ]
 

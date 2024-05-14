@@ -27,7 +27,7 @@ export default function SailControl() {
   }
 
   return (
-    <Paper>
+    <Paper >
       <Button onClick={makeQuerySailControl}>TEST QUERY SAIL CONTROL</Button>
       <br />
       <Button onClick={makeQuerySails}>TEST QUERY SAILS</Button>
