@@ -1,6 +1,6 @@
 import React from "react"
-import SailPanel from "./components/SailPanel"
-import ThrustPanel from "./components/ThrustPanel"
+import SailPanel from "./components/PanelSail"
+import ThrustPanel from "./components/PanelThrust"
 import { Grid } from "@mui/material"
 import { useKeelsonData } from "../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../utils"
