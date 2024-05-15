@@ -2,6 +2,7 @@ import React from "react"
 import { Button, Paper } from "@mui/material"
 import { sailControlAction, sailAction } from "../../../recoil/selectors"
 import { useSetRecoilState } from "recoil"
+import CardHeading from "./CardHeading"
 
 export default function SailControl() {
   const newSailControlAction = useSetRecoilState(sailControlAction)
@@ -20,14 +21,15 @@ export default function SailControl() {
   const makeQuerySails = () => {
     console.log("makeQuerySails")
     newSailAction({
-      sailId: 0, 
+      sailId: 0,
       isActiveMode: 0, // (int) 0=activated, 1=deactivated
       sheetingAngleSetDeg: 45, // # (float) -180 to 180 degrees
     })
   }
 
   return (
-    <Paper >
+    <Paper>
+      <CardHeading heading="Sail control" />
       <Button onClick={makeQuerySailControl}>TEST QUERY SAIL CONTROL</Button>
       <br />
       <Button onClick={makeQuerySails}>TEST QUERY SAILS</Button>
