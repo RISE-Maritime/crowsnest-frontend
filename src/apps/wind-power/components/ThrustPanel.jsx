@@ -8,8 +8,8 @@ import ControlThrust from "./ControlThrust"
 export default function ThrustPanel() {
   return (
     <Paper>
+      <CardHeading heading="Variable sail thrust" />
       <Stack direction="column" justifyContent="center" alignItems="center" spacing={0}>
-        <CardHeading heading="Thrust" />
         <ObcInstrumentField
           value={5}
           hasSetpoint={true}

@@ -1,22 +1,21 @@
 import React from "react"
-import { Paper, Typography } from "@mui/material"
+import { Paper, Typography, Grid, Stack } from "@mui/material"
 import { ObcWatch } from "@oicl/openbridge-webcomponents-react/navigation-instruments/watch/watch"
 import SailPNG from "../../../resources/Sail.png"
 import styled from "@emotion/styled"
 import CardHeading from "../components/CardHeading"
+import { ObcInstrumentField } from "@oicl/openbridge-webcomponents-react/navigation-instruments/instrument-field/instrument-field"
 
 const ShipOutline = styled.div`
   position: relative;
-  margin: 1rem;
   padding: 3rem 2rem 2rem;
   border-radius: 50% 50% 0% 0% / 17% 17% 0% 0%;
   border: 1px solid red;
+  width: 205px;
 `
 
 const SailWrapper = styled.div`
   position: relative;
-  height: 100%;
-  width: 100%;
 `
 
 const SailImageWrapper = styled.div`
@@ -27,11 +26,13 @@ const SailImageWrapper = styled.div`
 `
 
 const SailImage = styled.img`
-  transform: rotate(90deg);
+  transform: rotate(0deg);
   transition: transform 1s ease-in-out;
+  max-height: 100px;
+  width: auto;
 
   &:hover {
-    transform: rotate(0deg);
+    transform: rotate(90deg);
   }
 `
 
@@ -39,68 +40,83 @@ export default function SailPositions() {
   return (
     <Paper>
       <CardHeading heading="Sail positions" />
-      <ShipOutline>
-        <SailWrapper>
-          <ObcWatch />
-          <SailImageWrapper>
-            <SailImage src={SailPNG} />
-          </SailImageWrapper>
-        </SailWrapper>
-        <SailWrapper>
-          <ObcWatch />
-          <SailImageWrapper>
-            <SailImage src={SailPNG} />
-          </SailImageWrapper>
-        </SailWrapper>
-        <SailWrapper>
-          <ObcWatch />
-          <SailImageWrapper>
-            <SailImage src={SailPNG} />
-          </SailImageWrapper>
-        </SailWrapper>{" "}
-        <SailWrapper>
-          <ObcWatch />
-          <SailImageWrapper>
-            <SailImage src={SailPNG} />
-          </SailImageWrapper>
-        </SailWrapper>{" "}
-        <SailWrapper>
-          <ObcWatch />
-          <SailImageWrapper>
-            <SailImage src={SailPNG} />
-          </SailImageWrapper>
-        </SailWrapper>
-        <SailWrapper>
-          <ObcWatch />
-          <SailImageWrapper>
-            <SailImage src={SailPNG} />
-          </SailImageWrapper>
-        </SailWrapper>
-        <Typography
-          variant="p"
-          sx={{ position: "absolute", top: "1rem", left: "50%", transform: "translateX(-50%)", fontWeight: "600" }}
-        >
-          0°
-        </Typography>
-        <Typography
-          variant="p"
-          sx={{ position: "absolute", top: "50%", left: "1rem", transform: "translateY(-50%)", fontWeight: "600" }}
-        >
-          -90°
-        </Typography>
-        <Typography
-          variant="p"
-          sx={{ position: "absolute", top: "50%", right: "1rem", transform: "translateY(-50%)", fontWeight: "600" }}
-        >
-          90°
-        </Typography>
-        <Typography
-          variant="p"
-          sx={{ position: "absolute", bottom: "1rem", left: "50%", transform: "translateX(-50%)", fontWeight: "600" }}
-        >
-          180°
-        </Typography>
-      </ShipOutline>
+
+      <Grid container padding={2}>
+        <Grid item xs={6}>
+          <ShipOutline>
+            <SailWrapper>
+              <ObcWatch />
+              <SailImageWrapper>
+                <SailImage src={SailPNG} />
+              </SailImageWrapper>
+            </SailWrapper>
+            <SailWrapper>
+              <ObcWatch />
+              <SailImageWrapper>
+                <SailImage src={SailPNG} />
+              </SailImageWrapper>
+            </SailWrapper>
+            <SailWrapper>
+              <ObcWatch />
+              <SailImageWrapper>
+                <SailImage src={SailPNG} />
+              </SailImageWrapper>
+            </SailWrapper>{" "}
+            <SailWrapper>
+              <ObcWatch />
+              <SailImageWrapper>
+                <SailImage src={SailPNG} />
+              </SailImageWrapper>
+            </SailWrapper>{" "}
+            <SailWrapper>
+              <ObcWatch />
+              <SailImageWrapper>
+                <SailImage src={SailPNG} />
+              </SailImageWrapper>
+            </SailWrapper>
+            <SailWrapper>
+              <ObcWatch />
+              <SailImageWrapper>
+                <SailImage src={SailPNG} />
+              </SailImageWrapper>
+            </SailWrapper>
+            <Typography
+              variant="p"
+              sx={{ position: "absolute", top: "1rem", left: "50%", transform: "translateX(-50%)", fontWeight: "600" }}
+            >
+              0°
+            </Typography>
+            <Typography
+              variant="p"
+              sx={{ position: "absolute", top: "50%", left: "1rem", transform: "translateY(-50%)", fontWeight: "600" }}
+            >
+              -90°
+            </Typography>
+            <Typography
+              variant="p"
+              sx={{ position: "absolute", top: "50%", right: "1rem", transform: "translateY(-50%)", fontWeight: "600" }}
+            >
+              90°
+            </Typography>
+            <Typography
+              variant="p"
+              sx={{ position: "absolute", bottom: "1rem", left: "50%", transform: "translateX(-50%)", fontWeight: "600" }}
+            >
+              180°
+            </Typography>
+          </ShipOutline>
+        </Grid>
+        <Grid item xs paddingTop={4}>
+          <Stack justifyContent="space-around" sx={{ height: "100%" }} alignItems="center">
+            <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />
+            <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />
+            <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />
+            <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />
+            <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />
+            <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />
+          </Stack>
+        </Grid>
+      </Grid>
     </Paper>
   )
 }

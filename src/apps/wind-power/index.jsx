@@ -1,5 +1,5 @@
 import React from "react"
-import SailPanel from "./components/SailPanel"
+import PanelSail from "./components/PanelSail"
 import ThrustPanel from "./components/ThrustPanel"
 import SailPositions from "./components/SailPositions"
 import { Grid } from "@mui/material"
@@ -16,14 +16,14 @@ export default function index() {
 
   return (
     <Grid container sx={{ padding: "0.25rem" }} spacing={0.5}>
-      <Grid item xs={2}>
+      <Grid item xs={3}>
         <ThrustPanel />
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs>
         <SailPositions />
       </Grid>
-      <Grid item xs={8}>
-        <SailPanel />
+      <Grid item xs={6}>
+        <PanelSail />
       </Grid>
     </Grid>
   )

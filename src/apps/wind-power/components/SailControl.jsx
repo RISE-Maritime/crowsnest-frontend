@@ -1,8 +1,9 @@
 import React from "react"
-import { Button, Paper } from "@mui/material"
+import { Button, Paper, Stack, FormGroup, FormControlLabel, Checkbox, Radio, Typography } from "@mui/material"
 import { sailControlAction, sailAction } from "../../../recoil/selectors"
 import { useSetRecoilState } from "recoil"
 import CardHeading from "./CardHeading"
+import { ObcButton } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 export default function SailControl() {
   const newSailControlAction = useSetRecoilState(sailControlAction)
@@ -29,7 +30,37 @@ export default function SailControl() {
 
   return (
     <Paper>
-      <CardHeading heading="Sail control" />
+      <CardHeading heading="Sheeting" />
+
+      <Stack direction="row" spacing={2} padding={1} useFlexGap flexWrap="wrap" justifyContent="space-between">
+        <FormGroup>
+          <FormControlLabel control={<Radio defaultChecked />} label="Use sheeting" />
+        </FormGroup>
+
+        <Stack direction="row" spacing={0} useFlexGap flexWrap="wrap">
+          <Stack alignItems="center">
+            <ObcButton checked={false} variant="check" onClick={() => console.log("hej")}>
+              Automatic control
+            </ObcButton>
+            <Typography variant="body2">Relative to wind</Typography>
+          </Stack>
+          <Stack alignItems="center">
+            <ObcButton checked={true} variant="check" onClick={() => console.log("hej")}>
+              Manual control
+            </ObcButton>
+            <Typography variant="body2">Relative to ship</Typography>
+          </Stack>
+        </Stack>
+
+        <Stack direction="row" spacing={0} useFlexGap flexWrap="wrap">
+          <ObcButton checked={false} variant="check" onClick={() => console.log("hej")}>
+            Coupled sail steering
+          </ObcButton>
+          <ObcButton checked={true} variant="check" onClick={() => console.log("hej")}>
+            Uncoupled sail steering
+          </ObcButton>
+        </Stack>
+      </Stack>
       <Button onClick={makeQuerySailControl}>TEST QUERY SAIL CONTROL</Button>
       <br />
       <Button onClick={makeQuerySails}>TEST QUERY SAILS</Button>
