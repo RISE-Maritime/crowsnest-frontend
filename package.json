@@ -26,7 +26,7 @@
     "framer-motion": "^11.1.9",
     "google-protobuf": "^3.21.2",
     "jpeg-js": "^0.4.4",
-    "keelson-js": "^0.3.1-pre.25",
+    "keelson-js": "^0.3.4",
     "mapbox-gl": "^3.3.0",
     "maplibre-gl": "^4.2.0",
     "moment-timezone": "^0.5.45",

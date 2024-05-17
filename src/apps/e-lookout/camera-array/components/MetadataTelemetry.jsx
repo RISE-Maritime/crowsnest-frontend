@@ -16,7 +16,7 @@ export default function MetadataTelemetry({ keyExpression }) {
   const [throttle, setThrottle] = useState({ value: 0, received_at: null, enclosed_at: null })
 
   const onMessage = envelope => {
-    // console.log(envelope);
+    console.log(envelope);
     let msg = parseKeelsonMessage(envelope)
     if (msg.payload) {
       setHeading({
@@ -40,7 +40,8 @@ export default function MetadataTelemetry({ keyExpression }) {
     }
   }
 
-  useKeelsonData(keyExpression, "get_loop", onMessage)
+  // useKeelsonData(keyExpression, "get_loop", onMessage)
+  useKeelsonData(keyExpression, "subscribe", onMessage)
 
   return (
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
