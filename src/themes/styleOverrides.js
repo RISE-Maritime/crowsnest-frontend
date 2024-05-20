@@ -30,7 +30,6 @@ export const componentOverrides = {
       styleOverrides: {
         root: {
           color: "var(--element-active-color)",
-          // backgroundColor: "var(--container-section-color)",
           backgroundColor: "var(--container-background-color)",
           border: "1px solid var(--border-outline-color)",
         },
@@ -46,43 +45,34 @@ export const componentOverrides = {
     },
     MuiTextField: {
       styleOverrides: {
-        
         root: {
-          input: { color: 'var(--element-neutral-color)' },
-          helperText: { color: 'var(--element-active-color)' },
+          input: { color: "var(--element-neutral-color)" },
+          helperText: { color: "var(--element-active-color)" },
           fontColor: "var(--element-active-color)",
-
           backgroundColor: "var(--normal-enabled-background-color)",
-          
-          '&$selected': {
-            color: 'white'
+
+          "&$selected": {
+            color: "white",
           },
 
-          '&$success': {
-            color: 'white'
+          "&$success": {
+            color: "white",
           },
-          '&$error': {
-            color: 'white'
+          "&$error": {
+            color: "white",
           },
           error: {
-            color: 'white'
+            color: "white",
           },
-          
         },
-       
       },
     },
     MuiFormLabel: {
       styleOverrides: {
         root: {
-             
-   
           color: "var(--element-active-color)",
-         
         },
       },
     },
-
-    
   },
 }

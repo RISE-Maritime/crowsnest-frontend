@@ -1,0 +1,32 @@
+import React from "react"
+import { styled } from "@mui/material/styles"
+import { FormGroup, FormControlLabel, Radio } from "@mui/material"
+
+// Styled to match Open Brigde: Check button as much as possible
+// TODO: Handle states
+
+const StyledFormGroup = styled(FormGroup)`
+  height: 3rem;
+  justify-content: center;
+`
+
+const StyledFormControlLabel = styled(FormControlLabel)`
+  height: 2.125rem;
+  padding: 0 1rem 0 0.5rem;
+  margin: 0;
+  background-color: var(--normal-enabled-background-color);
+  border: 1px solid var(--normal-enabled-border-color);
+  border-radius: 0.375rem;
+
+  .Mui-checked + .MuiFormControlLabel-label {
+    font-weight: 600;
+  }
+`
+
+export default function LabelledRadioButton({ label, checked }) {
+  return (
+    <StyledFormGroup>
+      <StyledFormControlLabel control={<Radio checked={checked} />} label={label} />
+    </StyledFormGroup>
+  )
+}

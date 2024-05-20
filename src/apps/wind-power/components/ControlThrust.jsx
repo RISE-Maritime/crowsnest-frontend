@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import SvgThrust0to100 from "./SvgThrust0to100"
-import { Stack } from "@mui/material"
+import { Stack, Typography } from "@mui/material"
 
 export default function ControlThrust() {
   const [engines, setEngines] = useState({
@@ -20,7 +20,6 @@ export default function ControlThrust() {
     },
   })
 
-
   return (
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
       <Stack
@@ -28,16 +27,16 @@ export default function ControlThrust() {
         justifyContent="space-between"
         alignItems="center"
         spacing={2}
-        sx={{ height: "46rem", paddingTop: "0rem", fontSize: "1.5rem" }}
+        sx={{ height: "695px", paddingTop: "0rem", fontSize: "1rem" }}
       >
         <p>
-          <strong>100%</strong>
+          <b>100%</b>
         </p>
         <p>
-          <strong>50%</strong>
+          <b>50%</b>
         </p>
         <p>
-          <strong>0%</strong>
+          <b>0%</b>
         </p>
       </Stack>
       <SvgThrust0to100

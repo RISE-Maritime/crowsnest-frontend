@@ -61,13 +61,13 @@ export default function SailPositions() {
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
-            </SailWrapper>{" "}
+            </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
-            </SailWrapper>{" "}
+            </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
