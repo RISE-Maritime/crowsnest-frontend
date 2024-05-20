@@ -77,7 +77,7 @@ function manageKeyValueStore(store, key, createValue, deleteValue) {
 function CreateGetDataLoop(url, delay) {
   return setInterval(() => {
     axios
-      .get(url)
+      .post(url)
       .then(res => {
         if (!(Array.isArray(res) && res.length === 0)) {
           postMessage("get_loop", res.data)        

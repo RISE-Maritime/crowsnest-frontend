@@ -81,7 +81,7 @@ export default function LidarChart({ keyExpression }) {
     setPointcloud(pointCloudParsed)
   }
 
-  useKeelsonData(keyExpression, "get_loop", onMessage)
+  useKeelsonData(keyExpression, "subscribe", onMessage)
 
   return (
     <div style={{ height: "30rem", position: "relative", overflow: "hidden" }}>
