@@ -2,11 +2,10 @@ import React, { useState } from "react"
 import DeckGL from "@deck.gl/react"
 import ReactMapGl from "react-map-gl/maplibre"
 import basemaps from "../../../ECDIS/components/baseMaps.json"
-import { PointCloudLayer, ScatterplotLayer } from "@deck.gl/layers"
+import { PointCloudLayer } from "@deck.gl/layers"
 import { COORDINATE_SYSTEM } from "@deck.gl/core"
 import { useKeelsonData } from "../../../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../../../utils"
-import { max } from "moment-timezone"
 
 /* eslint-disable */
 // const routerURL = process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL
@@ -41,18 +40,6 @@ export default function LidarChart({ keyExpression }) {
       coordinateSystem: COORDINATE_SYSTEM.METER_OFFSETS,
       pickable: true,
     }),
-    // new ScatterplotLayer({
-    //   id: 'ScatterplotLayer',
-    //   data: [[11.976048877985928, 57.68867744534118]],
-    //   stroked: true,
-    //   getPosition: d => d,
-    //   getRadius: d => 1,
-    //   getFillColor: [255, 140, 0],
-    //   getLineColor: [0, 0, 0],
-    //   getLineWidth: 1,
-    //   radiusScale: 1,
-    //   pickable: true
-    // })
   ]
 
   function parseUint8ArrayToPointArray(uint8Array, pointStride) {
@@ -70,15 +57,18 @@ export default function LidarChart({ keyExpression }) {
 
   const onMessage = envelope => {
     // console.log("🚀 ~ onMessage ~ envelope:", envelope)
-    let msg = parseKeelsonMessage(envelope)
-    console.log("🚀 ~ LIDAR PAYLOAD:", msg)
-    let pointStride = msg.payload.pointStride
-    let binary_positions = new Uint8Array(msg.payload.data) // Assuming this is your binary data
-    let pointCloudParsed = parseUint8ArrayToPointArray(binary_positions, pointStride)
 
-    // console.log("🚀 ~ onMessage ~ pointCloudParsed:", pointCloudParsed)
+    if (envelope.key === "rise/v0/boatswain/pubsub/point_cloud/ydlidar") {
+      let msg = parseKeelsonMessage(envelope)
+      // console.log("🚀 ~ LIDAR PAYLOAD:", msg)
+      let pointStride = msg.payload.pointStride
+      let binary_positions = new Uint8Array(msg.payload.data) // Assuming this is your binary data
+      let pointCloudParsed = parseUint8ArrayToPointArray(binary_positions, pointStride)
 
-    setPointcloud(pointCloudParsed)
+      // console.log("🚀 ~ onMessage ~ pointCloudParsed:", pointCloudParsed)
+
+      setPointcloud(pointCloudParsed)
+    }
   }
 
   useKeelsonData(keyExpression, "subscribe", onMessage)

@@ -10,6 +10,13 @@ import { Obi13CameraOn as IconCameraOn } from "@oicl/openbridge-webcomponents-re
  *
  * Component: CamCanvasFrame
  */
+
+/* eslint-disable */
+let URL_WEB_RTC =
+  (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000") +
+  "/rise/v0/boatswain/rpc/mediamtx/whep"
+/* eslint-enable */
+
 export default function CamControllerFrame({ defaultSelected }) {
   const [selectedCameraId, setSelectedCameraId] = useState(defaultSelected)
 
@@ -74,20 +81,13 @@ export default function CamControllerFrame({ defaultSelected }) {
       .then(function () {
         var offer = pc.localDescription
 
-        /* eslint-disable */
-        let URL_WEB_RTC =
-          (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_
-            ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL_
-            : "http://localhost:8000") +
-          "/rise/v0/boatswain/rpc/mediamtx/whep"
 
-        /* eslint-enable */
 
         console.log("Request ULR: " + URL_WEB_RTC)
 
         axios
           .post(URL_WEB_RTC, {
-            path: "cam-"+camID,
+            path: "cam-" + camID,
             sdp: offer.sdp,
           })
           .then(response => {
@@ -108,6 +108,8 @@ export default function CamControllerFrame({ defaultSelected }) {
             } else {
               console.log("Empty response data")
             }
+          }).catch(function (e) {
+            console.log("WebRTC Error", e)
           })
       })
 
