@@ -14,7 +14,7 @@ import Draggable from "react-draggable"
  * @param {boolean} setEngines (atom set)
  * @param {boolean} engines (atom value)
  */
-export default function SvgThrust0to100({ setPower, actPower, thrusterID, thrusterNAME, isTouchControl, setEngines, engines }) {
+export default function SvgThrust0to100({ setPower, actPower, isTouchControl, setSailControl }) {
   const SVG_HEIGHT = 345
 
   // function handleStart(e, ui) {
@@ -26,13 +26,13 @@ export default function SvgThrust0to100({ setPower, actPower, thrusterID, thrust
   // }
 
   function handleStop(e, ui) {
-    // console.log("sTOP", e, ui)
-    setEngines({
-      ...engines,
-      [thrusterID]: {
-        ...engines[thrusterID],
-        setPower: Math.round(((-ui.y + SVG_HEIGHT) / (SVG_HEIGHT * 2)) * 100),
-      },
+
+
+    setSailControl(prevState => {
+      return {
+        ...prevState,
+        variableThrustSetPct: Math.round(((-ui.y + SVG_HEIGHT) / (SVG_HEIGHT * 2)) * 100) /100,
+      }
     })
   }
 
