@@ -8,7 +8,7 @@ import LabelledRadioButton from "./LabelledRadioButton"
 
 export default function ThrustPanel() {
   return (
-    <Paper>
+    <Paper sx={{ height: "100%" }}>
       <GridHeading heading="Variable sail thrust" actionButton={<LabelledRadioButton label="Use variable thrust" />} />
       <Stack direction="column" justifyContent="center" alignItems="center" padding={2}>
         <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>

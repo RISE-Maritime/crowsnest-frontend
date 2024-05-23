@@ -10,7 +10,7 @@ const ShipOutline = styled.div`
   position: relative;
   padding: 3rem 2rem 2rem;
   border-radius: 50% 50% 0% 0% / 17% 17% 0% 0%;
-  border: 1px solid red;
+  border: 3px solid var(--border-outline-color);
   width: 205px;
 `
 
@@ -38,7 +38,7 @@ const SailImage = styled.img`
 
 export default function SailPositions() {
   return (
-    <Paper>
+    <Paper sx={{ height: "100%" }}>
       <GridHeading heading="Sail positions" />
 
       <Grid container paddingY={1} paddingX={2}>
@@ -106,7 +106,7 @@ export default function SailPositions() {
             </Typography>
           </ShipOutline>
         </Grid>
-        <Grid item xs paddingTop={4}>
+        <Grid item xs paddingTop={9}>
           <Stack justifyContent="space-around" sx={{ height: "100%" }} alignItems="center">
             <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />
             <ObcInstrumentField hasSetpoint={true} setpoint={90} degree value={90} tag="Angle" />

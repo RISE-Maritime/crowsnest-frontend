@@ -82,13 +82,13 @@ export default function index() {
 
   return (
     <Grid container sx={{ padding: "0.25rem" }} spacing={0.5}>
-      <Grid item xs={3}>
+      <Grid item xs={3} sx={{ height: "100vh - 58px" }}>
         <ThrustPanel />
       </Grid>
-      <Grid item xs>
-        <SailPositions sailsState={sailsState} />
+      <Grid item xs sx={{ height: "100vh - 58px" }}>
+        <SailPositions />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} sx={{ height: "100vh - 58px" }}>
         <PanelSail />
       </Grid>
     </Grid>

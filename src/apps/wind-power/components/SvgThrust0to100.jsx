@@ -40,9 +40,9 @@ export default function SvgThrust0to100({ setPower, actPower, thrusterID, thrust
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="380"
-      height="869"
+      height="850"
       fill="none"
-      viewBox="0 0 380 869"
+      viewBox="0 0 380 850"
       overflow="visible"
       style={{ marginTop: "-6rem" }}
     >

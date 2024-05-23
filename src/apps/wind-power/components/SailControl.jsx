@@ -5,6 +5,7 @@ import { useSetRecoilState } from "recoil"
 import GridHeading from "./GridHeading"
 import { ObcButton } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import LabelledRadioButton from "./LabelledRadioButton"
+import SailControlButtonSlider from "./SailControlButtonSlider"
 
 export default function SailControl() {
   const newSailControlAction = useSetRecoilState(sailControlAction)
@@ -30,7 +31,7 @@ export default function SailControl() {
   }
 
   return (
-    <Paper>
+    <Paper sx={{ height: "100%" }}>
       <GridHeading heading="Sheeting" actionButton={<LabelledRadioButton label="Use sheeting" checked={true} />} />
 
       <Stack direction="row" spacing={1} margin={2} justifyContent="space-between">
@@ -59,74 +60,20 @@ export default function SailControl() {
         </Stack>
       </Stack>
 
-      <Grid container direction="column" spacing={0} paddingLeft={2} paddingRight={2}>
-        <Grid item sx={{ borderTop: "1px solid red", alignContent: "center" }} paddingTop={6} paddingBottom={6}>
-          <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button>-10</Button>
-            <Button>-5</Button>
-            <Button>-1</Button>
-            <Button>+1</Button>
-            <Button>+5</Button>
-            <Button>+10</Button>
-          </ButtonGroup>
-        </Grid>
-        <Grid item sx={{ borderTop: "1px solid red", alignContent: "center" }} paddingTop={6} paddingBottom={6}>
-          <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button>-10</Button>
-            <Button>-5</Button>
-            <Button>-1</Button>
-            <Button>+1</Button>
-            <Button>+5</Button>
-            <Button>+10</Button>
-          </ButtonGroup>
-        </Grid>
-        <Grid item sx={{ borderTop: "1px solid red", alignContent: "center" }} paddingTop={6} paddingBottom={6}>
-          <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button>-10</Button>
-            <Button>-5</Button>
-            <Button>-1</Button>
-            <Button>+1</Button>
-            <Button>+5</Button>
-            <Button>+10</Button>
-          </ButtonGroup>
-        </Grid>
-        <Grid item sx={{ borderTop: "1px solid red", alignContent: "center" }} paddingTop={6} paddingBottom={6}>
-          <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button>-10</Button>
-            <Button>-5</Button>
-            <Button>-1</Button>
-            <Button>+1</Button>
-            <Button>+5</Button>
-            <Button>+10</Button>
-          </ButtonGroup>
-        </Grid>
-        <Grid item sx={{ borderTop: "1px solid red", alignContent: "center" }} paddingTop={6} paddingBottom={6}>
-          <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button>-10</Button>
-            <Button>-5</Button>
-            <Button>-1</Button>
-            <Button>+1</Button>
-            <Button>+5</Button>
-            <Button>+10</Button>
-          </ButtonGroup>
-        </Grid>
-        <Grid item sx={{ borderTop: "1px solid red", alignContent: "center" }} paddingTop={6} paddingBottom={6}>
-          <ButtonGroup variant="outlined" aria-label="Basic button group">
-            <Button>-10</Button>
-            <Button>-5</Button>
-            <Button>-1</Button>
-            <Button>+1</Button>
-            <Button>+5</Button>
-            <Button>+10</Button>
-          </ButtonGroup>
-        </Grid>
-      </Grid>
+      <Stack direction="column" spacing={0} paddingLeft={2} paddingRight={2} justifyContent={"space-between"}>
+        <SailControlButtonSlider />
+        <SailControlButtonSlider />
+        <SailControlButtonSlider />
+        <SailControlButtonSlider />
+        <SailControlButtonSlider />
+        <SailControlButtonSlider />
+      </Stack>
 
-      <div>
+      {/*  <div>
         <Button onClick={makeQuerySailControl}>TEST QUERY SAIL CONTROL</Button>
         <br />
         <Button onClick={makeQuerySails}>TEST QUERY SAILS</Button>
-      </div>
+      </div> */}
     </Paper>
   )
 }
