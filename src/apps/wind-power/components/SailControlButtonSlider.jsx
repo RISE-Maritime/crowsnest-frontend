@@ -1,11 +1,7 @@
 import React from "react"
-import styled from "@emotion/styled"
 import { ButtonGroup, Button, Slider, Grid } from "@mui/material"
 
-const Wrapper = styled.div`
-  border-top: 1px solid var(--border-divider-color);
-  padding: 2rem 1rem;
-`
+
 
 export default function SailControlButtonSlider({ disabled }) {
   const marks = [
