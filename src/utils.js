@@ -415,10 +415,10 @@ export function parseKeelsonMessage(envelope) {
   let received_at = parsed[0]
   let enclosed_at = parsed[1]
   let proto_payload = parsed[2]
-
+  let key  = envelope.key
   const subject = get_subject_from_pub_sub_key(envelope.key)
   let schemaProtoMsg = getSubjectSchema(subject)
   let payload = decodePayloadFromTypeName(schemaProtoMsg, proto_payload)
 
-  return { received_at, enclosed_at, payload }
+  return { received_at, enclosed_at, payload, key }
 }
