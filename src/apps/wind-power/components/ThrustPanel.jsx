@@ -15,7 +15,7 @@ export default function ThrustPanel() {
     setSailControl(prevState => {
       return {
         ...prevState,
-        variableThrustMode: prevState.variableThrustMode === 0 ? 1 : 0,
+        variableThrustMode: 0,
       }
     })
   }

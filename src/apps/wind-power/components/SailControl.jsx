@@ -41,7 +41,7 @@ export default function SailControl() {
     setSailControl(prevState => {
       return {
         ...prevState,
-        variableThrustMode: prevState.variableThrustMode === 1 ? 2 : 1,
+        variableThrustMode: 1,
       }
     })
   }
