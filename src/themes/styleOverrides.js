@@ -74,5 +74,36 @@ export const componentOverrides = {
         },
       },
     },
+    MuiButtonGroup: {
+      styleOverrides: {
+        groupedOutlined: {
+          background: "var(--element-neutral-inverted-color)",
+          borderColor: "var(--border-divider-color)",
+          color: "var(--element-active-color)",
+
+          "&:hover": {
+            borderColor: "currentColor",
+          },
+        },
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          color: "var(--selected-enabled-background-color)",
+
+          "& .MuiSlider-thumb": {
+            border: "1px solid var(--selected-enabled-border-color)",
+          },
+        },
+        rail: {
+          border: "1px solid var(--selected-enabled-border-color)",
+          color: "var(--border-outline-color)",
+        },
+        markLabel: {
+          color: "var(--element-active-color)",
+        },
+      },
+    },
   },
 }
