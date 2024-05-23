@@ -1059,7 +1059,7 @@ export const ATOM_SAIL_CONTROL = atom({
   key: "sail_control",
   default: {
     coupledSteeringMode: 0,
-    sheetingMode: 1,
+    sheetingMode: 1, // 1= manual, 2= automatic 
     variableThrustMode: 0, // 0=activated, 1=deactivated
     variableThrustSetPct: 0.0,
     variableThrustActualPct: 0.0,

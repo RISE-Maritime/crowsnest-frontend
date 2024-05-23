@@ -1,7 +1,8 @@
 import React from "react"
 import { Paper, Stack, Typography } from "@mui/material"
 import { sailControlAction, sailAction } from "../../../recoil/selectors"
-import { useSetRecoilState } from "recoil"
+import { ATOM_SAIL_CONTROL } from "../../../recoil/atoms"
+import { useSetRecoilState, useRecoilState } from "recoil"
 import GridHeading from "./GridHeading"
 import { ObcButton } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import LabelledRadioButton from "./LabelledRadioButton"
@@ -10,6 +11,7 @@ import SailControlButtonSlider from "./SailControlButtonSlider"
 export default function SailControl() {
   const newSailControlAction = useSetRecoilState(sailControlAction)
   const newSailAction = useSetRecoilState(sailAction)
+  const [sailControl, setSailControl] = useRecoilState(ATOM_SAIL_CONTROL)
 
   const makeQuerySailControl = () => {
     console.log("makeQuerySailControl")
@@ -30,9 +32,27 @@ export default function SailControl() {
     })
   }
 
+  const onSelectSheeting = () => {
+    setSailControl(prevState => {
+      return {
+        ...prevState,
+        variableThrustMode: prevState.variableThrustMode === 1 ? 0 : 1,
+      }
+    })
+  }
+
   return (
     <Paper sx={{ height: "100%" }}>
-      <GridHeading heading="Sheeting" actionButton={<LabelledRadioButton label="Use sheeting" checked={true} />} />
+      <GridHeading
+        heading="Sheeting"
+        actionButton={
+          <LabelledRadioButton
+            label="Use sheeting"
+            checked={sailControl.variableThrustMode === 1 ? true : false}
+            onSelect={onSelectSheeting}
+          />
+        }
+      />
 
       <Stack direction="row" spacing={1} margin={2} justifyContent="space-between">
         <Stack direction="row" useFlexGap flexWrap="wrap">

@@ -112,7 +112,7 @@ export default function SailPositions() {
               </WindImageWrapper>
             </SailWrapper>
 
-            {sailControl.variableThrustMode === 0 ? (
+            {sailControl.sheetingMode === 1 ? (
               <>
                 <Typography
                   variant="p"
