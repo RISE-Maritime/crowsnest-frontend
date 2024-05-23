@@ -5,6 +5,8 @@ import SailPNG from "../../../resources/Sail.png"
 import styled from "@emotion/styled"
 import GridHeading from "./GridHeading"
 import { ObcInstrumentField } from "@oicl/openbridge-webcomponents-react/navigation-instruments/instrument-field/instrument-field"
+import SvgWind from "./SvgWind"
+import { transform } from "framer-motion"
 
 const ShipOutline = styled.div`
   position: relative;
@@ -23,6 +25,14 @@ const SailImageWrapper = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+`
+
+const WindImageWrapper = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  
 `
 
 const SailImage = styled.img`
@@ -49,36 +59,54 @@ export default function SailPositions() {
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
+              <WindImageWrapper>
+                <SvgWind windAngle={180}/>
+              </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
+              <WindImageWrapper>
+                <SvgWind windAngle={45}/>
+              </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
+              <WindImageWrapper>
+                <SvgWind windAngle={270}/>
+              </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
+              <WindImageWrapper>
+                <SvgWind windAngle={90}/>
+              </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
+              <WindImageWrapper>
+                <SvgWind windAngle={180}/>
+              </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
+              <WindImageWrapper>
+                <SvgWind windAngle={180}/>
+              </WindImageWrapper>
             </SailWrapper>
             <Typography
               variant="p"
