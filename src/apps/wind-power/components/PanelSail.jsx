@@ -1,6 +1,4 @@
 import React from "react"
-import { useKeelsonData } from "../../../hooks/useKeelsonData"
-import { parseKeelsonMessage } from "../../../utils"
 import { Grid } from "@mui/material"
 import SailControl from "./SailControl"
 

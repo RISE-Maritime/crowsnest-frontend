@@ -7,6 +7,8 @@ import { useKeelsonData } from "../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../utils"
 
 export default function index() {
+
+
   const [sailsState, setSailsState] = useState({
     sail1: {
       coupledSteeringMode: 0,
