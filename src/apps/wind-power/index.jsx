@@ -35,9 +35,10 @@ export default function index() {
 
   const onMessageSail = envelope => {
     let msg = parseKeelsonMessage(envelope)
-    console.log("SAIL msg", msg)
-    let sailNum = msg.key.split("/")[-1]
-
+    let sailNum = msg.key.split("/").at(-1)
+    
+    console.log("SAIL_"+sailNum +" msg", msg)
+   
     setSailsState(prevState => {
       return {
         ...prevState,

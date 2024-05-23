@@ -57,6 +57,15 @@ export default function SailPositions() {
       <Grid container paddingY={1} paddingX={2}>
         <Grid item xs={6}>
           <ShipOutline>
+          <SailWrapper>
+              <ObcWatch />
+              <SailImageWrapper>
+                <SailImage src={SailPNG} angle={sails.sail_0.sheetingAngleActualDeg}/>
+              </SailImageWrapper>
+              <WindImageWrapper>
+                <SvgWind windAngle={sails.sail_0.windTrueAngleDeg} />
+              </WindImageWrapper>
+            </SailWrapper>
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
@@ -69,7 +78,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_1.sheetingAngleActualDeg}/>
+                <SailImage src={SailPNG} angle={sails.sail_2.sheetingAngleActualDeg}/>
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_2.windTrueAngleDeg} />
@@ -78,7 +87,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_1.sheetingAngleActualDeg} />
+                <SailImage src={SailPNG} angle={sails.sail_3.sheetingAngleActualDeg} />
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_3.windTrueAngleDeg} />
@@ -87,7 +96,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_1.sheetingAngleActualDeg}/>
+                <SailImage src={SailPNG} angle={sails.sail_4.sheetingAngleActualDeg}/>
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_4.windTrueAngleDeg} />
@@ -96,21 +105,13 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_1.sheetingAngleActualDeg}/>
+                <SailImage src={SailPNG} angle={sails.sail_5.sheetingAngleActualDeg}/>
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_5.windTrueAngleDeg} />
               </WindImageWrapper>
             </SailWrapper>
-            <SailWrapper>
-              <ObcWatch />
-              <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_1.sheetingAngleActualDeg}/>
-              </SailImageWrapper>
-              <WindImageWrapper>
-                <SvgWind windAngle={sails.sail_6.windTrueAngleDeg} />
-              </WindImageWrapper>
-            </SailWrapper>
+   
 
             {sailControl.sheetingMode === 1 ? (
               <>
@@ -144,12 +145,12 @@ export default function SailPositions() {
         </Grid>
         <Grid item xs paddingTop={9}>
           <Stack justifyContent="space-around" sx={{ height: "100%" }} alignItems="center">
+            <ObcInstrumentField hasSetpoint={true} setpoint={sails.sail_0.sheetingAngleSetDeg} degree value={sails.sail_0.sheetingAngleActualDeg} tag="Angle" />
             <ObcInstrumentField hasSetpoint={true} setpoint={sails.sail_1.sheetingAngleSetDeg} degree value={sails.sail_1.sheetingAngleActualDeg} tag="Angle" />
             <ObcInstrumentField hasSetpoint={true} setpoint={sails.sail_2.sheetingAngleSetDeg} degree value={sails.sail_2.sheetingAngleActualDeg} tag="Angle" />
             <ObcInstrumentField hasSetpoint={true} setpoint={sails.sail_3.sheetingAngleSetDeg} degree value={sails.sail_3.sheetingAngleActualDeg} tag="Angle" />
             <ObcInstrumentField hasSetpoint={true} setpoint={sails.sail_4.sheetingAngleSetDeg} degree value={sails.sail_4.sheetingAngleActualDeg} tag="Angle" />
             <ObcInstrumentField hasSetpoint={true} setpoint={sails.sail_5.sheetingAngleSetDeg} degree value={sails.sail_5.sheetingAngleActualDeg} tag="Angle" />
-            <ObcInstrumentField hasSetpoint={true} setpoint={sails.sail_6.sheetingAngleSetDeg} degree value={sails.sail_6.sheetingAngleActualDeg} tag="Angle" />
           </Stack>
         </Grid>
       </Grid>
