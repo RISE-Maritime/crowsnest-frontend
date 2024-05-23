@@ -16,6 +16,7 @@ const StyledFormControlLabel = styled(FormControlLabel)`
   background-color: var(--normal-enabled-background-color);
   border: 1px solid var(--normal-enabled-border-color);
   border-radius: 0.375rem;
+  white-space: nowrap;
 
   .Mui-checked + .MuiFormControlLabel-label {
     font-weight: 600;

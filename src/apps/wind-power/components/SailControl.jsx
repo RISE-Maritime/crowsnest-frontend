@@ -1,4 +1,5 @@
 import React from "react"
+import styled from "@emotion/styled"
 import { Paper, Stack, Typography } from "@mui/material"
 import { sailControlAction, sailAction } from "../../../recoil/selectors"
 import { ATOM_SAIL_CONTROL } from "../../../recoil/atoms"
@@ -7,6 +8,10 @@ import GridHeading from "./GridHeading"
 import { ObcButton } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import LabelledRadioButton from "./LabelledRadioButton"
 import SailControlButtonSlider from "./SailControlButtonSlider"
+
+const NoWrap = styled.span`
+  white-space: nowrap;
+`
 
 export default function SailControl() {
   const newSailControlAction = useSetRecoilState(sailControlAction)
@@ -55,27 +60,27 @@ export default function SailControl() {
       />
 
       <Stack direction="row" spacing={1} margin={2} justifyContent="space-between">
-        <Stack direction="row" useFlexGap flexWrap="wrap">
+        <Stack direction="row" useFlexGap flexWrap="nowrap">
           <Stack alignItems="center">
             <ObcButton checked={false} variant="check" onClick={() => console.log("hej")}>
-              Automatic control
+              <NoWrap>Automatic control</NoWrap>
             </ObcButton>
             <Typography variant="body2">Relative to wind</Typography>
           </Stack>
           <Stack alignItems="center">
             <ObcButton checked={true} variant="check" onClick={() => console.log("hej")}>
-              Manual control
+              <NoWrap>Manual control</NoWrap>
             </ObcButton>
             <Typography variant="body2">Relative to ship</Typography>
           </Stack>
         </Stack>
 
-        <Stack direction="row" spacing={0} useFlexGap flexWrap="wrap">
+        <Stack direction="row" spacing={0} useFlexGap flexWrap="nowrap">
           <ObcButton checked={false} variant="check" onClick={() => console.log("hej")}>
-            Coupled sail steering
+            <NoWrap>Coupled sail steering</NoWrap>
           </ObcButton>
           <ObcButton checked={true} variant="check" onClick={() => console.log("hej")}>
-            Uncoupled sail steering
+            <NoWrap>Uncoupled sail steering</NoWrap>
           </ObcButton>
         </Stack>
       </Stack>
