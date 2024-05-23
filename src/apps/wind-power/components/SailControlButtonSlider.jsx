@@ -35,12 +35,23 @@ export default function SailControlButtonSlider({ disabled }) {
     <Grid
       container
       direction="row"
-      padding={4}
-      justifyContent="space-between"
+      justifyContent="space-around"
       alignItems="center"
       sx={{ height: "9rem", borderTop: "1px solid var(--border-divider-color)" }}
     >
       <Grid item xs={6}>
+        <Slider
+          min={-180}
+          max={180}
+          valueLabelDisplay="auto"
+          marks={marks}
+          step={10}
+          defaultValue={0}
+          track={false}
+          disabled={disabled}
+        />
+      </Grid>
+      <Grid item>
         <ButtonGroup variant="outlined" disabled={disabled}>
           <Button>-10</Button>
           <Button>-5</Button>
@@ -49,9 +60,6 @@ export default function SailControlButtonSlider({ disabled }) {
           <Button>+5</Button>
           <Button>+10</Button>
         </ButtonGroup>
-      </Grid>
-      <Grid item xs={6}>
-        <Slider min={-180} max={180} valueLabelDisplay="auto" marks={marks} step={10} defaultValue={0} track={false} />
       </Grid>
     </Grid>
   )
