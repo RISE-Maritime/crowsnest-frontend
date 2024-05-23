@@ -5,75 +5,29 @@ import SailPositions from "./components/SailPositions"
 import { Grid } from "@mui/material"
 import { useKeelsonData } from "../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../utils"
+import { ATOM_SAIL_CONTROL, ATOM_SAILS } from "../../recoil/atoms"
+import { useRecoilState } from "recoil"
 
 export default function index() {
-  const [controlState, setcontrolState] = useState({
-    coupledSteeringMode: 0,
-    sheetingMode: 1,
-    variableThrustActualPct: 5,
-    variableThrustMode: 0,
-    variableThrustSetPct: 0.5,
-  })
-
-  const [sailsState, setSailsState] = useState({
-    sail1: {
-      coupledSteeringMode: 0,
-      sheetingMode: 1,
-      variableThrustActualPct: 5,
-      variableThrustMode: 0,
-      variableThrustSetPct: 0.5,
-    },
-    sail2: {
-      coupledSteeringMode: 0,
-      sheetingMode: 1,
-      variableThrustActualPct: 5,
-      variableThrustMode: 0,
-      variableThrustSetPct: 0.5,
-    },
-    sail3: {
-      coupledSteeringMode: 0,
-      sheetingMode: 1,
-      variableThrustActualPct: 5,
-      variableThrustMode: 0,
-      variableThrustSetPct: 0.5,
-    },
-    sail4: {
-      coupledSteeringMode: 0,
-      sheetingMode: 1,
-      variableThrustActualPct: 5,
-      variableThrustMode: 0,
-      variableThrustSetPct: 0.5,
-    },
-    sail5: {
-      coupledSteeringMode: 0,
-      sheetingMode: 1,
-      variableThrustActualPct: 5,
-      variableThrustMode: 0,
-      variableThrustSetPct: 0.5,
-    },
-    sail6: {
-      coupledSteeringMode: 0,
-      sheetingMode: 1,
-      variableThrustActualPct: 5,
-      variableThrustMode: 0,
-      variableThrustSetPct: 0.5,
-    },
-  })
+  const [controlState, setControlState] = useRecoilState(ATOM_SAIL_CONTROL)
+  const [sailsState, setSailsState] = useRecoilState(ATOM_SAILS)
 
   const onMessageControl = envelope => {
     let msg = parseKeelsonMessage(envelope)
     console.log("Control msg", msg)
 
-    setSailsState(prevState => {
-      return {
-        ...prevState,
-        coupledSteeringMode: msg.payload.coupledSteeringMode,
-        sheetingMode: msg.payload.sheetingMode,
-        variableThrustActualPct: msg.payload.variableThrustActualPct,
-        variableThrustMode: msg.payload.variableThrustMode,
-        variableThrustSetPct: msg.payload.variableThrustSetPct,
-      }
-    })
+    if (msg.key === "rise/v0/seaman/pubsub/sail_control_state/backed/sail_control") {
+      setControlState(prevState => {
+        return {
+          ...prevState,
+          coupledSteeringMode: msg.payload.coupledSteeringMode,
+          sheetingMode: msg.payload.sheetingMode,
+          variableThrustActualPct: msg.payload.variableThrustActualPct,
+          variableThrustMode: msg.payload.variableThrustMode,
+          variableThrustSetPct: msg.payload.variableThrustSetPct,
+        }
+      })
+    }
   }
 
   useKeelsonData("rise/v0/seaman/pubsub/sail_control_state/backed/sail_control", "subscribe", onMessageControl)
@@ -102,13 +56,13 @@ export default function index() {
   return (
     <Grid container sx={{ padding: "0.25rem" }} spacing={0.5}>
       <Grid item xs={3} sx={{ height: "calc(100vh - 58px)" }}>
-        <ThrustPanel controlState={controlState} />
+        <ThrustPanel />
       </Grid>
       <Grid item xs sx={{ height: "calc(100vh - 58px)" }}>
         <SailPositions />
       </Grid>
       <Grid item xs={6} sx={{ height: "calc(100vh - 58px)" }}>
-        <PanelSail controlState={controlState} />
+        <PanelSail />
       </Grid>
     </Grid>
   )

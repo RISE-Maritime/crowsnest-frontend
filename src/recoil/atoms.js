@@ -1052,3 +1052,64 @@ export const ATOM_SIM_SHIP_MODELS = atom({
     },
   },
 })
+
+//  SAIL CONTROLL
+
+export const ATOM_SAIL_CONTROL = atom({
+  key: "sail_control",
+  default: {
+    coupledSteeringMode: 0,
+    sheetingMode: 1,
+    variableThrustMode: 0,
+    variableThrustSetPct: 0.0,
+    variableThrustActualPct: 0.0,
+  },
+})
+
+export const ATOM_SAILS = atom({
+  key: "sails",
+  default: {
+    sail1: {
+      coupledSteeringMode: 0,
+      sheetingMode: 1,
+      variableThrustActualPct: 5,
+      variableThrustMode: 0,
+      variableThrustSetPct: 0.5,
+    },
+    sail2: {
+      coupledSteeringMode: 0,
+      sheetingMode: 1,
+      variableThrustActualPct: 5,
+      variableThrustMode: 0,
+      variableThrustSetPct: 0.5,
+    },
+    sail3: {
+      coupledSteeringMode: 0,
+      sheetingMode: 1,
+      variableThrustActualPct: 5,
+      variableThrustMode: 0,
+      variableThrustSetPct: 0.5,
+    },
+    sail4: {
+      coupledSteeringMode: 0,
+      sheetingMode: 1,
+      variableThrustActualPct: 5,
+      variableThrustMode: 0,
+      variableThrustSetPct: 0.5,
+    },
+    sail5: {
+      coupledSteeringMode: 0,
+      sheetingMode: 1,
+      variableThrustActualPct: 5,
+      variableThrustMode: 0,
+      variableThrustSetPct: 0.5,
+    },
+    sail6: {
+      coupledSteeringMode: 0,
+      sheetingMode: 1,
+      variableThrustActualPct: 5,
+      variableThrustMode: 0,
+      variableThrustSetPct: 0.5,
+    },
+  },
+})
