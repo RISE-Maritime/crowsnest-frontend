@@ -50,7 +50,7 @@ export default function SailControl() {
     setSailControl(prevState => {
       return {
         ...prevState,
-        sheetingMode: prevState.sheetingMode === 2 ? 1 : 2,
+        sheetingMode: 2,
       }
     })
   }
@@ -59,7 +59,7 @@ export default function SailControl() {
     setSailControl(prevState => {
       return {
         ...prevState,
-        sheetingMode: prevState.sheetingMode === 2 ? 1 : 2,
+        sheetingMode: 1,
       }
     })
   }
@@ -68,17 +68,16 @@ export default function SailControl() {
     setSailControl(prevState => {
       return {
         ...prevState,
-        coupledSteeringMode: prevState.coupledSteeringMode === 0 ? 1 : 0,
+        coupledSteeringMode: 0,
       }
     })
   }
 
-  
   const onSelectUnCoupled = () => {
     setSailControl(prevState => {
       return {
         ...prevState,
-        coupledSteeringMode: prevState.coupledSteeringMode === 1 ? 0 : 1,
+        coupledSteeringMode: 1,
       }
     })
   }
@@ -96,43 +95,60 @@ export default function SailControl() {
         }
       />
 
-        <div style={{ opacity: sailControl.variableThrustMode === 1 ? "100%" : "10%" }}>
-      <Stack direction="row" spacing={1} margin={2} justifyContent="space-between">
-        <Stack direction="row" useFlexGap flexWrap="nowrap">
-          <Stack alignItems="center">
-            <ObcButton checked={sailControl.sheetingMode === 2 ? true : false} variant="check" onClick={onSelectAutomatic}>
-              <NoWrap>Automatic control</NoWrap>
-            </ObcButton>
-            <Typography variant="body2">Relative to wind</Typography>
+      <div style={{ opacity: sailControl.variableThrustMode === 1 ? "100%" : "10%" }}>
+        <Stack direction="row" spacing={1} margin={2} justifyContent="space-between">
+          <Stack direction="row" useFlexGap flexWrap="nowrap">
+            <Stack alignItems="center">
+              <ObcButton checked={sailControl.sheetingMode === 2 ? true : false} variant="check" onClick={onSelectAutomatic}>
+                <NoWrap>Automatic control</NoWrap>
+              </ObcButton>
+              <Typography variant="body2">Relative to wind</Typography>
+            </Stack>
+            <Stack alignItems="center">
+              <ObcButton checked={sailControl.sheetingMode === 1 ? true : false} variant="check" onClick={onSelectManual}>
+                <NoWrap>Manual control</NoWrap>
+              </ObcButton>
+              <Typography variant="body2">Relative to ship</Typography>
+            </Stack>
           </Stack>
-          <Stack alignItems="center">
-            <ObcButton checked={sailControl.sheetingMode === 1 ? true : false} variant="check" onClick={onSelectManual}>
-              <NoWrap>Manual control</NoWrap>
-            </ObcButton>
-            <Typography variant="body2">Relative to ship</Typography>
-          </Stack>
-        </Stack>
 
-        <Stack direction="row" spacing={0} useFlexGap flexWrap="nowrap">
-          <ObcButton  checked={sailControl.coupledSteeringMode === 0 ? true : false} variant="check" onClick={onSelectCoupled}>
-            <NoWrap>Coupled sail steering</NoWrap>
-          </ObcButton>
-          <ObcButton checked={sailControl.coupledSteeringMode === 1 ? true : false} variant="check" onClick={onSelectUnCoupled}>
-            <NoWrap>Uncoupled sail steering</NoWrap>
-          </ObcButton>
+          <Stack direction="row" spacing={0} useFlexGap flexWrap="nowrap">
+            <ObcButton checked={sailControl.coupledSteeringMode === 0 ? true : false} variant="check" onClick={onSelectCoupled}>
+              <NoWrap>Coupled sail steering</NoWrap>
+            </ObcButton>
+            <ObcButton checked={sailControl.coupledSteeringMode === 1 ? true : false} variant="check" onClick={onSelectUnCoupled}>
+              <NoWrap>Uncoupled sail steering</NoWrap>
+            </ObcButton>
+          </Stack>
         </Stack>
-      </Stack>
       </div>
 
       <Stack direction="column" spacing={0} paddingLeft={2} paddingRight={2} justifyContent={"space-between"}>
-        <SailControlButtonSlider disabled={sailControl.variableThrustMode === 1 ? false : true} />
-        <SailControlButtonSlider disabled={(sailControl.variableThrustMode === 1 ) && (sailControl.coupledSteeringMode === 1) ? false : true} />
-        <SailControlButtonSlider disabled={(sailControl.variableThrustMode === 1 ) && (sailControl.coupledSteeringMode === 1) ? false : true} />
-        <SailControlButtonSlider disabled={(sailControl.variableThrustMode === 1 ) && (sailControl.coupledSteeringMode === 1) ? false : true} />
-        <SailControlButtonSlider disabled={(sailControl.variableThrustMode === 1 ) && (sailControl.coupledSteeringMode === 1) ? false : true} />
-        <SailControlButtonSlider disabled={(sailControl.variableThrustMode === 1 ) && (sailControl.coupledSteeringMode === 1) ? false : true} />
+        <SailControlButtonSlider
+          sailId={"sail_0"}
+          disabled={sailControl.variableThrustMode === 1 ? false : true}
+        />
+        <SailControlButtonSlider
+          sailId={"sail_1"}
+          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+        />
+        <SailControlButtonSlider
+          sailId={"sail_2"}
+          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+        />
+        <SailControlButtonSlider
+          sailId={"sail_3"}
+          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+        />
+        <SailControlButtonSlider
+          sailId={"sail_4"}
+          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+        />
+        <SailControlButtonSlider
+          sailId={"sail_5"}
+          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+        />
       </Stack>
-
     </Paper>
   )
 }

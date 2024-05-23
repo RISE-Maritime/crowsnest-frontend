@@ -1,31 +1,45 @@
 import React from "react"
 import { ButtonGroup, Button, Slider, Grid } from "@mui/material"
+import { ATOM_SAILS } from "../../../recoil/atoms"
+import { useRecoilState } from "recoil"
+const marks = [
+  {
+    value: -180,
+    label: "-180°",
+  },
+  {
+    value: -90,
+    label: "-90°",
+  },
+  {
+    value: 0,
+    label: "0°",
+  },
+  {
+    value: 90,
+    label: "90°",
+  },
+  {
+    value: 180,
+    label: "180°",
+  },
+]
 
+export default function SailControlButtonSlider({ disabled, sailId }) {
+  let [sails, setSails] = useRecoilState(ATOM_SAILS)
 
+  const setSailAngle = angle => {
+    setSails(prevState => {
+      return {
+        ...prevState,
+        [sailId]: {
+          ...prevState.sailId,
 
-export default function SailControlButtonSlider({ disabled }) {
-  const marks = [
-    {
-      value: -180,
-      label: "-180°",
-    },
-    {
-      value: -90,
-      label: "-90°",
-    },
-    {
-      value: 0,
-      label: "0°",
-    },
-    {
-      value: 90,
-      label: "90°",
-    },
-    {
-      value: 180,
-      label: "180°",
-    },
-  ]
+          sheetingAngleSetDeg: angle,
+        },
+      }
+    })
+  }
 
   return (
     <Grid
@@ -49,7 +63,7 @@ export default function SailControlButtonSlider({ disabled }) {
       </Grid>
       <Grid item>
         <ButtonGroup variant="outlined" disabled={disabled}>
-          <Button>-10</Button>
+          <Button onClick={() => setSailAngle(-10)}>-10</Button>
           <Button>-5</Button>
           <Button>-1</Button>
           <Button>+1</Button>
