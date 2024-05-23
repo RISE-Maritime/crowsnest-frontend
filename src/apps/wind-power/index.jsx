@@ -8,6 +8,13 @@ import { parseKeelsonMessage } from "../../utils"
 
 export default function index() {
 
+  const [controlState, setcontrolState] = useState({
+    coupledSteeringMode: 0,
+    sheetingMode: 1,
+    variableThrustActualPct: 5,
+    variableThrustMode: 0,
+    variableThrustSetPct: 0.5,
+  })
 
   const [sailsState, setSailsState] = useState({
     sail1: {
@@ -57,6 +64,17 @@ export default function index() {
   const onMessageControl = envelope => {
     let msg = parseKeelsonMessage(envelope)
     console.log("Control msg", msg)
+
+    setSailsState(prevState => {
+      return {
+        ...prevState,
+        coupledSteeringMode: msg.payload.coupledSteeringMode,
+        sheetingMode: msg.payload.sheetingMode,
+        variableThrustActualPct: msg.payload.variableThrustActualPct,
+        variableThrustMode: msg.payload.variableThrustMode,
+        variableThrustSetPct: msg.payload.variableThrustSetPct,
+      }
+    })
   }
 
   useKeelsonData("rise/v0/seaman/pubsub/sail_control_state/backed/sail_control", "subscribe", onMessageControl)
@@ -85,13 +103,13 @@ export default function index() {
   return (
     <Grid container sx={{ padding: "0.25rem" }} spacing={0.5}>
       <Grid item xs={3}>
-        <ThrustPanel />
+        <ThrustPanel controlState={controlState} />
       </Grid>
       <Grid item xs>
         <SailPositions sailsState={sailsState} />
       </Grid>
       <Grid item xs={6}>
-        <PanelSail />
+        <PanelSail controlState={controlState} />
       </Grid>
     </Grid>
   )
