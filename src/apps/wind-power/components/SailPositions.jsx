@@ -32,7 +32,6 @@ const WindImageWrapper = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  
 `
 
 const SailImage = styled.img`
@@ -60,7 +59,7 @@ export default function SailPositions() {
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
               <WindImageWrapper>
-                <SvgWind windAngle={180}/>
+                <SvgWind windAngle={180} />
               </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
@@ -69,7 +68,7 @@ export default function SailPositions() {
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
               <WindImageWrapper>
-                <SvgWind windAngle={45}/>
+                <SvgWind windAngle={45} />
               </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
@@ -78,7 +77,7 @@ export default function SailPositions() {
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
               <WindImageWrapper>
-                <SvgWind windAngle={270}/>
+                <SvgWind windAngle={270} />
               </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
@@ -87,7 +86,7 @@ export default function SailPositions() {
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
               <WindImageWrapper>
-                <SvgWind windAngle={90}/>
+                <SvgWind windAngle={90} />
               </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
@@ -96,7 +95,7 @@ export default function SailPositions() {
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
               <WindImageWrapper>
-                <SvgWind windAngle={180}/>
+                <SvgWind windAngle={180} />
               </WindImageWrapper>
             </SailWrapper>
             <SailWrapper>
@@ -105,7 +104,7 @@ export default function SailPositions() {
                 <SailImage src={SailPNG} />
               </SailImageWrapper>
               <WindImageWrapper>
-                <SvgWind windAngle={180}/>
+                <SvgWind windAngle={180} />
               </WindImageWrapper>
             </SailWrapper>
             <Typography
