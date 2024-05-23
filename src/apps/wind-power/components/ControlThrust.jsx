@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import SvgThrust0to100 from "./SvgThrust0to100"
-import { Stack, Typography } from "@mui/material"
+import { Stack } from "@mui/material"
 
 export default function ControlThrust() {
   const [engines, setEngines] = useState({

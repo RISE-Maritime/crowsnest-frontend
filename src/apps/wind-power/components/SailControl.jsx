@@ -2,7 +2,7 @@ import React from "react"
 import { ButtonGroup, Button, Paper, Stack, Typography, Grid } from "@mui/material"
 import { sailControlAction, sailAction } from "../../../recoil/selectors"
 import { useSetRecoilState } from "recoil"
-import CardHeading from "./CardHeading"
+import GridHeading from "./GridHeading"
 import { ObcButton } from "@oicl/openbridge-webcomponents-react/components/button/button"
 import LabelledRadioButton from "./LabelledRadioButton"
 
@@ -31,11 +31,9 @@ export default function SailControl() {
 
   return (
     <Paper>
-      <CardHeading heading="Sheeting" />
+      <GridHeading heading="Sheeting" actionButton={<LabelledRadioButton label="Use sheeting" checked={true} />} />
 
-      <Stack direction="row" spacing={2} margin={2} justifyContent="space-between">
-        <LabelledRadioButton label="Use sheeting" checked={true} />
-
+      <Stack direction="row" spacing={1} margin={2} justifyContent="space-between">
         <Stack direction="row" useFlexGap flexWrap="wrap">
           <Stack alignItems="center">
             <ObcButton checked={false} variant="check" onClick={() => console.log("hej")}>

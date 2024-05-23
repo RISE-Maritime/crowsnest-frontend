@@ -3,7 +3,7 @@ import { Paper, Typography, Grid, Stack } from "@mui/material"
 import { ObcWatch } from "@oicl/openbridge-webcomponents-react/navigation-instruments/watch/watch"
 import SailPNG from "../../../resources/Sail.png"
 import styled from "@emotion/styled"
-import CardHeading from "../components/CardHeading"
+import GridHeading from "./GridHeading"
 import { ObcInstrumentField } from "@oicl/openbridge-webcomponents-react/navigation-instruments/instrument-field/instrument-field"
 
 const ShipOutline = styled.div`
@@ -39,9 +39,9 @@ const SailImage = styled.img`
 export default function SailPositions() {
   return (
     <Paper>
-      <CardHeading heading="Sail positions" />
+      <GridHeading heading="Sail positions" />
 
-      <Grid container padding={2}>
+      <Grid container paddingY={1} paddingX={2}>
         <Grid item xs={6}>
           <ShipOutline>
             <SailWrapper>

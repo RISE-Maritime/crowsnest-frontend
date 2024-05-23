@@ -6,13 +6,12 @@ import { FormGroup, FormControlLabel, Radio } from "@mui/material"
 // TODO: Handle states
 
 const StyledFormGroup = styled(FormGroup)`
-  height: 3rem;
   justify-content: center;
 `
 
 const StyledFormControlLabel = styled(FormControlLabel)`
   height: 2.125rem;
-  padding: 0 1rem 0 0.5rem;
+  padding: 0 0.75rem 0 0rem;
   margin: 0;
   background-color: var(--normal-enabled-background-color);
   border: 1px solid var(--normal-enabled-border-color);
