@@ -7,6 +7,7 @@ import { useKeelsonData } from "../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../utils"
 import { ATOM_SAIL_CONTROL, ATOM_SAILS } from "../../recoil/atoms"
 import { useRecoilState } from "recoil"
+import { m } from "framer-motion"
 
 export default function index() {
   const [controlState, setControlState] = useRecoilState(ATOM_SAIL_CONTROL)
@@ -40,12 +41,14 @@ export default function index() {
     setSailsState(prevState => {
       return {
         ...prevState,
-        [`sail${sailNum}`]: {
-          coupledSteeringMode: msg.payload.coupledSteeringMode,
-          sheetingMode: msg.payload.sheetingMode,
-          variableThrustActualPct: msg.payload.variableThrustActualPct,
-          variableThrustMode: msg.payload.variableThrustMode,
-          variableThrustSetPct: msg.payload.variableThrustSetPct,
+        [`sail_${sailNum}`]: {
+          isActiveMode: msg.payload.isActiveMode,
+          sheetingAngleActualDeg: msg.payload.sheetingAngleActualDeg,
+          sheetingAngleSetDeg: msg.payload.sheetingAngleSetDeg,
+          windApparentAngleDeg: msg.payload.windApparentAngleDeg,
+          windApparentSpeedMs: msg.payload.windApparentSpeedMs,
+          windTrueAngleDeg: msg.payload.windTrueAngleDeg,
+          windTrueSpeedMs: msg.payload.windTrueSpeedMs,
         },
       }
     })
