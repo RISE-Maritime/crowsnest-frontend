@@ -16,27 +16,30 @@ export default function MetadataTelemetry({ keyExpression }) {
   const [throttle, setThrottle] = useState({ value: 0, received_at: null, enclosed_at: null })
 
   const onMessage = envelope => {
-    console.log(envelope);
-    let msg = parseKeelsonMessage(envelope)
-    if (msg.payload) {
-      setHeading({
-        ...heading,
-        value: msg.payload.heading,
-        received_at: msg.received_at,
-        enclosed_at: msg.enclosed_at,
-      })
-      setGroundSpeed({
-        ...groundSpeed,
-        value: msg.payload.groundspeed,
-        received_at: msg.received_at,
-        enclosed_at: msg.enclosed_at,
-      })
-      setThrottle({
-        ...throttle,
-        value: msg.payload.throttle,
-        received_at: msg.received_at,
-        enclosed_at: msg.enclosed_at,
-      })
+    // console.log("Telemetry:", envelope)
+
+    if (envelope.key === keyExpression) {
+      let msg = parseKeelsonMessage(envelope)
+      if (msg.payload) {
+        setHeading({
+          ...heading,
+          value: msg.payload.heading,
+          received_at: msg.received_at,
+          enclosed_at: msg.enclosed_at,
+        })
+        setGroundSpeed({
+          ...groundSpeed,
+          value: msg.payload.groundspeed,
+          received_at: msg.received_at,
+          enclosed_at: msg.enclosed_at,
+        })
+        setThrottle({
+          ...throttle,
+          value: msg.payload.throttle,
+          received_at: msg.received_at,
+          enclosed_at: msg.enclosed_at,
+        })
+      }
     }
   }
 
