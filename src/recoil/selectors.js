@@ -50,6 +50,8 @@ import {
   ATOM_SIM_STATE,
   ATOM_SIM_ACTIVE_MODELS,
   ATOM_SIM_SHIP_MODELS,
+  ATOM_SAIL_CONTROL,
+  ATOM_SAILS
 } from "./atoms"
 
 // import { keelson.compound } from "keelson-js/dist/payloads"
@@ -814,8 +816,9 @@ export const sailControlAction = selector({
   get: () => {
     return null
   },
-  set: ({ set }, input) => {
+  set: ({ set, get }, input) => {
     console.log("🚀 ~ sail control:", input)
+    const currSailControl = get(ATOM_SAIL_CONTROL)
 
     let realm = "rise"
     let entityId = "seaman"
@@ -826,12 +829,15 @@ export const sailControlAction = selector({
 
     console.log("🚀 ~ keyExp:", keyExp)
 
-    let SailConState = SailControlState.encode({
-      sheetingMode: input.sheetingMode,
-      coupledSteeringMode: input.coupledSteeringMode,
-      variableThrustMode: input.variableThrustMode,
-      variableThrustSetPct: input.variableThrustSetPct,
-    }).finish()
+    let sendObj = {
+      sheetingMode: input.sheetingMode ? input.sheetingMode : currSailControl.sheetingMode,
+      coupledSteeringMode: input.coupledSteeringMode ? input.coupledSteeringMode : currSailControl.coupledSteeringMode,
+      variableThrustMode: input.variableThrustMode ? input.variableThrustMode : currSailControl.variableThrustMode,
+      variableThrustSetPct: input.variableThrustSetPct ? input.variableThrustSetPct : currSailControl.variableThrustSetPct,
+    }
+    console.log("🚀 ~ sendObj:", sendObj)
+
+    let SailConState = SailControlState.encode(sendObj).finish()
 
     console.log("🚀 ~ SaStatt:", SailConState)
 
@@ -853,13 +859,6 @@ export const sailControlAction = selector({
       }
     }
 
-    // set(ATOM_OS_RUDDERS, currentObj => ({
-    //   ...currentObj,
-    //   [newRudderVal.id]: {
-    //     ...currentObj[newRudderVal.id],
-    //     setAngle: newRudderVal.setAngle,
-    //   },
-    // }))
   },
 })
 
@@ -868,8 +867,9 @@ export const sailAction = selector({
   get: () => {
     return null
   },
-  set: ({ set }, input) => {
+  set: ({ set, get }, input) => {
     console.log("🚀 ~ sailAction:", input)
+    let currSails = get(ATOM_SAILS)
 
     let realm = "rise"
     let entityId = "seaman"
@@ -880,10 +880,13 @@ export const sailAction = selector({
 
     console.log("🚀 ~ keyExp:", keyExp)
 
-    let SailStateProto = SailState.encode({
-      isActiveMode: input.isActiveMode,
-      sheetingAngleSetDeg: input.sheetingAngleSetDeg,
-    }).finish()
+    let sendObj = {
+      isActiveMode: input.isActiveMode ? input.isActiveMode : currSails["sail_"+input.sailId].isActiveMode,
+      sheetingAngleSetDeg: input.sheetingAngleSetDeg ? input.sheetingAngleSetDeg : currSails["sail_"+input.sailId].sheetingAngleSetDeg,
+      sheetingAngleAddDeg: input.sheetingAngleAddDeg ? input.sheetingAngleAddDeg : 0,
+    }
+
+    let SailStateProto = SailState.encode(sendObj).finish()
 
     console.log("🚀 ~ SaStatt:", SailStateProto)
 
@@ -905,13 +908,7 @@ export const sailAction = selector({
       }
     }
 
-    // set(ATOM_OS_RUDDERS, currentObj => ({
-    //   ...currentObj,
-    //   [newRudderVal.id]: {
-    //     ...currentObj[newRudderVal.id],
-    //     setAngle: newRudderVal.setAngle,
-    //   },
-    // }))
+
   },
 })
 

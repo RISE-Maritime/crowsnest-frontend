@@ -6,12 +6,13 @@ import { Grid } from "@mui/material"
 import { useKeelsonData } from "../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../utils"
 import { ATOM_SAIL_CONTROL, ATOM_SAILS } from "../../recoil/atoms"
-import { useRecoilState } from "recoil"
+import { useSetRecoilState } from "recoil"
 
 export default function index() {
-  const [controlState, setControlState] = useRecoilState(ATOM_SAIL_CONTROL)
-  const [sailsState, setSailsState] = useRecoilState(ATOM_SAILS)
+  const setControlState = useSetRecoilState(ATOM_SAIL_CONTROL)
+  const setSailsState = useSetRecoilState(ATOM_SAILS)
 
+  // Setting up the subscription to the sail control state
   const onMessageControl = envelope => {
     let msg = parseKeelsonMessage(envelope)
     console.log("Control msg", msg)
@@ -32,6 +33,7 @@ export default function index() {
 
   useKeelsonData("rise/v0/seaman/pubsub/sail_control_state/backed/sail_control", "subscribe", onMessageControl)
 
+  // Setting up the subscription to the sails state
   const onMessageSail = envelope => {
     let msg = parseKeelsonMessage(envelope)
     let sailNum = msg.key.split("/").at(-1)

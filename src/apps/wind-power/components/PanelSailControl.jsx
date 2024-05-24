@@ -14,28 +14,9 @@ const NoWrap = styled.span`
 `
 
 export default function PanelSailControl() {
-  const newSailControlAction = useSetRecoilState(sailControlAction)
-  const newSailAction = useSetRecoilState(sailAction)
+  const setSailControlAction = useSetRecoilState(sailControlAction)
+  const setSailAction = useSetRecoilState(sailAction)
   const [sailControl, setSailControl] = useRecoilState(ATOM_SAIL_CONTROL)
-
-  const makeQuerySailControl = () => {
-    console.log("makeQuerySailControl")
-    newSailControlAction({
-      sheetingMode: 0, // (int) 1= manual, 2= automatic
-      coupledSteeringMode: 0, // (int) 0=activated, 1=deactivated
-      variableThrustMode: 0, // (int) 0=activated, 1=deactivated
-      variableThrustSetPct: 0.4, // (float) 0.0 -> 1.0 = 0% -> 100%
-    })
-  }
-
-  const makeQuerySails = () => {
-    console.log("makeQuerySails")
-    newSailAction({
-      sailId: 0,
-      isActiveMode: 0, // (int) 0=activated, 1=deactivated
-      sheetingAngleSetDeg: 45, // # (float) -180 to 180 degrees
-    })
-  }
 
   const onSelectSheeting = () => {
     setSailControl(prevState => {
@@ -44,6 +25,7 @@ export default function PanelSailControl() {
         variableThrustMode: 1,
       }
     })
+    setSailControlAction({ variableThrustMode: 1 })
   }
 
   const onSelectAutomatic = () => {
@@ -53,6 +35,7 @@ export default function PanelSailControl() {
         sheetingMode: 2,
       }
     })
+    setSailControlAction({ sheetingMode: 2 })
   }
 
   const onSelectManual = () => {
@@ -62,6 +45,7 @@ export default function PanelSailControl() {
         sheetingMode: 1,
       }
     })
+    setSailControlAction({ sheetingMode: 1 })
   }
 
   const onSelectCoupled = () => {
@@ -71,6 +55,7 @@ export default function PanelSailControl() {
         coupledSteeringMode: 0,
       }
     })
+    setSailControlAction({ coupledSteeringMode: 0 })
   }
 
   const onSelectUnCoupled = () => {
@@ -80,6 +65,7 @@ export default function PanelSailControl() {
         coupledSteeringMode: 1,
       }
     })
+    setSailControlAction({ coupledSteeringMode: 1 })
   }
 
   return (
@@ -124,25 +110,25 @@ export default function PanelSailControl() {
       </div>
 
       <Stack direction="column" spacing={0} paddingLeft={2} paddingRight={2} justifyContent={"space-between"}>
-        <SailControlButtonSlider sailId={"sail_0"} disabled={sailControl.variableThrustMode === 1 ? false : true} />
+        <SailControlButtonSlider sailId={"0"} disabled={sailControl.variableThrustMode === 1 ? false : true} />
         <SailControlButtonSlider
-          sailId={"sail_1"}
+          sailId={"1"}
           disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
         />
         <SailControlButtonSlider
-          sailId={"sail_2"}
+          sailId={"2"}
           disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
         />
         <SailControlButtonSlider
-          sailId={"sail_3"}
+          sailId={"3"}
           disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
         />
         <SailControlButtonSlider
-          sailId={"sail_4"}
+          sailId={"4"}
           disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
         />
         <SailControlButtonSlider
-          sailId={"sail_5"}
+          sailId={"5"}
           disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
         />
       </Stack>

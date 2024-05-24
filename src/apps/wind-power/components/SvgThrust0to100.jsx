@@ -1,6 +1,7 @@
 import React from "react"
 import Draggable from "react-draggable"
-
+import { useSetRecoilState } from "recoil"
+import { sailControlAction } from "../../../recoil/selectors"
 /**
  * ## Engine controller (actual & set)
  *
@@ -15,6 +16,7 @@ import Draggable from "react-draggable"
  * @param {boolean} engines (atom value)
  */
 export default function SvgThrust0to100({ setPower, actPower, isTouchControl, setSailControl }) {
+  const setSailControlAction = useSetRecoilState(sailControlAction)
   const SVG_HEIGHT = 345
 
   // function handleStart(e, ui) {
@@ -26,12 +28,16 @@ export default function SvgThrust0to100({ setPower, actPower, isTouchControl, se
   // }
 
   function handleStop(e, ui) {
+
+    let newVariableThrustSetPct = Math.round(((-ui.y + SVG_HEIGHT) / (SVG_HEIGHT * 2)) * 100) / 100
+
     setSailControl(prevState => {
       return {
         ...prevState,
-        variableThrustSetPct: Math.round(((-ui.y + SVG_HEIGHT) / (SVG_HEIGHT * 2)) * 100) / 100,
+        variableThrustSetPct: newVariableThrustSetPct,
       }
     })
+    setSailControlAction({ variableThrustSetPct: newVariableThrustSetPct })
   }
 
   return (

@@ -5,11 +5,13 @@ import { Stack } from "@mui/material"
 import { ObcInstrumentField } from "@oicl/openbridge-webcomponents-react/navigation-instruments/instrument-field/instrument-field"
 import ControlThrust from "./ControlThrust"
 import LabelledRadioButton from "./LabelledRadioButton"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { sailControlAction } from "../../../recoil/selectors"
 import { ATOM_SAIL_CONTROL } from "../../../recoil/atoms"
 
 export default function ThrustPanel() {
   let [sailControl, setSailControl] = useRecoilState(ATOM_SAIL_CONTROL)
+  const setSailControlAction = useSetRecoilState(sailControlAction)
 
   const onSelectThrust = () => {
     setSailControl(prevState => {
@@ -18,6 +20,7 @@ export default function ThrustPanel() {
         variableThrustMode: 0,
       }
     })
+    setSailControlAction({ variableThrustMode: 0 })
   }
 
   return (
