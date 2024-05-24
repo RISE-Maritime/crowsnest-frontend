@@ -11,6 +11,8 @@ import { useRecoilValue } from "recoil"
 
 const ShipOutline = styled.div`
   position: relative;
+  margin-left: auto;
+  margin-right: auto;
   padding: 3rem 2rem 2rem;
   border-radius: 50% 50% 0% 0% / 17% 17% 0% 0%;
   border: 3px solid var(--border-outline-color);

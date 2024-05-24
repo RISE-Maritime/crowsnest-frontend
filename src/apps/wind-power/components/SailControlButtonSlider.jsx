@@ -4,6 +4,7 @@ import { ATOM_SAILS } from "../../../recoil/atoms"
 import { useRecoilState } from "recoil"
 import { sailAction } from "../../../recoil/selectors"
 import { useSetRecoilState } from "recoil"
+import { ObcButton } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
 const marks = [
   {
@@ -59,8 +60,8 @@ export default function SailControlButtonSlider({ disabled, sailId }) {
         },
       }
     })
-    setSailAction({ sailId: sailId, sheetingAngleSetDeg: newValue})
-  };
+    setSailAction({ sailId: sailId, sheetingAngleSetDeg: newValue })
+  }
 
   return (
     <Grid
@@ -96,9 +97,13 @@ export default function SailControlButtonSlider({ disabled, sailId }) {
       </Grid>
       <Grid item>
         {sails[`sail_${sailId}`].isActiveMode ? (
-          <Button onClick={() => setSailMode(0)}>Start Sail</Button>
+          <ObcButton onClick={() => setSailMode(0)} disabled={disabled}>
+            Start Sail
+          </ObcButton>
         ) : (
-          <Button onClick={() => setSailMode(1)}>Stop Sail</Button>
+          <ObcButton onClick={() => setSailMode(1)} disabled={disabled}>
+            Stop Sail
+          </ObcButton>
         )}
       </Grid>
     </Grid>
