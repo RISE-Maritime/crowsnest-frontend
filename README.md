@@ -4,6 +4,20 @@ Crowsnest, a testing and demonstration application base developed by RISE Mariti
 
 It is a [React](https://react.dev/) web-application aimed to use [Open Bridge](https://www.openbridge.no/) design guidelines as fare as reasonable e posable.  
 
+## Quick start on own computer 
+
+```bash
+
+npm install 
+
+npm start
+
+# OR
+
+docker compose -f docker-compose.yml up 
+```
+
+
 ## Connectors
 
 - Keelson (Zenoh)
