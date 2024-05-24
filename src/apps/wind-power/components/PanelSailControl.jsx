@@ -13,7 +13,7 @@ const NoWrap = styled.span`
   white-space: nowrap;
 `
 
-export default function SailControl() {
+export default function PanelSailControl() {
   const newSailControlAction = useSetRecoilState(sailControlAction)
   const newSailAction = useSetRecoilState(sailAction)
   const [sailControl, setSailControl] = useRecoilState(ATOM_SAIL_CONTROL)
@@ -124,10 +124,7 @@ export default function SailControl() {
       </div>
 
       <Stack direction="column" spacing={0} paddingLeft={2} paddingRight={2} justifyContent={"space-between"}>
-        <SailControlButtonSlider
-          sailId={"sail_0"}
-          disabled={sailControl.variableThrustMode === 1 ? false : true}
-        />
+        <SailControlButtonSlider sailId={"sail_0"} disabled={sailControl.variableThrustMode === 1 ? false : true} />
         <SailControlButtonSlider
           sailId={"sail_1"}
           disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}

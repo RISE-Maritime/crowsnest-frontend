@@ -3,8 +3,6 @@ import { styled } from "@mui/material/styles"
 import { FormGroup, FormControlLabel, Radio } from "@mui/material"
 
 // Styled to match Open Brigde: Check button as much as possible
-
-
 const StyledFormGroup = styled(FormGroup)`
   justify-content: center;
 `
@@ -26,7 +24,7 @@ const StyledFormControlLabel = styled(FormControlLabel)`
 export default function LabelledRadioButton({ label, checked, onSelect }) {
   return (
     <StyledFormGroup>
-      <StyledFormControlLabel control={<Radio checked={checked} onClick={onSelect}/>} label={label} />
+      <StyledFormControlLabel control={<Radio checked={checked} onClick={onSelect} />} label={label} />
     </StyledFormGroup>
   )
 }

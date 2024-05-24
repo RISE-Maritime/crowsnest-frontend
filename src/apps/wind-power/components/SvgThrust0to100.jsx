@@ -26,12 +26,10 @@ export default function SvgThrust0to100({ setPower, actPower, isTouchControl, se
   // }
 
   function handleStop(e, ui) {
-
-
     setSailControl(prevState => {
       return {
         ...prevState,
-        variableThrustSetPct: Math.round(((-ui.y + SVG_HEIGHT) / (SVG_HEIGHT * 2)) * 100) /100,
+        variableThrustSetPct: Math.round(((-ui.y + SVG_HEIGHT) / (SVG_HEIGHT * 2)) * 100) / 100,
       }
     })
   }

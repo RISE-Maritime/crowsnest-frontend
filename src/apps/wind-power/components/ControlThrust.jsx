@@ -5,9 +5,7 @@ import { ATOM_SAIL_CONTROL } from "../../../recoil/atoms"
 import { useRecoilState } from "recoil"
 
 export default function ControlThrust() {
-
   const [sailControl, setSailControl] = useRecoilState(ATOM_SAIL_CONTROL)
-
 
   return (
     <Stack direction="row" justifyContent="center" alignItems="center" spacing={0}>
@@ -30,7 +28,7 @@ export default function ControlThrust() {
       </Stack>
       <SvgThrust0to100
         isTouchControl={false}
-        setPower={sailControl.variableThrustSetPct*100}
+        setPower={sailControl.variableThrustSetPct * 100}
         actPower={0}
         // actPower={sailControl.variableThrustActualPct*100}
         setSailControl={setSailControl}

@@ -1,13 +1,12 @@
-import React, { useState } from "react"
-import PanelSail from "./components/PanelSail"
-import ThrustPanel from "./components/ThrustPanel"
-import SailPositions from "./components/SailPositions"
+import React from "react"
+import PanelSailControl from "./components/PanelSailControl"
+import PanelThrust from "./components/PanelThrust"
+import PanelSailPositions from "./components/PanelSailPositions"
 import { Grid } from "@mui/material"
 import { useKeelsonData } from "../../hooks/useKeelsonData"
 import { parseKeelsonMessage } from "../../utils"
 import { ATOM_SAIL_CONTROL, ATOM_SAILS } from "../../recoil/atoms"
 import { useRecoilState } from "recoil"
-import { m } from "framer-motion"
 
 export default function index() {
   const [controlState, setControlState] = useRecoilState(ATOM_SAIL_CONTROL)
@@ -36,9 +35,9 @@ export default function index() {
   const onMessageSail = envelope => {
     let msg = parseKeelsonMessage(envelope)
     let sailNum = msg.key.split("/").at(-1)
-    
-    console.log("SAIL_"+sailNum +" msg", msg)
-   
+
+    console.log("SAIL_" + sailNum + " msg", msg)
+
     setSailsState(prevState => {
       return {
         ...prevState,
@@ -60,13 +59,13 @@ export default function index() {
   return (
     <Grid container sx={{ padding: "0.25rem" }} spacing={0.5}>
       <Grid item xs={3} sx={{ minHeight: "calc(100vh - 58px)" }}>
-        <ThrustPanel />
+        <PanelThrust />
       </Grid>
       <Grid item xs sx={{ minHeight: "calc(100vh - 58px)" }}>
-        <SailPositions />
+        <PanelSailPositions />
       </Grid>
       <Grid item xs={6} sx={{ minHeight: "calc(100vh - 58px)" }}>
-        <PanelSail />
+        <PanelSailControl />
       </Grid>
     </Grid>
   )

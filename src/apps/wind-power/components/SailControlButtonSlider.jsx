@@ -2,6 +2,7 @@ import React from "react"
 import { ButtonGroup, Button, Slider, Grid } from "@mui/material"
 import { ATOM_SAILS } from "../../../recoil/atoms"
 import { useRecoilState } from "recoil"
+
 const marks = [
   {
     value: -180,
