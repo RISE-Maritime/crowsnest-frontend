@@ -17,10 +17,10 @@ export default function ThrustPanel() {
     setSailControl(prevState => {
       return {
         ...prevState,
-        variableThrustMode: 0,
+        variableThrustMode: 1,
       }
     })
-    setSailControlAction({ variableThrustMode: 0 })
+    setSailControlAction({ variableThrustMode: 1 })
   }
 
   return (
@@ -30,7 +30,7 @@ export default function ThrustPanel() {
         actionButton={
           <LabelledRadioButton
             label="Use variable thrust"
-            checked={sailControl.variableThrustMode === 0 ? true : false}
+            checked={sailControl.variableThrustMode === 1 ? true : false}
             onSelect={onSelectThrust}
           />
         }
@@ -40,7 +40,7 @@ export default function ThrustPanel() {
         justifyContent="center"
         alignItems="center"
         padding={2}
-        sx={{ opacity: sailControl.variableThrustMode === 0 ? "100%" : "10%" }}
+        sx={{ opacity: sailControl.variableThrustMode === 1 ? "100%" : "10%" }}
       >
         <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
           <ObcInstrumentField

@@ -1058,9 +1058,9 @@ export const ATOM_SIM_SHIP_MODELS = atom({
 export const ATOM_SAIL_CONTROL = atom({
   key: "sail_control",
   default: {
-    coupledSteeringMode: 0, // (int) 0=activated, 1=deactivated 
     sheetingMode: 1, // 1= manual, 2= automatic 
-    variableThrustMode: 0, // 0=activated, 1=deactivated
+    coupledSteeringMode: 0, // 0=deactivated, 1=activated
+    variableThrustMode: 0, // 0=deactivated, 1=activated
     variableThrustSetPct: 0.0,
     variableThrustActualPct: 0.0,
   },
@@ -1070,7 +1070,7 @@ export const ATOM_SAILS = atom({
   key: "sails",
   default: {
     sail_0: {
-      isActiveMode: 0,
+      isActiveMode: 1,
       sheetingAngleActualDeg: 0.0,
       sheetingAngleSetDeg: 0.0,
       windApparentAngleDeg: 0.0,
@@ -1079,7 +1079,7 @@ export const ATOM_SAILS = atom({
       windTrueSpeedMs: 0.0,
     },
     sail_1: {
-      isActiveMode: 0,
+      isActiveMode: 1,
       sheetingAngleActualDeg: 0.0,
       sheetingAngleSetDeg: 0.0,
       windApparentAngleDeg: 0.0,
@@ -1088,7 +1088,7 @@ export const ATOM_SAILS = atom({
       windTrueSpeedMs: 0.0,
     },
     sail_2: {
-      isActiveMode: 0,
+      isActiveMode: 1,
       sheetingAngleActualDeg: 0.0,
       sheetingAngleSetDeg: 0.0,
       windApparentAngleDeg: 0.0,
@@ -1097,7 +1097,7 @@ export const ATOM_SAILS = atom({
       windTrueSpeedMs: 0.0,
     },
     sail_3: {
-      isActiveMode: 0,
+      isActiveMode: 1,
       sheetingAngleActualDeg: 0.0,
       sheetingAngleSetDeg: 0.0,
       windApparentAngleDeg: 0.0,
@@ -1106,7 +1106,7 @@ export const ATOM_SAILS = atom({
       windTrueSpeedMs: 0.0,
     },
     sail_4: {
-      isActiveMode: 0,
+      isActiveMode: 1,
       sheetingAngleActualDeg: 0.0,
       sheetingAngleSetDeg: 0.0,
       windApparentAngleDeg: 0.0,
@@ -1115,7 +1115,7 @@ export const ATOM_SAILS = atom({
       windTrueSpeedMs: 0.0,
     },
     sail_5: {
-      isActiveMode: 0,
+      isActiveMode: 1,
       sheetingAngleActualDeg: 0.0,
       sheetingAngleSetDeg: 0.0,
       windApparentAngleDeg: 0.0,

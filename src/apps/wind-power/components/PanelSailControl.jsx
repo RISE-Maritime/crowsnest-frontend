@@ -15,17 +15,16 @@ const NoWrap = styled.span`
 
 export default function PanelSailControl() {
   const setSailControlAction = useSetRecoilState(sailControlAction)
-  const setSailAction = useSetRecoilState(sailAction)
   const [sailControl, setSailControl] = useRecoilState(ATOM_SAIL_CONTROL)
 
   const onSelectSheeting = () => {
     setSailControl(prevState => {
       return {
         ...prevState,
-        variableThrustMode: 1,
+        variableThrustMode: 0,
       }
     })
-    setSailControlAction({ variableThrustMode: 1 })
+    setSailControlAction({ variableThrustMode: 0 })
   }
 
   const onSelectAutomatic = () => {
@@ -52,20 +51,20 @@ export default function PanelSailControl() {
     setSailControl(prevState => {
       return {
         ...prevState,
-        coupledSteeringMode: 0,
+        coupledSteeringMode: 1,
       }
     })
-    setSailControlAction({ coupledSteeringMode: 0 })
+    setSailControlAction({ coupledSteeringMode: 1 })
   }
 
   const onSelectUnCoupled = () => {
     setSailControl(prevState => {
       return {
         ...prevState,
-        coupledSteeringMode: 1,
+        coupledSteeringMode: 0,
       }
     })
-    setSailControlAction({ coupledSteeringMode: 1 })
+    setSailControlAction({ coupledSteeringMode: 0 })
   }
 
   return (
@@ -75,13 +74,13 @@ export default function PanelSailControl() {
         actionButton={
           <LabelledRadioButton
             label="Use sheeting"
-            checked={sailControl.variableThrustMode === 1 ? true : false}
+            checked={sailControl.variableThrustMode === 0 ? true : false}
             onSelect={onSelectSheeting}
           />
         }
       />
 
-      <div style={{ opacity: sailControl.variableThrustMode === 1 ? "100%" : "10%" }}>
+      <div style={{ opacity: sailControl.variableThrustMode === 0 ? "100%" : "10%" }}>
         <Stack direction="row" spacing={1} margin={2} justifyContent="space-between">
           <Stack direction="row" useFlexGap flexWrap="nowrap">
             <Stack alignItems="center">
@@ -99,10 +98,10 @@ export default function PanelSailControl() {
           </Stack>
 
           <Stack direction="row" spacing={0} useFlexGap flexWrap="nowrap">
-            <ObcButton checked={sailControl.coupledSteeringMode === 0 ? true : false} variant="check" onClick={onSelectCoupled}>
+            <ObcButton checked={sailControl.coupledSteeringMode === 1 ? true : false} variant="check" onClick={onSelectCoupled}>
               <NoWrap>Coupled sail steering</NoWrap>
             </ObcButton>
-            <ObcButton checked={sailControl.coupledSteeringMode === 1 ? true : false} variant="check" onClick={onSelectUnCoupled}>
+            <ObcButton checked={sailControl.coupledSteeringMode === 0 ? true : false} variant="check" onClick={onSelectUnCoupled}>
               <NoWrap>Uncoupled sail steering</NoWrap>
             </ObcButton>
           </Stack>
@@ -110,26 +109,26 @@ export default function PanelSailControl() {
       </div>
 
       <Stack direction="column" spacing={0} paddingLeft={2} paddingRight={2} justifyContent={"space-between"}>
-        <SailControlButtonSlider sailId={"0"} disabled={sailControl.variableThrustMode === 1 ? false : true} />
+        <SailControlButtonSlider sailId={"0"} disabled={sailControl.variableThrustMode === 0 ? false : true} />
         <SailControlButtonSlider
           sailId={"1"}
-          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+          disabled={sailControl.variableThrustMode === 0 && sailControl.coupledSteeringMode === 0 ? false : true}
         />
         <SailControlButtonSlider
           sailId={"2"}
-          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+          disabled={sailControl.variableThrustMode === 0 && sailControl.coupledSteeringMode === 0 ? false : true}
         />
         <SailControlButtonSlider
           sailId={"3"}
-          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+          disabled={sailControl.variableThrustMode === 0 && sailControl.coupledSteeringMode === 0 ? false : true}
         />
         <SailControlButtonSlider
           sailId={"4"}
-          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+          disabled={sailControl.variableThrustMode === 0 && sailControl.coupledSteeringMode === 0 ? false : true}
         />
         <SailControlButtonSlider
           sailId={"5"}
-          disabled={sailControl.variableThrustMode === 1 && sailControl.coupledSteeringMode === 1 ? false : true}
+          disabled={sailControl.variableThrustMode === 0 && sailControl.coupledSteeringMode === 0 ? false : true}
         />
       </Stack>
     </Paper>

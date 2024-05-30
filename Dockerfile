@@ -1,13 +1,16 @@
-FROM node:18-alpine as build
+FROM node:20-alpine as build
 # Based on: https://mherman.org/blog/dockerizing-a-react-app/
 
-# Build environment
 WORKDIR /app
+
+# Build environment
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install
+# Add app
 COPY . ./
 RUN npm run build
+
 
 # Production environment
 FROM nginx:stable-alpine
