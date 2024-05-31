@@ -58,7 +58,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_0.sheetingAngleActualDeg} />
+                <SailImage src={SailPNG} angle={sails.sail_0.boom_angle_actual_deg} />
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_0.windTrueAngleDeg} />
@@ -67,7 +67,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_1.sheetingAngleActualDeg} />
+                <SailImage src={SailPNG} angle={sails.sail_1.boomAngleActualDeg} />
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_1.windTrueAngleDeg} />
@@ -76,7 +76,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_2.sheetingAngleActualDeg} />
+                <SailImage src={SailPNG} angle={sails.sail_2.boomAngleActualDeg} />
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_2.windTrueAngleDeg} />
@@ -85,7 +85,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_3.sheetingAngleActualDeg} />
+                <SailImage src={SailPNG} angle={sails.sail_3.boomAngleActualDeg} />
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_3.windTrueAngleDeg} />
@@ -94,7 +94,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_4.sheetingAngleActualDeg} />
+                <SailImage src={SailPNG} angle={sails.sail_4.boomAngleActualDeg} />
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_4.windTrueAngleDeg} />
@@ -103,7 +103,7 @@ export default function SailPositions() {
             <SailWrapper>
               <ObcWatch />
               <SailImageWrapper>
-                <SailImage src={SailPNG} angle={sails.sail_5.sheetingAngleActualDeg} />
+                <SailImage src={SailPNG} angle={sails.sail_5.boomAngleActualDeg} />
               </SailImageWrapper>
               <WindImageWrapper>
                 <SvgWind windAngle={sails.sail_5.windTrueAngleDeg} />

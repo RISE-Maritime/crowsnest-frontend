@@ -48,6 +48,7 @@ export default function index() {
           sheetingAngleActualDeg: msg.payload.sheetingAngleActualDeg,
           sheetingAngleSetDeg: msg.payload.sheetingAngleSetDeg,
           windApparentAngleDeg: msg.payload.windApparentAngleDeg,
+          boomAngleActualDeg: msg.payload.boomAngleActualDeg,
           windApparentSpeedMs: msg.payload.windApparentSpeedMs,
           windTrueAngleDeg: msg.payload.windTrueAngleDeg,
           windTrueSpeedMs: msg.payload.windTrueSpeedMs,

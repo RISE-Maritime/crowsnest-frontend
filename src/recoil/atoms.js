@@ -1072,6 +1072,7 @@ export const ATOM_SAILS = atom({
     sail_0: {
       isActiveMode: 1,
       sheetingAngleActualDeg: 0.0,
+      boomAngleActualDeg: 0.0,
       sheetingAngleSetDeg: 0.0,
       windApparentAngleDeg: 0.0,
       windApparentSpeedMs: 0.0,
