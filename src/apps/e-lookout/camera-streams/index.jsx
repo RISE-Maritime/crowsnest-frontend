@@ -24,7 +24,7 @@ export default function CameraStreams() {
             <Typography variant="h5" p={2}>
               WebRTC
             </Typography>
-            <CamStream ID={"axis1"} />
+            <CamStream ID={"axis-1"} />
           </Paper>
         </Grid>
       </Grid>

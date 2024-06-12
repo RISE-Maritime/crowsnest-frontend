@@ -3,7 +3,13 @@ import axios from "axios"
 import PlayArrowIcon from "@mui/icons-material/PlayArrow"
 import { ObcButton as Button } from "@oicl/openbridge-webcomponents-react/components/button/button"
 
-export default function CamSelect({ refV, refA, ID }) {
+
+/* eslint-disable */
+let BASE_URL_WEB_RTC =
+  (process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL ? process.env.REACT_APP_ZENOH_LOCAL_ROUTER_URL : "http://localhost:8000") 
+/* eslint-enable */
+
+export default function CamSelect({ refV, refA, ID, platform }) {
   
   const startCamera = camID => {
     refV.onplay = () => {
@@ -68,8 +74,12 @@ export default function CamSelect({ refV, refA, ID }) {
 
         console.log("send sdp:", offer.sdp)
 
+        let URL = BASE_URL_WEB_RTC+"/rise/v0/"+ platform +"/rpc/mediamtx/whep"
+
+        console.log("Request ULR: " + URL)
+
         axios
-        .post("http://localhost:8000/rise/v0/boatswain/rpc/mediamtx/whep", {
+        .post(URL, {
             path: "cam-axis-1",
             sdp: offer.sdp,
           })
@@ -104,7 +114,7 @@ export default function CamSelect({ refV, refA, ID }) {
   return (
     <div>
       <Button onClick={() => startCamera(ID)}>
-        <PlayArrowIcon slot="leading-icon" /> Start
+        <PlayArrowIcon slot="leading-icon" /> Start {platform} 
       </Button>
     </div>
   )
