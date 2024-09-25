@@ -1052,3 +1052,77 @@ export const ATOM_SIM_SHIP_MODELS = atom({
     },
   },
 })
+
+//  SAIL CONTROLL
+
+export const ATOM_SAIL_CONTROL = atom({
+  key: "sail_control",
+  default: {
+    sheetingMode: 1, // 1= manual, 2= automatic 
+    coupledSteeringMode: 0, // 0=deactivated, 1=activated
+    variableThrustMode: 0, // 0=deactivated, 1=activated
+    variableThrustSetPct: 0.0,
+    variableThrustActualPct: 0.0,
+  },
+})
+
+export const ATOM_SAILS = atom({
+  key: "sails",
+  default: {
+    sail_0: {
+      isActiveMode: 1,
+      sheetingAngleActualDeg: 0.0,
+      boomAngleActualDeg: 0.0,
+      sheetingAngleSetDeg: 0.0,
+      windApparentAngleDeg: 0.0,
+      windApparentSpeedMs: 0.0,
+      windTrueAngleDeg: 0.0,
+      windTrueSpeedMs: 0.0,
+    },
+    sail_1: {
+      isActiveMode: 1,
+      sheetingAngleActualDeg: 0.0,
+      sheetingAngleSetDeg: 0.0,
+      windApparentAngleDeg: 0.0,
+      windApparentSpeedMs: 0.0,
+      windTrueAngleDeg: 0.0,
+      windTrueSpeedMs: 0.0,
+    },
+    sail_2: {
+      isActiveMode: 1,
+      sheetingAngleActualDeg: 0.0,
+      sheetingAngleSetDeg: 0.0,
+      windApparentAngleDeg: 0.0,
+      windApparentSpeedMs: 0.0,
+      windTrueAngleDeg: 0.0,
+      windTrueSpeedMs: 0.0,
+    },
+    sail_3: {
+      isActiveMode: 1,
+      sheetingAngleActualDeg: 0.0,
+      sheetingAngleSetDeg: 0.0,
+      windApparentAngleDeg: 0.0,
+      windApparentSpeedMs: 0.0,
+      windTrueAngleDeg: 0.0,
+      windTrueSpeedMs: 0.0,
+    },
+    sail_4: {
+      isActiveMode: 1,
+      sheetingAngleActualDeg: 0.0,
+      sheetingAngleSetDeg: 0.0,
+      windApparentAngleDeg: 0.0,
+      windApparentSpeedMs: 0.0,
+      windTrueAngleDeg: 0.0,
+      windTrueSpeedMs: 0.0,
+    },
+    sail_5: {
+      isActiveMode: 1,
+      sheetingAngleActualDeg: 0.0,
+      sheetingAngleSetDeg: 0.0,
+      windApparentAngleDeg: 0.0,
+      windApparentSpeedMs: 0.0,
+      windTrueAngleDeg: 0.0,
+      windTrueSpeedMs: 0.0,
+    },
+  },
+})

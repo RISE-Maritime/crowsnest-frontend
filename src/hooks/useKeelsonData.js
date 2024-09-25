@@ -77,7 +77,10 @@ export const useKeelsonData = (keyExpr, type, onMessage) => {
             })
             break
           case "subscribe":
-            onMessage(message.data.data)
+            if (matchKeyWithKeyExpression(message.data.data.key, keyExpr)) {
+              onMessage(message.data.data)
+            } 
+            // onMessage(message.data.data)
             break
           case "error":
             console.error(message.data.data)

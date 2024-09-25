@@ -9,7 +9,8 @@ export default function CamStream({ ID }) {
   return (
     <Grid container>
       <Grid item xs={12} px={2}>
-        <CamSelect refV={refVideo} refA={refAudio} ID={ID} />
+      <CamSelect refV={refVideo} refA={refAudio} ID={ID} platform={"boatswain"} />
+      <CamSelect refV={refVideo} refA={refAudio} ID={ID} platform={"landkrabba"} />
         {/* <CamSelectH2 refV={refVideo} refA={refAudio}/> */}
       </Grid>
       <Grid item xs={12} sx={{ border: "solid" }}>
