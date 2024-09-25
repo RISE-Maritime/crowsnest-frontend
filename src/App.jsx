@@ -28,7 +28,7 @@ import RouteEditor from "./apps/route-editor"
 import Lookout360 from "./apps/e-lookout/subpage_360"
 import CameraStreams from "./apps/e-lookout/camera-streams"
 import ELookoutCamArray from "./apps/e-lookout/camera-array"
-import WindPower from "./apps/wind-power"
+
 
 export default function App() {
   const app_state = useRecoilValue(appState)
@@ -65,7 +65,6 @@ export default function App() {
               <Route exact path={ROUTES.REMOTE_CONTROL} element={<PageRemoteControl />} />
               <Route exact path={ROUTES.ROUTE_EDITOR} element={<RouteEditor />} />
 
-              <Route exact path={ROUTES.WIND_POWER} element={<WindPower />} />
             </Routes>
           </BasePage>
         </Router>
