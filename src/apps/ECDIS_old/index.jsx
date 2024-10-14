@@ -3,7 +3,8 @@ import { Grid } from "@mui/material"
 import StatusSideBar from "./components/StatusSideBarNEW"
 import Chart from "./components/Chart"
 import ChartControls from "./components/ChartControls"
-import { useKeelsonWorker } from "../../hooks/useKeelsonData"
+import { useKeelsonWorker
+ } from "../../hooks/useKeelsonData"
 const identifier = 265810550
 
 function getCookieValue(cookieName) {
@@ -24,6 +25,7 @@ export default function Ecdis() {
   const [monitorData, setMonitorData] = useState({})
   const [aisWorker, setAisWorker] = useState(null)
   const [monitorWorker, setMonitorWorker] = useState(null)
+
 
   useEffect(() => {
     // AIS WORKER
@@ -62,7 +64,7 @@ export default function Ecdis() {
     tmpMonitorWorker.port.start()
 
     // Keelson Worker
-
+    
     // const tmpKeelsonWorker = new SharedWorker(new URL("../../workers/keelsonWorker.js", import.meta.url))
     // tmpKeelsonWorker.port.onmessage = e => {
     //   console.log("KEEEEEEEEELSOOON")
@@ -72,6 +74,8 @@ export default function Ecdis() {
     //   type:"subscribe",
     //   payload: "http://localhost:8000/rise/v0/masslab/**"
     // })
+
+
 
     // Send the workers the MQTT credentials
     let credentials
@@ -124,18 +128,6 @@ export default function Ecdis() {
       <Grid container spacing={0}>
         <Grid
           item
-          xs={2}
-          sx={{
-            display: "grid",
-            placeItems: "center",
-            position: "relative",
-            height: "calc(99vh - 95px)",
-          }}
-        >
-          <StatusSideBar data={monitorData} identifier={identifier} />
-        </Grid>
-        <Grid
-          item
           xs={10}
           sx={{
             position: "relative",
@@ -146,6 +138,18 @@ export default function Ecdis() {
           }}
         >
           <Chart ais={ais} />
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          sx={{
+            display: "grid",
+            placeItems: "center",
+            position: "relative",
+            height: "calc(99vh - 95px)",
+          }}
+        >
+          <StatusSideBar data={monitorData} identifier={identifier} />
         </Grid>
       </Grid>
       <Grid

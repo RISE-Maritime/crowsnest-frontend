@@ -32,6 +32,14 @@ export const APPS = [
     description: "Electronic Chart Display and Information System",
   },
   {
+    href: ROUTES.ECDIS_OLD,
+    icon: <IconEcdis size="24" slot="icon" />,
+    leadingIcon: <IconEcdis slot="leading-icon" />,
+    buttonIcon: <IconEcdis />,
+    label: "ECDIS Old",
+    description: "Electronic Chart Display and Information System",
+  },
+  {
     href: ROUTES.BEARING_RATE,
     icon: <IconErbl size="24" slot="icon" />,
     leadingIcon: <IconErbl slot="leading-icon" />,
@@ -98,7 +106,6 @@ export const APP_CONFIG = [
   },
 ]
 
-
 export const PAGES_E_LOOKOUT = [
   {
     href: ROUTES.E_LOOKOUT,
@@ -128,9 +135,7 @@ export const PAGES_E_LOOKOUT = [
     buttonIcon: <IconInfo />,
     label: "Camera Array",
   },
- 
 ]
-
 
 export const ROUTE_TO_LABEL = [...APPS, ...APP_CONFIG].reduce((acc, cur) => {
   acc[cur.href] = cur.label
