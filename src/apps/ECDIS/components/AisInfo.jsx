@@ -12,23 +12,32 @@ export default function AisInfo() {
         AIS Info
       </Typography>
       {chartQueryInfo.layer === "ais" ? (
-        <Typography variant={"subtitle1"}>
-          Name: {chartQueryInfo.object.shipname}
-          <br />
-          MMSI: {chartQueryInfo.object.mmsi}
-          <br />
-          HDG: {chartQueryInfo.object.heading}
-          <br />
-          COG: {chartQueryInfo.object.course}
-          <br />
-          SOG: {chartQueryInfo.object.speed}
-          <br />
-          ROT: {chartQueryInfo.object.turn}
-          <br />
-          Destination: {chartQueryInfo.object.destination}
-          <br />
-          NavStatus: {chartQueryInfo.object.status}`
-        </Typography>
+        <>
+          <Typography variant={"body"} component={"p"}>
+            Name: {chartQueryInfo.object.shipname}
+          </Typography>
+          <Typography variant={"body"} component={"p"}>
+            MMSI: {chartQueryInfo.object.mmsi}
+          </Typography>
+          <Typography variant={"body"} component={"p"}>
+            HDG: {chartQueryInfo.object.heading}
+          </Typography>
+          <Typography variant={"body"} component={"p"}>
+            COG: {chartQueryInfo.object.course}
+          </Typography>
+          <Typography variant={"body"} component={"p"}>
+            SOG: {chartQueryInfo.object.speed}
+          </Typography>
+          <Typography variant={"body"} component={"p"}>
+            ROT: {chartQueryInfo.object.turn}
+          </Typography>
+          <Typography variant={"body"} component={"p"}>
+            Destination: {chartQueryInfo.object.destination}
+          </Typography>
+          <Typography variant={"body"} component={"p"}>
+            NavStatus: {chartQueryInfo.object.status}`
+          </Typography>
+        </>
       ) : null}
     </div>
   )
