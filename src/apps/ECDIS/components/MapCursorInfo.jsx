@@ -26,8 +26,6 @@ export default function MapCursorInfo() {
   }
   return (
     <Stack>
-      <hr style={{ width: "100%" }} />
-
       <Typography variant="overline" style={{ padding: "0.5rem" }}>
         Cursor
       </Typography>
@@ -56,7 +54,7 @@ export default function MapCursorInfo() {
               mapCursor.latitude,
               mapCursor.longitude,
               osPos[osPosSetting.source].latitude,
-              osPos[osPosSetting.source].longitude
+              osPos[osPosSetting.source].longitude,
             )}
             nm
             <br />
@@ -66,7 +64,7 @@ export default function MapCursorInfo() {
               mapCursor.longitude,
               osPos[osPosSetting.source].latitude,
               osPos[osPosSetting.source].longitude,
-              "m"
+              "m",
             )}
             meter
             <br />
@@ -75,7 +73,7 @@ export default function MapCursorInfo() {
               osPos[osPosSetting.source].latitude,
               osPos[osPosSetting.source].longitude,
               mapCursor.latitude,
-              mapCursor.longitude
+              mapCursor.longitude,
             )}
             °
             <br />
@@ -85,7 +83,7 @@ export default function MapCursorInfo() {
                 mapCursor.latitude,
                 mapCursor.longitude,
                 osPos[osPosSetting.source].latitude,
-                osPos[osPosSetting.source].longitude
+                osPos[osPosSetting.source].longitude,
               ) * osVelocity[osVelocitySetting.source].sog
             ).toFixed(1)}
             min

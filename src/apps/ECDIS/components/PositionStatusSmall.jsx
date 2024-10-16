@@ -99,7 +99,7 @@ export default function PositionStatusSmall() {
             value={posSetting.source}
             onChange={handleChangeGNSSsource}
             label="Position"
-            sx={{fontSize: "0.8rem"}}
+            sx={{ fontSize: "0.8rem" }}
           >
             {Object.keys(osPos).map(osPoskey => {
               return (
@@ -115,9 +115,9 @@ export default function PositionStatusSmall() {
       {viewManualPosInput ? (
         <div>
           <Formik initialValues={initialValuesManual} onSubmit={submitManualPos} validationSchema={validationSchema}>
-          {({ handleChange, touched, errors }) => {
-            // {({ handleChange, values, setFieldValue, touched, errors }) => {
-              
+            {({ handleChange, touched, errors }) => {
+              // {({ handleChange, values, setFieldValue, touched, errors }) => {
+
               return (
                 <Form>
                   <Grid container spacing={1} justifyContent="center" alignItems="center">

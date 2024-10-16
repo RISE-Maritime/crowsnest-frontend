@@ -1,4 +1,4 @@
-import { Stack, InputLabel, FormControl, Select, MenuItem, Container } from "@mui/material"
+import { Stack, InputLabel, FormControl, Select, MenuItem, Paper } from "@mui/material"
 import basemaps from "./baseMaps.json"
 import React from "react"
 import ZoomOutIcon from "@mui/icons-material/ZoomOut"
@@ -12,7 +12,7 @@ export default function ChartControls() {
   const [chartSettings, setChartSettings] = useRecoilState(atomChartSettings)
 
   return (
-    <Container sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", padding: "10px" }}>
+    <Paper sx={{ display: "flex", alignItems: "center", justifyContent: "flex-start", padding: "10px", height: "58px" }}>
       <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
         {/* Zoom selector */}
         <Stack direction="row" px={1}>
@@ -132,6 +132,6 @@ export default function ChartControls() {
           </Select>
         </FormControl>
       </Stack>
-    </Container>
+    </Paper>
   )
 }

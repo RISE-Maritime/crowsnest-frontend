@@ -120,43 +120,28 @@ export default function Ecdis() {
   }, [])
 
   return (
-    <Grid container spacing={0}>
-      <Grid container spacing={0}>
-        <Grid
-          item
-          xs={2}
-          sx={{
-            display: "grid",
-            placeItems: "center",
+    <Grid container>
+      <Grid
+        item
+        xs={2}
+        sx={{
+          height: "calc(100vh - 48px)",
+          padding: "0.25rem",
+        }}
+      >
+        <StatusSideBar data={monitorData} identifier={identifier} />
+      </Grid>
+      <Grid item xs={10}>
+        <div
+          style={{
             position: "relative",
-            height: "calc(99vh - 95px)",
-          }}
-        >
-          <StatusSideBar data={monitorData} identifier={identifier} />
-        </Grid>
-        <Grid
-          item
-          xs={10}
-          sx={{
-            position: "relative",
-            padding: "0px",
-            height: "calc(99vh - 95px)",
+            height: "calc(100vh - 114px)",
             cursor: "crosshair",
             overflow: "hidden",
           }}
         >
           <Chart ais={ais} />
-        </Grid>
-      </Grid>
-      <Grid
-        item
-        md={12}
-        sx={{
-          display: "grid",
-          position: "relative",
-          height: "50px",
-        }}
-      >
+        </div>
         <ChartControls />
       </Grid>
     </Grid>
